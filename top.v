@@ -10,7 +10,7 @@ module top (rx_clock, leds);
 
     reg [20:0] bigcount = 0;
     pll chip_pll(rx_clock, pll_clock);
-    nco sin(pll_clock, sins);
+    nco sin(pll_clock,3 ,  sins);
 
 
 

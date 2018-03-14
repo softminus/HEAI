@@ -1,7 +1,9 @@
 `default_nettype none
-module nco (clock, bits);
+module nco (clock, phase_increment, bits);
     /* I/O */
     output reg [3:0] bits;
+
+    input wire [7:0] phase_increment;
 
     input wire clock;
 
@@ -59,7 +61,7 @@ module nco (clock, bits);
     endfunction
 
     always @ (posedge clock) begin
-            counter <= counter + 1;
+            counter <= counter + phase_increment;
             bits <= whole_sin(counter);
     end /* begin */
 endmodule
