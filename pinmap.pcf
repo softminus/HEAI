@@ -1,0 +1,29 @@
+# example.pcf
+set_io --warn-no-port crystal J3
+
+
+set_io --warn-no-port rxd_full[0]  B2
+set_io --warn-no-port rxd_full[1]  B1
+set_io --warn-no-port rxd_full[2]  C2
+set_io --warn-no-port rxd_full[3]  C1
+set_io --warn-no-port rxd_full[4]  D2
+set_io --warn-no-port rxd_full[5]  D1
+set_io --warn-no-port rxd_full[6]  E2
+set_io --warn-no-port rxd_full[7]  F1
+set_io --warn-no-port rxd_full[8]  F2
+set_io --warn-no-port rxd_full[9]  H1
+set_io --warn-no-port rxd_full[10] G2
+set_io --warn-no-port rxd_full[11] H2
+
+
+set_io --warn-no-port rx_clock     G1
+set_io --warn-no-port rx_iq_select J1
+
+set_io --warn-no-port rx_en     T2
+
+
+
+
+# led0 = D9 on schematic
+#led 7 = D2 on schematic
+

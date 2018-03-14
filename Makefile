@@ -1,11 +1,11 @@
 # Project setup
-PROJ      = blinky
+PROJ      = xpdr
 BUILD     = ./build
 DEVICE    = 8k
 FOOTPRINT = ct256
 
 # Files
-FILES = top.v lms6_tx.v
+FILES = top.v lms6_tx.v clock.v
 
 .PHONY: all clean burn
 
