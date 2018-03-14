@@ -5,7 +5,7 @@ DEVICE    = 8k
 FOOTPRINT = ct256
 
 # Files
-FILES = top.v lms6_tx.v clock.v
+FILES = top.v lms6_tx.v clock.v nco.v
 
 .PHONY: all clean burn
 

@@ -24,6 +24,12 @@ set_io --warn-no-port rx_en     T2
 
 
 
-# led0 = D9 on schematic
-#led 7 = D2 on schematic
+set_io --warn-no-port leds[0]      B5
+set_io --warn-no-port leds[1]      B4
+set_io --warn-no-port leds[2]      A2
+set_io --warn-no-port leds[3]      A1
+set_io --warn-no-port leds[4]      C5
+set_io --warn-no-port leds[5]      C4
+set_io --warn-no-port leds[6]      B3
+set_io --warn-no-port leds[7]      C3
 
