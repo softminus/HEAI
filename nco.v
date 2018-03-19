@@ -1,7 +1,10 @@
 `default_nettype none
-module nco (clock, phase_increment, bits);
+module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits);
     /* I/O */
-    output reg [3:0] bits;
+    output reg [3:0] sine_bits;
+    output reg [3:0] cosine_bits;
+
+    input wire clk_en;
 
     input wire [7:0] phase_increment;
 
@@ -50,19 +53,22 @@ module nco (clock, phase_increment, bits);
     function [3:0] whole_sin;
         input [7:0] phase;
         if (phase < 64) begin
-            whole_sin = 8 + quarter_sin(phase) / 2;
+            whole_sin = quarter_sin(phase) / 2;
         end else if (phase < 128) begin
-            whole_sin = 8 + quarter_sin(128 - phase)  / 2 ;
+            whole_sin = quarter_sin(128 - phase)  / 2 ;
         end else if (phase < 192) begin
-            whole_sin = 8 - quarter_sin(phase - 128)/2;
+            whole_sin = - quarter_sin(phase - 128)/2;
         end else begin
-            whole_sin = -8 - quarter_sin(256 - phase)/2;
+            whole_sin = - quarter_sin(256 - phase)/2;
         end
     endfunction
 
     always @ (posedge clock) begin
+        if (clk_en == 1) begin
             counter <= counter + phase_increment;
-            bits <= whole_sin(counter);
+        end
+        sine_bits <= whole_sin(counter);
+        cosine_bits <= whole_sin(counter + 64);
     end /* begin */
 endmodule
 
