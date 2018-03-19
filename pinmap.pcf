@@ -33,3 +33,31 @@ set_io --warn-no-port leds[5]      C4
 set_io --warn-no-port leds[6]      B3
 set_io --warn-no-port leds[7]      C3
 
+
+set_io --warn-no-port dac_zero[0]      B16
+set_io --warn-no-port dac_zero[1]      D14
+set_io --warn-no-port dac_zero[2]      D15
+set_io --warn-no-port dac_zero[3]      E14
+set_io --warn-no-port dac_zero[4]      F15
+set_io --warn-no-port dac_zero[5]      G15
+
+
+
+set_io --warn-no-port dac_one[0]      T1
+set_io --warn-no-port dac_one[1]      R2
+set_io --warn-no-port dac_one[2]      R3
+set_io --warn-no-port dac_one[3]      T5
+set_io --warn-no-port dac_one[4]      T6
+set_io --warn-no-port dac_one[5]      T7
+
+
+
+set_io --warn-no-port debugport[0]      C16
+set_io --warn-no-port debugport[1]      D16
+set_io --warn-no-port debugport[2]      E16
+set_io --warn-no-port debugport[3]      F16
+set_io --warn-no-port debugport[4]      G16
+set_io --warn-no-port debugport[5]      H16
+set_io --warn-no-port debugport[6]      J15
+set_io --warn-no-port debugport[7]      G14
+
