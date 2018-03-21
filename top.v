@@ -1,37 +1,31 @@
 `default_nettype none
-/* module */
-module top (rx_clock, leds, debugport);
-    /* I/O */
-    input rx_clock;
+module top (crystal, dac_zero, dac_one);
+    input crystal;
     wire pll_clock;
 
     wire clk_en;
 
-    output reg [7:0] leds;
-    output reg [7:0] debugport;
+    output reg [5:0] dac_zero = 0;
+    output reg [5:0] dac_one = 0;
+    
+    reg clk_en = 1;
+    reg pi = 1;
 
-    wire [3:0] sins;
-    wire [3:0] cosines;
+    pll chip_pll(crystal, pll_clock);
 
-    reg [24:0] bigcount = 0;
+    signed wire [3:0] sinout;
+    signed wire [3:0] cosout;
 
-    pll chip_pll(rx_clock, pll_clock);
-    nco sin(pll_clock, clk_en, 3 ,  sins, cosines);
+    nco nco_under_test(pll_clock, clk_en, pi, sinout, cosout);
+
+    
+    reg [31:0] counter = 0;
 
 
-//    assign clk_en = (bigcount == 0);
-    assign clk_en = 1;
-
-    assign debugport[0] = pll_clock;
     always @(posedge pll_clock) begin
-        bigcount <= bigcount + 1;
-        leds[7:4] <= sins;
-        leds[3:0] <= cosines;
-        debugport[7:4] <= sins;
+        counter <= counter + 1;
+        dac_zero <= sinout + 8;
+        dac_one <= cosout + 8;
     end
-
-
-
-
 endmodule
 

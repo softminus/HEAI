@@ -12,7 +12,7 @@ module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits);
 
     /* state */
     reg [7:0] counter = 0;  /* runs at clock from 0 to 255 */
-
+    /* LCs          1318 / 7680 */
     function [3:0] quarter_sin;
         input [7:0] phase;
         if (phase == 0)  begin
