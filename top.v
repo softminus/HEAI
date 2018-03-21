@@ -13,19 +13,18 @@ module top (crystal, dac_zero, dac_one);
 
     pll chip_pll(crystal, pll_clock);
 
-    signed wire [3:0] sinout;
-    signed wire [3:0] cosout;
+    wire [4:0] sinout;
+    wire [4:0] cosout;
+    wire [5:0] debug_out;
 
-    nco nco_under_test(pll_clock, clk_en, pi, sinout, cosout);
+    nco nco_under_test(pll_clock, clk_en, pi, sinout, cosout, debug_out);
 
     
-    reg [31:0] counter = 0;
 
 
     always @(posedge pll_clock) begin
-        counter <= counter + 1;
-        dac_zero <= sinout + 8;
-        dac_one <= cosout + 8;
+        dac_zero <= $signed(sinout)+32;
+        dac_one <= debug_out;
     end
 endmodule
 
