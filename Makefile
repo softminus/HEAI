@@ -12,6 +12,7 @@ FILES = top.v lms6_tx.v clock.v nco.v
 all:
 	# if build folder doesn't exist, create it
 	mkdir -p $(BUILD)
+	./qwave_romgen.py > qwave_6i_4o.hex
 	# synthesize using Yosys
 	yosys -p "synth_ice40 -top top -blif $(BUILD)/$(PROJ).blif" $(FILES)
 	# Place and route using arachne

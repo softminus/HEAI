@@ -28,7 +28,7 @@ module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits, debug_pulse)
     /* state */
     reg [7:0] counter = 0;  /* runs at clock from 0 to 255 */
     reg [7:0] counter_cos = 0;  /* runs at clock from 0 to 255 */
-    /* LCs          226 / 7680 */
+    /* LCs          78 / 7680 */
 
     function [5:0] synth_index;
         input [7:0] phase;

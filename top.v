@@ -9,7 +9,7 @@ module top (crystal, dac_zero, dac_one);
     output reg [5:0] dac_one = 0;
     
     reg clk_en = 1;
-    reg pi = 1;
+    reg [7:0] pi = 1;
 
     pll chip_pll(crystal, pll_clock);
 
@@ -24,7 +24,7 @@ module top (crystal, dac_zero, dac_one);
 
     always @(posedge pll_clock) begin
         dac_zero <= $signed(sinout)+32;
-        dac_one <= debug_out;
+        dac_one <=  $signed(cosout)+32;
     end
 endmodule
 
