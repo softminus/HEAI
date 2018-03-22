@@ -27,7 +27,7 @@ module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits, debug_pulse)
 
     /* state */
     reg [7:0] counter = 0;  /* runs at clock from 0 to 255 */
-    reg [7:0] counter_cos = 0;  /* runs at clock from 0 to 255 */
+    wire [7:0] counter_cos;  /* runs at clock from 0 to 255 */
     /* LCs          78 / 7680 */
 
     function [5:0] synth_index;
@@ -40,11 +40,10 @@ module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits, debug_pulse)
         endcase
     endfunction
 
-
+    assign counter_cos = counter + 64;
     always @ (posedge clock) begin
         if (clk_en == 1) begin
             counter <= counter + phase_increment;
-            counter_cos <= counter + 64;
 
             flip_sin[0] <= counter[7];
             flip_sin[1] <= flip_sin[0];
