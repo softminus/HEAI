@@ -23,5 +23,9 @@ all:
 burn:
 	iceprog $(BUILD)/$(PROJ).bin
 
+lint:
+	verilator -Wall --lint-only $(FILES)
+
+
 clean:
 	rm build/*
