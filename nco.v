@@ -41,6 +41,7 @@ module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits, debug_pulse)
     endfunction
 
     assign counter_cos = counter + 64;
+//    assign counter_cos = {(counter[7:6]+1), counter[5:0]} ;
     always @ (posedge clock) begin
         if (clk_en == 1) begin
             counter <= counter + phase_increment;
