@@ -1,5 +1,7 @@
 `default_nettype none
-module pll (input crystal, output pll_clock);
+module icepll (input crystal, output pll_clock);
+
+/* verilator lint_off DECLFILENAME */
 SB_PLL40_CORE #(
     .PLLOUT_SELECT("GENCLK"),
 

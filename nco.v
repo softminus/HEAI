@@ -4,7 +4,7 @@ module nco (clock, clk_en, phase_increment, sine_bits, cosine_bits, debug_pulse)
     output reg [4:0] sine_bits;
     output reg [4:0] cosine_bits;
 
-    output reg [5:0] debug_pulse;
+    output reg [5:0] debug_pulse = 0;
 
     input wire clk_en;
 
