@@ -27,5 +27,11 @@ lint:
 	verilator -Wall --lint-only nco.v
 	verilator -Wall --lint-only lms6_tx.v
 
+sim:
+	verilator -Wall --cc --trace nco.v --exe tb-nco.cc
+	make -j -C obj_dir/ -f Vnco.mk Vnco
+	obj_dir/Vnco
+	-gtkwave nco.vcd nco.sav
+
 clean:
-	rm build/*
+	rm -rf build obj_dir nco.vcd
