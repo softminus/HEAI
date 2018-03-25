@@ -26,7 +26,7 @@ module top (crystal, dac_zero, dac_one);
 
     always @(posedge pll_clock) begin
         dac_one <=  $signed(tmpq[9:5])+32;
-        dac_zero <= $signed(rfq) + 32;
+        dac_zero <= $signed(tmpi[9:5]) + 32;
     end
 endmodule
 
