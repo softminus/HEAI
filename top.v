@@ -16,14 +16,14 @@ module top (crystal, dac_zero, dac_one);
     wire [4:0] rfi;
     wire [4:0] loi;
     wire [4:0] loq;
-
+/* verilator lint_off UNUSED */
     reg [11:0] tmpi;
     wire [4:0] rfq;
     reg [11:0] tmpq;
 
     nco lo_nco(pll_clock, clk_en, pi, loi, loq);
     nco rf_nco(pll_clock, clk_en, pi_two, rfi, rfq);
-
+/* verilator lint_off WIDTH */
     complex_mixer mix(pll_clock, clk_en, rfi, rfq, loi, loq, tmpi, tmpq);
 
     always @(posedge pll_clock) begin
