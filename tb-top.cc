@@ -22,6 +22,7 @@ int main(int argc, char **argv, char **env) {
     for (clk=0; clk<2; clk++) {
       tfp->dump (2*i+clk);
       top->crystal = !top->crystal;
+      printf("loqq %d\n", top->top__DOT__loq);
       top->eval ();
     }
     if (Verilated::gotFinish())  exit(0);
