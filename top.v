@@ -1,34 +1,34 @@
 `default_nettype none
-module top (crystal, dac_zero, dac_one);
+module top (crystal, rf_in_i, rf_in_q, lo_in_i, lo_in_q, out_i, out_q);
     input crystal;
-    wire pll_clock;
 
-    output reg [5:0] dac_zero = 0;
-    output reg [5:0] dac_one = 0;
+
+    input reg [7:0] rf_in_i;
+    input reg [7:0] rf_in_q;
+
+    input reg [7:0] lo_in_i;
+    input reg [7:0] lo_in_q;
+
+    output reg [16:0] out_i;
+    output reg [16:0] out_q;
     
     reg clk_en = 1;
-    reg [7:0] pi = 3;
-    reg [7:0] pi_two = 2;
 
-//    icepll chip_pll(crystal, pll_clock);
+    reg [7:0] a_i = 0;
+    reg [7:0] a_q = 0;
 
-    assign pll_clock = crystal;
-    wire [4:0] rfi;
-    wire [4:0] loi;
-    wire [4:0] loq;
-/* verilator lint_off UNUSED */
-    reg [11:0] tmpi;
-    wire [4:0] rfq;
-    reg [11:0] tmpq;
 
-    nco lo_nco(pll_clock, clk_en, pi, loi, loq);
-    nco rf_nco(pll_clock, clk_en, pi_two, rfi, rfq);
-/* verilator lint_off WIDTH */
-    complex_mixer mix(pll_clock, clk_en, rfi, rfq, loi, loq, tmpi, tmpq);
+    reg [7:0] b_i = 0;
+    reg [7:0] b_q = 0;
 
-    always @(posedge pll_clock) begin
-        dac_one <=  $signed(tmpq[11:7])+32;
-        dac_zero <= $signed(tmpi[11:7]) + 32;
+    complex_mixer mix(crystal, clk_en, a_i, a_q, b_i, b_q, out_i, out_q);
+
+    always @(posedge crystal) begin
+        a_i <= rf_in_i;
+        a_q <= rf_in_q;
+
+        b_i <= lo_in_i;
+        b_q <= lo_in_q;
     end
 endmodule
 
