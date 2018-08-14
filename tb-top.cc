@@ -23,8 +23,8 @@ int main(int argc, char **argv, char **env) {
   for (i=0; i<1000; i++) {
       top->rf_in_i = (sin(2*i/100.0) * 128.0);
       top->rf_in_q = (cos(2*i/100.0) * 128.0);
-      top->lo_in_i = -(sin(2.5*i/100.0) * 128.0);
-      top->lo_in_q = (cos(2.5* i/100.0) * 128.0);
+      top->lo_in_i = (sin(2.5*i/100.0) * 128.0);
+      top->lo_in_q = -(cos(2.5* i/100.0) * 128.0);
 
     // dump variables into VCD file and toggle crystal
     for (clk=0; clk<2; clk++) {
