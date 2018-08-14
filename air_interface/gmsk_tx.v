@@ -42,10 +42,15 @@ module gmsk_tx
     input wire input_bit_strobe;
 
     localparam BITS_PER_SAMPLE = 8;
+
     output reg [(BITS_PER_SAMPLE-1):0] inphase_out;
     output reg [(BITS_PER_SAMPLE-1):0] quadrature_out;
     output reg inphase_strobe;
     output reg quadrature_strobe;
+
+
+
+
 
     
 
