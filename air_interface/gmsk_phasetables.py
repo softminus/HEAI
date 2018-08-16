@@ -11,11 +11,12 @@ def erfint(normalised_time): # normalised time goes from 0 to 1 to represent 0 t
     erfi = normalised_time * erf(beta * normalised_time) + (1 / ( beta *sqrt(pi))) * exp(-((beta*normalised_time)**2))
     return erfi
 
-def traj_three(t):
-    return 0.5 * pi * (erfint(t) - erfint(0.0))
 
 def traj_two(t):
     return 0.5 * pi * (erfint(t) - erfint(0.0) - erfint(t-1) + 1 - t)
+
+def traj_three(t):
+    return 0.5 * pi * (erfint(t) - erfint(0.0))
 
 def traj_seven(t):
     return 0.5 * pi * t
