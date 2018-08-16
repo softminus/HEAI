@@ -12,6 +12,9 @@ def erfint(normalised_time): # normalised time goes from 0 to 1 to represent 0 t
     return erfi
 
 
+def traj_one(t):
+    return 0.5 * pi * (erfint(t-1) -1)
+
 def traj_two(t):
     return 0.5 * pi * (erfint(t) - erfint(0.0) - erfint(t-1) + 1 - t)
 
@@ -23,7 +26,7 @@ def traj_seven(t):
 
 for i in range(0,samples+1):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
-    print (time, traj_two(time))
+    print (time, traj_one(time))
 
     
 
