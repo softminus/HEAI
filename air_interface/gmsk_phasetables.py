@@ -32,30 +32,42 @@ ph_7 = open("phase_7.txt",'w')
 
 
 
-#### MASTER CURVES ####
 
-def master_phase_one(t):
+def fixup_phase_one(t):
     return (-traj_one(t))
 
-def master_phase_two(t):
+def fixup_phase_two(t):
     return traj_two(t) + 2 * (sqrt(log(2)/(2*pi))/(4*0.3))
 
-def master_phase_three(t):
+def fixup_phase_three(t):
     return traj_three(t) + 2 * (sqrt(log(2)/(2*pi))/(4*0.3))
 
-def master_phase_seven(t):
+def fixup_phase_seven(t):
     return traj_seven(t)
 
 
+#### MASTER CURVES ####
+
+def master_curve_one(t):
+    return sin(fixup_phase_one(t))
+
+def master_curve_two(t):
+    return sin(fixup_phase_two(t))
+
+def master_curve_three(t):
+    return sin(fixup_phase_three(t))
+
+def master_curve_seven(t):
+    return sin(fixup_phase_seven(t))
 
 
 
 for i in range(0,samples+1):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
-    print (time, sin(master_phase_one(time)), file=ph_1)
-    print (time, sin(master_phase_two(time)), file=ph_2)
-    print (time, sin(master_phase_three(time)), file=ph_3)
-    print (time, sin(master_phase_seven(time)), file=ph_7)
+    print (time, master_curve_one(time), file=ph_1)
+    print (time, master_curve_two(time), file=ph_2)
+    print (time, master_curve_three(time), file=ph_3)
+    print (time, master_curve_seven(time), file=ph_7)
 
     
 
