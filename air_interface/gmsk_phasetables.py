@@ -3,7 +3,8 @@
 
 from math import *
 
-samples = 1024
+samples = 128
+bitdepth = 8
 
 beta = pi * 0.3 * sqrt(2 / log(2))
 
@@ -25,10 +26,10 @@ def traj_seven(t):
     return 0.5 * pi * t
 
 
-ph_1 = open("phase_1.txt",'w')
-ph_2 = open("phase_2.txt",'w')
-ph_3 = open("phase_3.txt",'w')
-ph_7 = open("phase_7.txt",'w')
+curve_table_1 = open("curve_1.txt",'w')
+curve_table_2 = open("curve_2.txt",'w')
+curve_table_3 = open("curve_3.txt",'w')
+curve_table_7 = open("curve_7.txt",'w')
 
 
 
@@ -60,14 +61,23 @@ def master_curve_three(t):
 def master_curve_seven(t):
     return sin(fixup_phase_seven(t))
 
+#### float to binary ####
 
+def scale(val, bits):
+    norm = 2 ** bits
+    if (val < 0):
+        val = 0
+    return ceil(val * norm)
 
-for i in range(0,samples+1):  # from zero (inclusive) to 64 (EXCLUSIVE)
+def conv(v):
+    return scale(v, bitdepth)
+
+for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
-    print (time, master_curve_one(time), file=ph_1)
-    print (time, master_curve_two(time), file=ph_2)
-    print (time, master_curve_three(time), file=ph_3)
-    print (time, master_curve_seven(time), file=ph_7)
+    print (i, conv(master_curve_one(time))   , file=curve_table_1)
+    print (i, conv(master_curve_two(time))   , file=curve_table_2)
+    print (i, conv(master_curve_three(time)) , file=curve_table_3)
+    print (i, conv(master_curve_seven(time)) , file=curve_table_7)
 
     
 
