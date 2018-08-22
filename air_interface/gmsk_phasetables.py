@@ -64,7 +64,7 @@ def master_curve_seven(t):
 #### float to binary ####
 
 def scale(val, bits):
-    norm = 2 ** bits
+    norm = (2 ** (bits-1)-1)
     if (val < 0):
         val = 0
     return ceil(val * norm)
