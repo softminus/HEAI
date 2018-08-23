@@ -17,18 +17,19 @@
 module gmsk_tx
 (
     input wire clock,
+    input wire symbol_strobe,
     /* verilator lint_off UNUSED */
     input wire clk_en,
 
-    input wire input_bit,
-    input wire input_bit_strobe,
+//    input wire input_bit,
+//    input wire input_bit_strobe,
     /* verilator lint_on UNUSED */
 
     output reg [(BITS_PER_SAMPLE-1):0] inphase_out,
     /* verilator lint_off UNDRIVEN */
-    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out,
-    output reg inphase_strobe,
-    output reg quadrature_strobe
+    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out
+//    output reg inphase_strobe,
+//    output reg quadrature_strobe
     /* verilator lint_on UNDRIVEN */
 );
 
