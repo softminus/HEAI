@@ -26,10 +26,10 @@ def traj_seven(t):
     return 0.5 * pi * t
 
 
-curve_table_1 = open("curve_1.txt",'w')
-curve_table_2 = open("curve_2.txt",'w')
-curve_table_3 = open("curve_3.txt",'w')
-curve_table_7 = open("curve_7.txt",'w')
+curve_table_1 = open("gmsk_curve_1.hex",'w')
+curve_table_2 = open("gmsk_curve_2.hex",'w')
+curve_table_3 = open("gmsk_curve_3.hex",'w')
+curve_table_7 = open("gmsk_curve_7.hex",'w')
 
 
 
