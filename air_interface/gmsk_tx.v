@@ -39,6 +39,9 @@ module gmsk_tx
     // by doing a proper 2s complement negation. endpoints and edge cases need
     // to be verified as properly handled since we need zero discontinuities.
     //
+    //
+    // XXX DANGER XXX be careful about 2s complement asymmetry concerns whilst
+    // negating the output of the ROM tables
 
     localparam BITS_PER_SAMPLE = 8;
 
