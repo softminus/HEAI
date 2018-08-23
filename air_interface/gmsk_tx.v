@@ -44,9 +44,9 @@ module gmsk_tx
     // negating the output of the ROM tables
 
     localparam BITS_PER_SAMPLE = 8;
+    localparam SAMPLES_PER_SYMBOL = 128;
 
-
-    reg [7:0] master_curve_1 [0:127];
+    reg [(BITS_PER_SAMPLE-1):0] master_curve_1 [0:(SAMPLES_PER_SYMBOL-1)];
     initial $readmemh("gmsk_curve_1.hex",master_curve_1);
 
     reg [7:0] counter;
@@ -56,6 +56,8 @@ module gmsk_tx
         counter <= counter + 1;
 
         inphase_out <= master_curve_1[counter[6:0]];
+
+
 
 
 
