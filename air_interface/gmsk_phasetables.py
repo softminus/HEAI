@@ -50,16 +50,16 @@ def fixup_phase_seven(t):
 #### MASTER CURVES ####
 
 def master_curve_one(t):
-    return sin(fixup_phase_one(t))
+    return conv(sin(fixup_phase_one(t)))
 
 def master_curve_two(t):
-    return sin(fixup_phase_two(t))
+    return conv(sin(fixup_phase_two(t)))
 
 def master_curve_three(t):
-    return sin(fixup_phase_three(t))
+    return conv(sin(fixup_phase_three(t)))
 
 def master_curve_seven(t):
-    return sin(fixup_phase_seven(t))
+    return conv(sin(fixup_phase_seven(t)))
 
 #### float to binary ####
 
@@ -74,10 +74,10 @@ def conv(v):
 
 for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
-    print (i, conv(master_curve_one(time))   , file=curve_table_1)
-    print (i, conv(master_curve_two(time))   , file=curve_table_2)
-    print (i, conv(master_curve_three(time)) , file=curve_table_3)
-    print (i, conv(master_curve_seven(time)) , file=curve_table_7)
+    f = "{:04x}"
+    print (f.format(master_curve_one(time))   , file=curve_table_1)
+    print (f.format(master_curve_two(time))   , file=curve_table_2)
+    print (f.format(master_curve_three(time)) , file=curve_table_3)
+    print (f.format(master_curve_seven(time)) , file=curve_table_7)
 
     
-
