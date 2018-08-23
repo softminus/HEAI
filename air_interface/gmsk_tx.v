@@ -16,16 +16,20 @@
 
 module gmsk_tx
 (
-    input clock,
-    input clk_en,
+    input wire clock,
+    /* verilator lint_off UNUSED */
+    input wire clk_en,
 
-    input input_bit,
-    input input_bit_strobe,
+    input wire input_bit,
+    input wire input_bit_strobe,
+    /* verilator lint_on UNUSED */
 
-    output reg inphase_out,
+    output reg [(BITS_PER_SAMPLE-1):0] inphase_out,
+    /* verilator lint_off UNDRIVEN */
+    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out,
     output reg inphase_strobe,
-    output reg quadrature_out,
     output reg quadrature_strobe
+    /* verilator lint_on UNDRIVEN */
 );
 
     // XXX make sure this works with GSM data rate and clock, clock dividers
@@ -35,21 +39,12 @@ module gmsk_tx
     // by doing a proper 2s complement negation. endpoints and edge cases need
     // to be verified as properly handled since we need zero discontinuities.
     //
-    input wire clock;
-    input wire clk_en;
-
-    input wire input_bit;
-    input wire input_bit_strobe;
 
     localparam BITS_PER_SAMPLE = 8;
 
-    output reg [(BITS_PER_SAMPLE-1):0] inphase_out;
-    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out;
-    output reg inphase_strobe;
-    output reg quadrature_strobe;
 
     reg [7:0] master_curve_1 [0:127];
-    initial $readmemh("gmsk_curve_1.hex",);
+    initial $readmemh("gmsk_curve_1.hex",master_curve_1);
 
     reg [7:0] counter;
 
@@ -57,7 +52,7 @@ module gmsk_tx
     always @ (posedge clock) begin
         counter <= counter + 1;
 
-        inphase_out <= master_curve_1[counter];
+        inphase_out <= master_curve_1[counter[6:0]];
 
 
 
