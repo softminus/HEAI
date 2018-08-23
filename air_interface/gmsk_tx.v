@@ -46,6 +46,9 @@ module gmsk_tx
 
     localparam BITS_PER_SAMPLE = 8;
     localparam SAMPLES_PER_SYMBOL = 128;
+    localparam CLOCKS_PER_SAMPLE  = 8;
+
+
 
     reg [(BITS_PER_SAMPLE-1):0] master_curve_1 [0:(SAMPLES_PER_SYMBOL-1)];
     initial $readmemh("gmsk_curve_1.hex",master_curve_1);
@@ -64,14 +67,13 @@ module gmsk_tx
 
 
     always @ (posedge clock) begin
-        counter <= counter + 1;
-
-        inphase_out <= master_curve_1[counter[6:0]];
-
-
-
-
-
+        if (symbol_strobe == 1) begin
+            counter <= 0;
+        end // if (symbol_strobe == 1)
+        else begin
+            counter <= counter + 1;
+            inphase_out <= master_curve_1[counter[6:0]];
+        end
     end // always @ (posedge clock)
 
 
