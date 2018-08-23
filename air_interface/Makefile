@@ -1,0 +1,9 @@
+sim:
+	verilator -Wall --cc --trace gmsk_tx.v --exe tb-gmsk_tx.cc
+	make -j -C obj_dir/ -f Vgmsk_tx.mk Vgmsk_tx
+	obj_dir/Vgmsk_tx
+	# -gtkwave top.vcd top.sav
+
+clean:
+	rm -rf build/* obj_dir top.vcd
+
