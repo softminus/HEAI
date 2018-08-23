@@ -6,5 +6,5 @@ sim:
 	# -gtkwave top.vcd top.sav
 
 clean:
-	rm -rf build/* obj_dir top.vcd
+	rm -rf build/* obj_dir verilog_out.txt gmsk_tx.vcd
 
