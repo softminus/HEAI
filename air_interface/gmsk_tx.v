@@ -48,11 +48,22 @@ module gmsk_tx
     output reg inphase_strobe;
     output reg quadrature_strobe;
 
+    reg [7:0] master_curve_1 [0:127];
+    initial $readmemh("gmsk_curve_1.hex",);
+
+    reg [7:0] counter;
+
+
+    always @ (posedge clock) begin
+        counter <= counter + 1;
+
+        inphase_out <= master_curve_1[counter];
 
 
 
+    end // always @ (posedge clock)
 
-    
+
 
 
 endmodule
