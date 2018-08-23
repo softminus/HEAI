@@ -1,1 +1,4 @@
 build/*
+obj_dir
+*.sav
+*.vcd
