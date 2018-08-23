@@ -30,7 +30,7 @@ int main(int argc, char **argv, char **env) {
     for (clk=0; clk<2; clk++) {
       tfp->dump (2*i+clk);
       gmsk_tx->clock = !gmsk_tx->clock;
-      printf("iter = %d, out_i=%d\n", 2*i+clk, gmsk_tx->inphase_out);
+      printf("%d %d\n", 2*i+clk, gmsk_tx->inphase_out);
       gmsk_tx->eval ();
     }
     if (Verilated::gotFinish())  exit(0);
