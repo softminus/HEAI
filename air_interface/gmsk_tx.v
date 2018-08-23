@@ -18,6 +18,8 @@ module gmsk_tx
 (
     input wire clock,
     input wire symbol_strobe,
+    input wire sample_strobe,
+
     /* verilator lint_off UNUSED */
     input wire clk_en,
 
@@ -25,9 +27,9 @@ module gmsk_tx
 //    input wire input_bit_strobe,
     /* verilator lint_on UNUSED */
 
-    output reg [(BITS_PER_SAMPLE-1):0] inphase_out,
+    output reg [(BITS_PER_SAMPLE-1):0] inphase_out
     /* verilator lint_off UNDRIVEN */
-    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out
+//    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out
 //    output reg inphase_strobe,
 //    output reg quadrature_strobe
     /* verilator lint_on UNDRIVEN */
@@ -48,7 +50,7 @@ module gmsk_tx
     localparam SAMPLES_PER_SYMBOL = 128;
     localparam CLOCKS_PER_SAMPLE  = 8;
 
-
+    reg rom_lookup;
 
     reg [(BITS_PER_SAMPLE-1):0] master_curve_1 [0:(SAMPLES_PER_SYMBOL-1)];
     initial $readmemh("gmsk_curve_1.hex",master_curve_1);
@@ -69,11 +71,11 @@ module gmsk_tx
     always @ (posedge clock) begin
         if (symbol_strobe == 1) begin
             counter <= 0;
-        end // if (symbol_strobe == 1)
-        else begin
+        end else if (sample_strobe == 1) begin
             counter <= counter + 1;
-            inphase_out <= master_curve_1[counter[6:0]];
         end
+        inphase_out <= master_curve_1[counter[6:0]];
+        rom_lookup <= ~rom_lookup;
     end // always @ (posedge clock)
 
 
