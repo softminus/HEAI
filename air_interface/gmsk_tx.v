@@ -50,7 +50,7 @@ module gmsk_tx
     localparam SAMPLES_PER_SYMBOL = 128;
     localparam CLOCKS_PER_SAMPLE  = 8;
 
-    reg rom_lookup;
+
 
     reg [(BITS_PER_SAMPLE-1):0] master_curve_1 [0:(SAMPLES_PER_SYMBOL-1)];
     initial $readmemh("gmsk_curve_1.hex",master_curve_1);
@@ -66,6 +66,8 @@ module gmsk_tx
     /* verilator lint_on UNUSED */
 
     reg [7:0] counter;
+    reg rom_lookup;
+    reg [7:0] rom_out;
 
 
     always @ (posedge clock) begin
@@ -74,7 +76,9 @@ module gmsk_tx
         end else if (sample_strobe == 1) begin
             counter <= counter + 1;
         end
-        inphase_out <= master_curve_1[counter[6:0]];
+
+        rom_out <= master_curve_1[counter[6:0]];
+        inphase_out <= -rom_out;
         rom_lookup <= ~rom_lookup;
     end // always @ (posedge clock)
 
