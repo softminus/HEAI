@@ -84,15 +84,15 @@
 	},
 	"file_history":
 	[
-		"/home/thz/xpdr_gateware/nco.v",
-		"/home/thz/xpdr_gateware/air_interface/tb-gmsk_tx.cc",
-		"/home/thz/xpdr_gateware/qwave_6i_4o.hex",
-		"/home/thz/xpdr_gateware/qwave_romgen.py",
-		"/home/thz/xpdr_gateware/air_interface/gmsk_phasetables.py",
-		"/home/thz/xpdr_gateware/qwave_gen.py",
+		"/home/thz/tdma_gmsk/nco.v",
+		"/home/thz/tdma_gmsk/air_interface/tb-gmsk_tx.cc",
+		"/home/thz/tdma_gmsk/qwave_6i_4o.hex",
+		"/home/thz/tdma_gmsk/qwave_romgen.py",
+		"/home/thz/tdma_gmsk/air_interface/gmsk_phasetables.py",
+		"/home/thz/tdma_gmsk/qwave_gen.py",
 		"/home/thz/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
-		"/home/thz/xpdr_gateware/air_interface/gmsk_tx.v",
-		"/home/thz/xpdr_gateware/gmsk_tx.sublime-project"
+		"/home/thz/tdma_gmsk/air_interface/gmsk_tx.v",
+		"/home/thz/tdma_gmsk/gmsk_tx.sublime-project"
 	],
 	"find":
 	{
