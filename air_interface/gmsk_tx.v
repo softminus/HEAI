@@ -68,17 +68,19 @@ module gmsk_tx
     reg [7:0] counter;
     reg rom_lookup;
     reg [7:0] rom_out;
+    reg [6:0] rom_index;
 
 
     always @ (posedge clock) begin
-        if (symbol_strobe == 1) begin
+        if (symbol_strobe == 1) begin /* XXX replace with pattern match*/
             counter <= 0;
         end else if (sample_strobe == 1) begin
             counter <= counter + 1;
         end
-
-        rom_out <= master_curve_1[counter[6:0]];
-        inphase_out <= -rom_out;
+        rom_index <= - counter[6:0];
+        rom_out <= master_curve_1[rom_index];
+        inphase_out <= rom_out;
+        
         rom_lookup <= ~rom_lookup;
     end // always @ (posedge clock)
 
