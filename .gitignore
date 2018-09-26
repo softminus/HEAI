@@ -2,3 +2,12 @@ build/*
 obj_dir
 *.sav
 *.vcd
+gmsk_curve_1.hex
+gmsk_curve_1.txt
+gmsk_curve_2.hex
+gmsk_curve_2.txt
+gmsk_curve_3.hex
+gmsk_curve_3.txt
+gmsk_curve_7.hex
+gmsk_curve_7.txt
+verilog_out.txt
