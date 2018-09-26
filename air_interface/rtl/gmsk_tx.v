@@ -53,16 +53,16 @@ module gmsk_tx
 
 
     reg [(BITS_PER_SAMPLE-1):0] master_curve_1 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("gmsk_curve_1.hex",master_curve_1);
+    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_1);
     /* verilator lint_off UNUSED */
     reg [(BITS_PER_SAMPLE-1):0] master_curve_2 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("gmsk_curve_1.hex",master_curve_2);
+    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_2);
 
     reg [(BITS_PER_SAMPLE-1):0] master_curve_3 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("gmsk_curve_1.hex",master_curve_3);
+    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_3);
 
     reg [(BITS_PER_SAMPLE-1):0] master_curve_7 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("gmsk_curve_1.hex",master_curve_7);
+    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_7);
     /* verilator lint_on UNUSED */
 
     reg [7:0] counter;
