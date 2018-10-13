@@ -62,16 +62,24 @@ module gmsk_tx
     reg [(ROM_INDEX_BITS-1):0] index_rising;
     reg [(ROM_INDEX_BITS-1):0] index_falling;
 
-    /* verilator lint_off UNUSED */
     reg [(ROM_OUTPUT_BITS-1):0] sample_reversed;
+    reg [(ROM_OUTPUT_BITS-1):0] sample_forward;
+    /* verilator lint_off UNUSED */
 
+    reg [(ROM_OUTPUT_BITS-1):0] inphase_tmp;
+    reg [(ROM_OUTPUT_BITS-1):0] quadrature_tmp;
     /* verilator lint_on UNUSED */
 
-    reg [(ROM_OUTPUT_BITS-1):0] sample_forward;
+
     reg [2:0] tristimulus;
 
+//    reg [1:0] phase_quadrant_acc;
+
+    reg debug_strobe;
     always @ (posedge clock) begin
         if (symbol_strobe == 1) begin /* XXX replace with pattern match*/
+            debug_strobe <= ~debug_strobe;
+
             index_rising  <= 0;
             index_falling <= 255;
             tristimulus <= {input_bit, tristimulus[2:1]};
@@ -100,8 +108,8 @@ module gmsk_tx
                 3'b110: sample_reversed <= master_curve_3[index_rising];
                 3'b111: sample_reversed <= master_curve_7[index_rising];
             endcase // tristimulus
-
             inphase_out <= sample_forward;
+            quadrature_out <= sample_reversed;
         end // if (sample_strobe == 1)
 
     end // always @ (posedge clock)
