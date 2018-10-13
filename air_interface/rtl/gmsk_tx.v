@@ -77,7 +77,7 @@ module gmsk_tx
             index_rising  <= 0;
             index_falling <= ROM_SIZE-1;
 
-            phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[0]) ? 2'b01 : 2'b11);
+            phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
             tristimulus <= {tristimulus[1:0], input_bit};
 
         end // if (symbol_strobe == 1)
