@@ -21,7 +21,7 @@ int main(int argc, char **argv, char **env) {
     // initialize simulation inputs
     gmsk_tx->clock = 0;
     // run simulation for 1000 crystal periods
-    for (tick_count=1; tick_count<1000; tick_count++) {
+    for (tick_count=1; tick_count<131072; tick_count++) {
 //            gmsk_tx->rf_in_i = (sin(2*i/100.0) * 128.0);
 //            gmsk_tx->rf_in_q = (cos(2*i/100.0) * 128.0);
 //            gmsk_tx->lo_in_i = (sin(2.5*i/100.0) * 128.0);
@@ -41,7 +41,7 @@ int main(int argc, char **argv, char **env) {
             gmsk_tx->sample_strobe = 0;
         }
 
-        if (tick_count%(16*4)==0) {
+        if (tick_count%(128*4)==0) {
             gmsk_tx->symbol_strobe = 1;
             gmsk_tx->input_bit = (rand())%2;
         } else {
