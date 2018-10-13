@@ -19,15 +19,14 @@ module gmsk_tx
     input wire clock,
     input wire symbol_strobe,
     input wire sample_strobe,
+    input wire input_bit,
 
     /* verilator lint_off UNUSED */
     input wire clk_en,
 
-//    input wire input_bit,
-//    input wire input_bit_strobe,
     /* verilator lint_on UNUSED */
 
-    output reg [(BITS_PER_SAMPLE-1):0] inphase_out
+    output reg [(ROM_OUTPUT_BITS-1):0] inphase_out
     /* verilator lint_off UNDRIVEN */
 //    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out
 //    output reg inphase_strobe,
@@ -46,42 +45,68 @@ module gmsk_tx
     // XXX DANGER XXX be careful about 2s complement asymmetry concerns whilst
     // negating the output of the ROM tables
 
-    localparam BITS_PER_SAMPLE = 8;
-    localparam SAMPLES_PER_SYMBOL = 128;
-    localparam CLOCKS_PER_SAMPLE  = 8;
+    localparam ROM_INDEX_BITS  = 8;
+    localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
 
+    localparam ROM_OUTPUT_BITS = 8;
 
-
-    reg [(BITS_PER_SAMPLE-1):0] master_curve_1 [0:(SAMPLES_PER_SYMBOL-1)];
+    reg [(ROM_OUTPUT_BITS-1):0] master_curve_1 [0:(ROM_SIZE-1)];
     initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_1);
+
+    reg [(ROM_OUTPUT_BITS-1):0] master_curve_2 [0:(ROM_SIZE-1)];
+    initial $readmemh("../gen/gmsk_curve_2.hex",master_curve_2);
+
+    reg [(ROM_OUTPUT_BITS-1):0] master_curve_3 [0:(ROM_SIZE-1)];
+    initial $readmemh("../gen/gmsk_curve_3.hex",master_curve_3);
+
+    reg [(ROM_OUTPUT_BITS-1):0] master_curve_7 [0:(ROM_SIZE-1)];
+    initial $readmemh("../gen/gmsk_curve_7.hex",master_curve_7);
+
+    reg [(ROM_INDEX_BITS-1):0] index_rising;
+    reg [(ROM_INDEX_BITS-1):0] index_falling;
+
     /* verilator lint_off UNUSED */
-    reg [(BITS_PER_SAMPLE-1):0] master_curve_2 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_2);
+    reg [(ROM_OUTPUT_BITS-1):0] sample_reversed;
 
-    reg [(BITS_PER_SAMPLE-1):0] master_curve_3 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_3);
-
-    reg [(BITS_PER_SAMPLE-1):0] master_curve_7 [0:(SAMPLES_PER_SYMBOL-1)];
-    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_7);
     /* verilator lint_on UNUSED */
 
-    reg [7:0] counter;
-    reg rom_lookup;
-    reg [7:0] rom_out;
-    reg [6:0] rom_index;
-
+    reg [(ROM_OUTPUT_BITS-1):0] sample_forward;
+    reg [2:0] tristimulus;
 
     always @ (posedge clock) begin
         if (symbol_strobe == 1) begin /* XXX replace with pattern match*/
-            counter <= 0;
-        end else if (sample_strobe == 1) begin
-            counter <= counter + 1;
-        end
-        rom_index <= - counter[6:0];
-        rom_out <= master_curve_1[rom_index];
-        inphase_out <= rom_out;
-        
-        rom_lookup <= ~rom_lookup;
+            index_rising  <= 0;
+            index_falling <= 255;
+            tristimulus <= {input_bit, tristimulus[2:1]};
+        end // if (symbol_strobe == 1)
+        if (sample_strobe == 1) begin
+            index_rising <= index_rising + 1;
+            index_falling <= index_falling - 1;
+
+            case (tristimulus)
+                3'b000: sample_forward <= master_curve_7[index_rising];
+                3'b001: sample_forward <= master_curve_1[index_rising];
+                3'b010: sample_forward <= master_curve_2[index_rising];
+                3'b011: sample_forward <= master_curve_3[index_rising];
+                3'b100: sample_forward <= master_curve_3[index_rising];
+                3'b101: sample_forward <= master_curve_2[index_rising];
+                3'b110: sample_forward <= master_curve_1[index_rising];
+                3'b111: sample_forward <= master_curve_7[index_rising];
+            endcase // tristimulus
+            case (tristimulus)
+                3'b000: sample_reversed <= master_curve_7[index_rising];
+                3'b001: sample_reversed <= master_curve_3[index_rising];
+                3'b010: sample_reversed <= master_curve_2[index_rising];
+                3'b011: sample_reversed <= master_curve_1[index_rising];
+                3'b100: sample_reversed <= master_curve_1[index_rising];
+                3'b101: sample_reversed <= master_curve_2[index_rising];
+                3'b110: sample_reversed <= master_curve_3[index_rising];
+                3'b111: sample_reversed <= master_curve_7[index_rising];
+            endcase // tristimulus
+
+            inphase_out <= sample_forward;
+        end // if (sample_strobe == 1)
+
     end // always @ (posedge clock)
 
 
