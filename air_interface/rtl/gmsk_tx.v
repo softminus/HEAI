@@ -81,8 +81,8 @@ module gmsk_tx
             debug_strobe <= ~debug_strobe;
 
             index_rising  <= 0;
-            index_falling <= 255;
-            tristimulus <= {input_bit, tristimulus[2:1]};
+            index_falling <= ROM_SIZE-1;
+            tristimulus <= {tristimulus[1:0], input_bit};
         end // if (symbol_strobe == 1)
         if (sample_strobe == 1) begin
             index_rising <= index_rising + 1;
