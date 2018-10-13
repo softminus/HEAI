@@ -10,6 +10,7 @@ int main(int argc, char **argv, char **env) {
     srand(time(0));
     int tick_count;
     int clk;
+    int8_t i,q;
     Verilated::commandArgs(argc, argv);
     // init gmsk_tx verilog instance
     Vgmsk_tx* gmsk_tx = new Vgmsk_tx;
@@ -54,7 +55,10 @@ int main(int argc, char **argv, char **env) {
         tfp->dump (10*tick_count+5);
         tfp->flush();
 
-        printf("%d %d\n", tick_count, gmsk_tx->inphase_out);
+        i = gmsk_tx->inphase_out;
+        q = gmsk_tx->quadrature_out;
+
+        printf("%d %d %d\n", tick_count, i,q);
         if (Verilated::gotFinish())    exit(0);
     }
     tfp->close();
