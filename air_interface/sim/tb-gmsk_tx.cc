@@ -34,16 +34,17 @@ int main(int argc, char **argv, char **env) {
         gmsk_tx->eval ();
         tfp->dump (10*tick_count);
 
-        if (tick_count%2==0) {
+        if (tick_count%4==0) {
             gmsk_tx->sample_strobe = 1;
         } else {
             gmsk_tx->sample_strobe = 0;
         }
 
-        if (tick_count%17==0) {
-            //gmsk_tx->symbol_strobe = 1;
+        if (tick_count%(16*4)==0) {
+            gmsk_tx->symbol_strobe = 1;
+            gmsk_tx->input_bit = (rand())%2;
         } else {
-            //gmsk_tx->symbol_strobe = 0;
+            gmsk_tx->symbol_strobe = 0;
         }
 
 
