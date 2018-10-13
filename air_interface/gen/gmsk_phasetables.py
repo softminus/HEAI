@@ -4,7 +4,7 @@
 from math import *
 
 samples = 128
-bitdepth = 8
+bitdepth = 7
 
 beta = pi * 0.3 * sqrt(2 / log(2))
 
