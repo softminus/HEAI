@@ -25,8 +25,8 @@ module gmsk_tx
     input wire clk_en,
     /* verilator lint_on UNUSED */
 
-    output reg [(ROM_OUTPUT_BITS-1):0] inphase_out,
-    output reg [(ROM_OUTPUT_BITS-1):0] quadrature_out
+    output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
+    output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
 //    output reg inphase_strobe,
 //    output reg quadrature_strobe
 );
@@ -45,7 +45,7 @@ module gmsk_tx
     localparam ROM_INDEX_BITS  = 7;
     localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
 
-    localparam ROM_OUTPUT_BITS = 8;
+    localparam ROM_OUTPUT_BITS = 7;
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_1 [0:(ROM_SIZE-1)];
     initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_1);
@@ -62,18 +62,14 @@ module gmsk_tx
     reg [(ROM_INDEX_BITS-1):0] index_rising;
     reg [(ROM_INDEX_BITS-1):0] index_falling;
 
-    reg [(ROM_OUTPUT_BITS-1):0] sample_reversed;
-    reg [(ROM_OUTPUT_BITS-1):0] sample_forward;
-    /* verilator lint_off UNUSED */
+    reg [(ROM_OUTPUT_BITS-1+1):0] sample_reversed;
+    reg [(ROM_OUTPUT_BITS-1+1):0] sample_forward;
 
-    reg [(ROM_OUTPUT_BITS-1):0] inphase_tmp;
-    reg [(ROM_OUTPUT_BITS-1):0] quadrature_tmp;
-    /* verilator lint_on UNUSED */
-
+    reg [(ROM_OUTPUT_BITS-1+1):0] inphase_tmp;
+    reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_tmp;
 
     reg [2:0] tristimulus;
-
-//    reg [1:0] phase_quadrant_acc;
+    reg [1:0] phase_quadrant_acc;
 
     reg debug_strobe;
     always @ (posedge clock) begin
@@ -83,33 +79,70 @@ module gmsk_tx
             index_rising  <= 0;
             index_falling <= ROM_SIZE-1;
             tristimulus <= {tristimulus[1:0], input_bit};
+            phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[0]) ? 2'b01 : 2'b11);
+
+
         end // if (symbol_strobe == 1)
         if (sample_strobe == 1) begin
             index_rising <= index_rising + 1;
             index_falling <= index_falling - 1;
 
             case (tristimulus)
-                3'b000: sample_forward <= master_curve_7[index_rising];
-                3'b001: sample_forward <= master_curve_1[index_rising];
-                3'b010: sample_forward <= master_curve_2[index_rising];
-                3'b011: sample_forward <= master_curve_3[index_rising];
-                3'b100: sample_forward <= master_curve_3[index_rising];
-                3'b101: sample_forward <= master_curve_2[index_rising];
-                3'b110: sample_forward <= master_curve_1[index_rising];
-                3'b111: sample_forward <= master_curve_7[index_rising];
+                3'b000: sample_forward <= {1'b0, master_curve_7[index_rising]};
+                3'b001: sample_forward <= {1'b0, master_curve_1[index_rising]};
+                3'b010: sample_forward <= {1'b0, master_curve_2[index_rising]};
+                3'b011: sample_forward <= {1'b0, master_curve_3[index_rising]};
+                3'b100: sample_forward <= {1'b0, master_curve_3[index_rising]};
+                3'b101: sample_forward <= {1'b0, master_curve_2[index_rising]};
+                3'b110: sample_forward <= {1'b0, master_curve_1[index_rising]};
+                3'b111: sample_forward <= {1'b0, master_curve_7[index_rising]};
             endcase // tristimulus
             case (tristimulus)
-                3'b000: sample_reversed <= master_curve_7[index_rising];
-                3'b001: sample_reversed <= master_curve_3[index_rising];
-                3'b010: sample_reversed <= master_curve_2[index_rising];
-                3'b011: sample_reversed <= master_curve_1[index_rising];
-                3'b100: sample_reversed <= master_curve_1[index_rising];
-                3'b101: sample_reversed <= master_curve_2[index_rising];
-                3'b110: sample_reversed <= master_curve_3[index_rising];
-                3'b111: sample_reversed <= master_curve_7[index_rising];
+                3'b000: sample_reversed <= {1'b0, master_curve_7[index_falling]};
+                3'b001: sample_reversed <= {1'b0, master_curve_3[index_falling]};
+                3'b010: sample_reversed <= {1'b0, master_curve_2[index_falling]};
+                3'b011: sample_reversed <= {1'b0, master_curve_1[index_falling]};
+                3'b100: sample_reversed <= {1'b0, master_curve_1[index_falling]};
+                3'b101: sample_reversed <= {1'b0, master_curve_2[index_falling]};
+                3'b110: sample_reversed <= {1'b0, master_curve_3[index_falling]};
+                3'b111: sample_reversed <= {1'b0, master_curve_7[index_falling]};
             endcase // tristimulus
-            inphase_out <= sample_forward;
-            quadrature_out <= sample_reversed;
+
+            if (tristimulus[1] == 0)
+            begin
+                case (phase_quadrant_acc)
+                    2'b00: inphase_tmp <=  sample_reversed;
+                    2'b01: inphase_tmp <=  sample_forward;
+                    2'b10: inphase_tmp <= -sample_reversed;
+                    2'b11: inphase_tmp <= -sample_forward;
+                endcase // phase_quadrant_acc
+
+                case (phase_quadrant_acc)
+                    2'b00: quadrature_tmp <= -sample_forward;
+                    2'b01: quadrature_tmp <=  sample_reversed;
+                    2'b10: quadrature_tmp <=  sample_forward;
+                    2'b11: quadrature_tmp <= -sample_reversed;
+                endcase // phase_quadrant_acc
+            end else begin
+                case (phase_quadrant_acc)
+                    2'b00: inphase_tmp <=  sample_reversed;
+                    2'b01: inphase_tmp <= -sample_forward;
+                    2'b10: inphase_tmp <= -sample_reversed;
+                    2'b11: inphase_tmp <=  sample_forward;
+                endcase // phase_quadrant_acc
+
+
+                case (phase_quadrant_acc)
+                    2'b00: quadrature_tmp <=  sample_forward;
+                    2'b01: quadrature_tmp <=  sample_reversed;
+                    2'b10: quadrature_tmp <= -sample_forward;
+                    2'b11: quadrature_tmp <= -sample_reversed;
+                endcase // phase_quadrant_acc
+            end // end else
+
+            inphase_out <= inphase_tmp;
+            quadrature_out <= quadrature_tmp;
+
         end // if (sample_strobe == 1)
 
     end // always @ (posedge clock)
