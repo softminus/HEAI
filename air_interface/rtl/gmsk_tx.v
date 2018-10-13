@@ -56,8 +56,8 @@ module gmsk_tx
     reg [(ROM_INDEX_BITS-1):0] index_rising;
     reg [(ROM_INDEX_BITS-1):0] index_falling;
 
-    reg [(ROM_OUTPUT_BITS-1):0] rom_out_falling;
     reg [(ROM_OUTPUT_BITS-1):0] rom_out_rising;
+    reg [(ROM_OUTPUT_BITS-1):0] rom_out_falling;
 
     reg [(ROM_OUTPUT_BITS-1+1):0] sample_falling;
     reg [(ROM_OUTPUT_BITS-1+1):0] sample_rising;
@@ -87,14 +87,14 @@ module gmsk_tx
             index_falling <= index_falling - 1;
 
             case (tristimulus)
-                3'b000: rom_out_rising <= master_curve_7[index_rising];
-                3'b001: rom_out_rising <= master_curve_1[index_rising];
-                3'b010: rom_out_rising <= master_curve_2[index_rising];
-                3'b011: rom_out_rising <= master_curve_3[index_rising];
-                3'b100: rom_out_rising <= master_curve_3[index_rising];
-                3'b101: rom_out_rising <= master_curve_2[index_rising];
-                3'b110: rom_out_rising <= master_curve_1[index_rising];
-                3'b111: rom_out_rising <= master_curve_7[index_rising];
+                3'b000: rom_out_rising  <= master_curve_7[index_rising];
+                3'b001: rom_out_rising  <= master_curve_1[index_rising];
+                3'b010: rom_out_rising  <= master_curve_2[index_rising];
+                3'b011: rom_out_rising  <= master_curve_3[index_rising];
+                3'b100: rom_out_rising  <= master_curve_3[index_rising];
+                3'b101: rom_out_rising  <= master_curve_2[index_rising];
+                3'b110: rom_out_rising  <= master_curve_1[index_rising];
+                3'b111: rom_out_rising  <= master_curve_7[index_rising];
             endcase // tristimulus
             case (tristimulus)
                 3'b000: rom_out_falling <= master_curve_7[index_falling];
@@ -107,6 +107,9 @@ module gmsk_tx
                 3'b111: rom_out_falling <= master_curve_7[index_falling];
             endcase // tristimulus
 
+            sample_rising  <= {1'b0, rom_out_rising };
+            sample_falling <= {1'b0, rom_out_falling};
+
             if (tristimulus[1] == 0)
             begin
                 case (phase_quadrant_acc)
@@ -115,7 +118,6 @@ module gmsk_tx
                     2'b10: inphase_tmp <= -sample_falling;
                     2'b11: inphase_tmp <= -sample_rising;
                 endcase // phase_quadrant_acc
-
                 case (phase_quadrant_acc)
                     2'b00: quadrature_tmp <= -sample_rising;
                     2'b01: quadrature_tmp <=  sample_falling;
@@ -129,8 +131,6 @@ module gmsk_tx
                     2'b10: inphase_tmp <= -sample_falling;
                     2'b11: inphase_tmp <=  sample_rising;
                 endcase // phase_quadrant_acc
-
-
                 case (phase_quadrant_acc)
                     2'b00: quadrature_tmp <=  sample_rising;
                     2'b01: quadrature_tmp <=  sample_falling;
