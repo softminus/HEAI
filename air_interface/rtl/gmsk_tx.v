@@ -23,15 +23,12 @@ module gmsk_tx
 
     /* verilator lint_off UNUSED */
     input wire clk_en,
-
     /* verilator lint_on UNUSED */
 
-    output reg [(ROM_OUTPUT_BITS-1):0] inphase_out
-    /* verilator lint_off UNDRIVEN */
-//    output reg [(BITS_PER_SAMPLE-1):0] quadrature_out
+    output reg [(ROM_OUTPUT_BITS-1):0] inphase_out,
+    output reg [(ROM_OUTPUT_BITS-1):0] quadrature_out
 //    output reg inphase_strobe,
 //    output reg quadrature_strobe
-    /* verilator lint_on UNDRIVEN */
 );
 
     // XXX make sure this works with GSM data rate and clock, clock dividers
@@ -45,7 +42,7 @@ module gmsk_tx
     // XXX DANGER XXX be careful about 2s complement asymmetry concerns whilst
     // negating the output of the ROM tables
 
-    localparam ROM_INDEX_BITS  = 8;
+    localparam ROM_INDEX_BITS  = 7;
     localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
 
     localparam ROM_OUTPUT_BITS = 8;
