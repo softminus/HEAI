@@ -7,6 +7,7 @@
 #include <math.h>
 
 int main(int argc, char **argv, char **env) {
+    srand(time(0));
     int tick_count;
     int clk;
     Verilated::commandArgs(argc, argv);
