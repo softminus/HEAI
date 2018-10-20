@@ -38,20 +38,19 @@ module gmsk_tx
 
     localparam ROM_INDEX_BITS  = 7;
     localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
-
     localparam ROM_OUTPUT_BITS = 7;
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_1 [0:(ROM_SIZE-1)];
-    initial $readmemh("../gen/gmsk_curve_1.hex",master_curve_1);
+    initial $readmemh("air_interface/gen/gmsk_curve_1.hex",master_curve_1);
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_2 [0:(ROM_SIZE-1)];
-    initial $readmemh("../gen/gmsk_curve_2.hex",master_curve_2);
+    initial $readmemh("air_interface/gen/gmsk_curve_2.hex",master_curve_2);
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_3 [0:(ROM_SIZE-1)];
-    initial $readmemh("../gen/gmsk_curve_3.hex",master_curve_3);
+    initial $readmemh("air_interface/gen/gmsk_curve_3.hex",master_curve_3);
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_7 [0:(ROM_SIZE-1)];
-    initial $readmemh("../gen/gmsk_curve_7.hex",master_curve_7);
+    initial $readmemh("air_interface/gen/gmsk_curve_7.hex",master_curve_7);
 
     reg [(ROM_INDEX_BITS-1):0] index_rising;
     reg [(ROM_INDEX_BITS-1):0] index_falling;
@@ -65,7 +64,16 @@ module gmsk_tx
     reg [(ROM_OUTPUT_BITS-1+1):0] inphase_tmp;
     reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_tmp;
 
+    /* tristimulus is a shift register that keeps track of the precursor symbol,
+     * current symbol, and postcursor symbol. We make assumption that the gaussian
+     * filter negligably affects pre-pre-cursor symbol or post-postcursor symbol
+     */
     reg [2:0] tristimulus;
+
+    /* where we are on the phase trellis influences what waveform to output, so we
+     * add or subtract 1 from phase_quadrant_acc after we emit a symbol to keep
+     * track of this.
+     */
     reg [1:0] phase_quadrant_acc;
 
     reg debug_strobe;
