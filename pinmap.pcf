@@ -2,62 +2,29 @@
 set_io --warn-no-port crystal J3
 
 
-set_io --warn-no-port rxd_full[0]  B2
-set_io --warn-no-port rxd_full[1]  B1
-set_io --warn-no-port rxd_full[2]  C2
-set_io --warn-no-port rxd_full[3]  C1
-set_io --warn-no-port rxd_full[4]  D2
-set_io --warn-no-port rxd_full[5]  D1
-set_io --warn-no-port rxd_full[6]  E2
-set_io --warn-no-port rxd_full[7]  F1
-set_io --warn-no-port rxd_full[8]  F2
-set_io --warn-no-port rxd_full[9]  H1
-set_io --warn-no-port rxd_full[10] G2
-set_io --warn-no-port rxd_full[11] H2
+set_io --warn-no-port out_i[0]  B2
+set_io --warn-no-port out_i[1]  B1
+set_io --warn-no-port out_i[2]  C2
+set_io --warn-no-port out_i[3]  C1
+set_io --warn-no-port out_i[4]  D2
+set_io --warn-no-port out_i[5]  D1
+set_io --warn-no-port out_i[6]  E2
+set_io --warn-no-port out_i[7]  F1
 
 
-set_io --warn-no-port rx_clock     G1
-set_io --warn-no-port rx_iq_select J1
+set_io --warn-no-port sy_st     G1
+set_io --warn-no-port sa_st J1
 
-set_io --warn-no-port rx_en     T2
+set_io --warn-no-port in_bits     T2
 
 
 
 
-set_io --warn-no-port leds[0]      B5
-set_io --warn-no-port leds[1]      B4
-set_io --warn-no-port leds[2]      A2
-set_io --warn-no-port leds[3]      A1
-set_io --warn-no-port leds[4]      C5
-set_io --warn-no-port leds[5]      C4
-set_io --warn-no-port leds[6]      B3
-set_io --warn-no-port leds[7]      C3
-
-
-set_io --warn-no-port dac_zero[0]      B16
-set_io --warn-no-port dac_zero[1]      D14
-set_io --warn-no-port dac_zero[2]      D15
-set_io --warn-no-port dac_zero[3]      E14
-set_io --warn-no-port dac_zero[4]      F15
-set_io --warn-no-port dac_zero[5]      G15
-
-
-
-set_io --warn-no-port dac_one[0]      T1
-set_io --warn-no-port dac_one[1]      R2
-set_io --warn-no-port dac_one[2]      R3
-set_io --warn-no-port dac_one[3]      T5
-set_io --warn-no-port dac_one[4]      T6
-set_io --warn-no-port dac_one[5]      T7
-
-
-
-set_io --warn-no-port debugport[0]      C16
-set_io --warn-no-port debugport[1]      D16
-set_io --warn-no-port debugport[2]      E16
-set_io --warn-no-port debugport[3]      F16
-set_io --warn-no-port debugport[4]      G16
-set_io --warn-no-port debugport[5]      H16
-set_io --warn-no-port debugport[6]      J15
-set_io --warn-no-port debugport[7]      G14
-
+set_io --warn-no-port out_q[0]      B5
+set_io --warn-no-port out_q[1]      B4
+set_io --warn-no-port out_q[2]      A2
+set_io --warn-no-port out_q[3]      A1
+set_io --warn-no-port out_q[4]      C5
+set_io --warn-no-port out_q[5]      C4
+set_io --warn-no-port out_q[6]      B3
+set_io --warn-no-port out_q[7]      C3
