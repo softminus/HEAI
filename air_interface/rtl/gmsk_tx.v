@@ -69,12 +69,17 @@ module gmsk_tx
      * filter negligably affects pre-pre-cursor symbol or post-postcursor symbol
      */
     reg [2:0] tristimulus;
-
+    reg [2:0] ts_tmp;
+    /* verilator lint_off UNUSED */
+    reg [2:0] ts_delay;
+    /* verilator lint_on UNUSED */
     /* where we are on the phase trellis influences what waveform to output, so we
      * add or subtract 1 from phase_quadrant_acc after we emit a symbol to keep
      * track of this.
      */
     reg [1:0] phase_quadrant_acc;
+    reg [1:0] pq_tmp;
+    reg [1:0] pq_delay;
 
     reg debug_strobe;
 
@@ -82,8 +87,8 @@ module gmsk_tx
         if (symbol_strobe == 1) begin /* XXX replace with pattern match*/
             debug_strobe <= ~debug_strobe;
 
-            index_rising  <= 0;
-            index_falling <= ROM_SIZE-1;
+//            index_rising  <= 0;
+  //          index_falling <= ROM_SIZE-1;
 
             phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
             tristimulus <= {tristimulus[1:0], input_bit};
@@ -93,6 +98,12 @@ module gmsk_tx
         if (sample_strobe == 1) begin
             index_rising  <= index_rising  + 1;
             index_falling <= index_falling - 1;
+            ts_tmp <= tristimulus;
+            ts_delay <= ts_tmp;
+
+            pq_tmp <= phase_quadrant_acc;
+            pq_delay <= pq_tmp;
+
 
             case (tristimulus)
                 3'b000: rom_out_rising  <= master_curve_7[index_rising];
@@ -118,28 +129,28 @@ module gmsk_tx
             sample_rising  <= {1'b0, rom_out_rising };
             sample_falling <= {1'b0, rom_out_falling};
 
-            if (tristimulus[1] == 0)
+            if (ts_delay[1] == 0)
             begin
-                case (phase_quadrant_acc)
+                case (pq_delay)
                     2'b00: inphase_tmp <=  sample_falling;
                     2'b01: inphase_tmp <=  sample_rising;
                     2'b10: inphase_tmp <= -sample_falling;
                     2'b11: inphase_tmp <= -sample_rising;
                 endcase // phase_quadrant_acc
-                case (phase_quadrant_acc)
+                case (pq_delay)
                     2'b00: quadrature_tmp <= -sample_rising;
                     2'b01: quadrature_tmp <=  sample_falling;
                     2'b10: quadrature_tmp <=  sample_rising;
                     2'b11: quadrature_tmp <= -sample_falling;
                 endcase // phase_quadrant_acc
             end else begin
-                case (phase_quadrant_acc)
+                case (pq_delay)
                     2'b00: inphase_tmp <=  sample_falling;
                     2'b01: inphase_tmp <= -sample_rising;
                     2'b10: inphase_tmp <= -sample_falling;
                     2'b11: inphase_tmp <=  sample_rising;
                 endcase // phase_quadrant_acc
-                case (phase_quadrant_acc)
+                case (pq_delay)
                     2'b00: quadrature_tmp <=  sample_rising;
                     2'b01: quadrature_tmp <=  sample_falling;
                     2'b10: quadrature_tmp <= -sample_rising;
