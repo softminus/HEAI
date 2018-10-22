@@ -87,8 +87,8 @@ module gmsk_tx
         if (symbol_strobe == 1) begin /* XXX replace with pattern match*/
             debug_strobe <= ~debug_strobe;
 
-//            index_rising  <= 0;
-  //          index_falling <= ROM_SIZE-1;
+            index_rising  <= 0;
+            index_falling <= ROM_SIZE-1;
 
             phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
             tristimulus <= {tristimulus[1:0], input_bit};
