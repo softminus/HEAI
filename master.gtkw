@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Mon Oct 22 03:58:24 2018
+[*] Mon Oct 22 07:21:55 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/gmsk_tx.vcd"
-[dumpfile_mtime] "Mon Oct 22 03:03:57 2018"
-[dumpfile_size] 6772416
+[dumpfile_mtime] "Mon Oct 22 05:52:11 2018"
+[dumpfile_size] 7347911
 [savefile] "/home/thz/tdma_gmsk/master.gtkw"
-[timestart] 624450
+[timestart] 368146
 [size] 1600 879
 [pos] -1 -1
-*-7.000000 624742 624742 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.000000 368781 368781 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [sst_width] 212
 [signals_width] 332
@@ -30,27 +30,29 @@ TOP.gmsk_tx.pq_delay[1:0]
 -
 @22
 TOP.gmsk_tx.index_rising[6:0]
-TOP.gmsk_tx.index_falling[6:0]
-@20000
--
-@22
 TOP.gmsk_tx.rom_out_rising[6:0]
-TOP.gmsk_tx.rom_out_falling[6:0]
+TOP.gmsk_tx.sample_rising[7:0]
 @20000
 -
 @22
-TOP.gmsk_tx.sample_rising[7:0]
+TOP.gmsk_tx.index_falling[6:0]
+TOP.gmsk_tx.rom_out_falling[6:0]
 TOP.gmsk_tx.sample_falling[7:0]
 @20000
 -
 @22
 TOP.gmsk_tx.inphase_tmp[7:0]
-TOP.gmsk_tx.quadrature_tmp[7:0]
+@20000
+-
 @8022
 TOP.gmsk_tx.inphase_out[7:0]
 @20000
 -
 -
+-
+@22
+TOP.gmsk_tx.quadrature_tmp[7:0]
+@20001
 -
 @8022
 TOP.gmsk_tx.quadrature_out[7:0]
