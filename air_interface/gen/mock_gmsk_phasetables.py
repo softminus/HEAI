@@ -4,7 +4,7 @@
 from math import *
 
 samples = 128
-bitdepth = 8
+bitdepth = 7
 
 curve_table_1 = open("gmsk_curve_1.hex",'w')
 curve_table_2 = open("gmsk_curve_2.hex",'w')
