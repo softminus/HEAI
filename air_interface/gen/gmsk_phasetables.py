@@ -3,7 +3,8 @@
 
 from math import *
 
-samples = 128
+rom_index_bits = 7
+samples = 2**rom_index_bits
 bitdepth = 7
 
 beta = pi * 0.3 * sqrt(2 / log(2))
