@@ -3,7 +3,7 @@
 
 from math import *
 
-rom_index_bits = 7
+rom_index_bits = 4
 samples = 2**rom_index_bits
 bitdepth = 7
 

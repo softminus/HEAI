@@ -36,8 +36,9 @@ module gmsk_tx
     // XXX DANGER XXX be careful about 2s complement asymmetry concerns whilst
     // negating the output of the ROM tables
 
-    localparam ROM_INDEX_BITS  = 7;
+    localparam ROM_INDEX_BITS  = 4;
     localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
+
     localparam ROM_OUTPUT_BITS = 7;
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_1 [0:(ROM_SIZE-1)];
