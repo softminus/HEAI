@@ -42,7 +42,7 @@ int main(int argc, char **argv, char **env) {
             gmsk_tx->sample_strobe = 0;
         }
 
-        if ((tick_count-2)%(16*4)==0) {
+        if ((tick_count-2)%(31*4)==0) {
             gmsk_tx->symbol_strobe = 1;
             gmsk_tx->input_bit = (rand())%2;
         } else {
