@@ -1,5 +1,5 @@
-# example.pcf
 set_io --warn-no-port crystal J3
+set_io --warn-no-port in_bits T2
 
 
 set_io --warn-no-port out_i[0]  B2
@@ -10,15 +10,6 @@ set_io --warn-no-port out_i[4]  D2
 set_io --warn-no-port out_i[5]  D1
 set_io --warn-no-port out_i[6]  E2
 set_io --warn-no-port out_i[7]  F1
-
-
-set_io --warn-no-port sy_st     G1
-set_io --warn-no-port sa_st J1
-
-set_io --warn-no-port in_bits     T2
-
-
-
 
 set_io --warn-no-port out_q[0]      B5
 set_io --warn-no-port out_q[1]      B4
