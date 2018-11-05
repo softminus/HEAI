@@ -36,12 +36,6 @@ int main(int argc, char **argv, char **env) {
         gmsk_tx->eval ();
         tfp->dump (10*tick_count);
 
-        if (tick_count%4==0) {
-            gmsk_tx->clk_en = 1;
-        } else {
-            gmsk_tx->clk_en = 0;
-        }
-
         if ((tick_count)%(31*4)==0) {
             gmsk_tx->input_bit = (rand())%2;
         }

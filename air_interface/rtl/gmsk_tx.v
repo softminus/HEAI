@@ -17,8 +17,6 @@
 module gmsk_tx
 (
     input wire clock,
-    input wire clk_en,
-
     input wire input_bit,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
@@ -84,9 +82,21 @@ module gmsk_tx
 
     reg debug_strobe;
 
-    always @ (posedge clock) begin
+    reg [3:0] clkdiv;
+    reg reset;
 
-        if (clk_en == 1) begin
+
+    always @ (posedge clock) begin
+        if (reset == 0) begin
+            reset <= 1;
+            clkdiv <= 1;
+        end else begin
+            clkdiv <= {clkdiv[2:0], clkdiv[3]};
+        end // end else
+
+
+
+        if (clkdiv == 1) begin
 
             if (index_rising==ROM_SIZE-2) begin
                 index_rising  <= 0;
