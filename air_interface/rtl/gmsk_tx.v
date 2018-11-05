@@ -70,10 +70,9 @@ module gmsk_tx
      * filter negligably affects pre-pre-cursor symbol or post-postcursor symbol
      */
     reg [2:0] tristimulus;
-    reg [2:0] ts_tmp;
-    /* verilator lint_off UNUSED */
-    reg [2:0] ts_delay;
-    /* verilator lint_on UNUSED */
+    reg       ts_tmp;
+    reg       ts_delay;
+
     /* where we are on the phase trellis influences what waveform to output, so we
      * add or subtract 1 from phase_quadrant_acc after we emit a symbol to keep
      * track of this.
@@ -130,7 +129,7 @@ module gmsk_tx
             sample_rising  <= {1'b0, rom_out_rising };
             sample_falling <= {1'b0, rom_out_falling};
 
-            if (ts_delay[1] == 0)
+            if (ts_delay == 0)
             begin
                 case (pq_delay)
                     2'b00: inphase_tmp <=  sample_falling;
