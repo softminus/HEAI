@@ -17,8 +17,8 @@
 module gmsk_tx
 (
     input wire clock,
-    input wire symbol_strobe,
-    input wire sample_strobe,
+    input wire clk_en,
+
     input wire input_bit,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
@@ -40,6 +40,7 @@ module gmsk_tx
     localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
 
     localparam ROM_OUTPUT_BITS = 7;
+
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_1 [0:(ROM_SIZE-1)];
     initial $readmemh("air_interface/gen/gmsk_curve_1.hex",master_curve_1);
@@ -84,21 +85,22 @@ module gmsk_tx
     reg debug_strobe;
 
     always @ (posedge clock) begin
-        if (symbol_strobe == 1) begin /* XXX replace with pattern match*/
+
+        if (clk_en == 1) begin
+
+            if (index_rising==ROM_SIZE-2) begin
+                index_rising  <= 0;
+                index_falling <= ROM_SIZE-1;
+                phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
+                tristimulus <= {tristimulus[1:0], input_bit};
+            end else begin
+                index_rising  <= index_rising  + 1;
+                index_falling <= index_falling - 1;
+            end // end else
+
             debug_strobe <= ~debug_strobe;
 
-            index_rising  <= 0;
-            index_falling <= ROM_SIZE-1;
-
-            phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
-            tristimulus <= {tristimulus[1:0], input_bit};
-
-        end // if (symbol_strobe == 1)
-
-        if (sample_strobe == 1) begin
-            index_rising  <= index_rising  + 1;
-            index_falling <= index_falling - 1;
-            ts_tmp <= tristimulus;
+            ts_tmp <= tristimulus[1];
             ts_delay <= ts_tmp;
 
             pq_tmp <= phase_quadrant_acc;
@@ -160,8 +162,8 @@ module gmsk_tx
 
             inphase_out <= inphase_tmp;
             quadrature_out <= quadrature_tmp;
-
         end // if (sample_strobe == 1)
+
 
     end // always @ (posedge clock)
 
