@@ -82,7 +82,7 @@ module gmsk_tx
 
     reg debug_strobe;
 
-    reg [3:0] clkdiv;
+    reg [2:0] clkdiv;
     reg reset;
 
 
@@ -91,7 +91,7 @@ module gmsk_tx
             reset <= 1;
             clkdiv <= 1;
         end else begin
-            clkdiv <= {clkdiv[2:0], clkdiv[3]};
+            clkdiv <= {clkdiv[1:0], clkdiv[2]};
         end // end else
 
 
@@ -103,12 +103,11 @@ module gmsk_tx
                 index_falling <= ROM_SIZE-1;
                 phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
                 tristimulus <= {tristimulus[1:0], input_bit};
+                debug_strobe <= ~debug_strobe;
             end else begin
                 index_rising  <= index_rising  + 1;
                 index_falling <= index_falling - 1;
             end // end else
-
-            debug_strobe <= ~debug_strobe;
 
             ts_tmp <= tristimulus[1];
             ts_delay <= ts_tmp;
