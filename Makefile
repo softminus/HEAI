@@ -8,7 +8,7 @@ ICETIME_DEVICE	= hx8k
 FOOTPRINT = ct256
 
 # Files
-LINTABLE_FILES = air_interface/rtl/gmsk_tx.v
+LINTABLE_FILES = air_interface/rtl/gmsk_tx.v air_interface/rtl/tx_burst.v
 FILES = $(LINTABLE_FILES) top.v icepll.v 
 PCF = pinmap.pcf
 
@@ -39,7 +39,7 @@ timing: $(ASC_FILE)
 	icetime -tmd $(ICETIME_DEVICE) $<
 
 lint: $(LINTABLE_FILES)
-	verilator -Wall --lint-only top.v
+	verilator -Wall --lint-only top.v $^
 
 sim:
 	verilator -Wall --cc --trace air_interface/rtl/gmsk_tx.v --exe air_interface/sim/tb-gmsk_tx.cc
