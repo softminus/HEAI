@@ -1,5 +1,5 @@
 # Project setup
-PROJ      = gmsk_tx
+PROJ      = gmsk_phy
 BUILD     = ./build
 
 DEVICE    		= 8k
@@ -8,7 +8,7 @@ ICETIME_DEVICE	= hx8k
 FOOTPRINT = ct256
 
 # Files
-LINTABLE_FILES = air_interface/rtl/gmsk_tx.v air_interface/rtl/tx_burst.v
+LINTABLE_FILES = air_interface/rtl/gmsk_modulate.v air_interface/rtl/tx_burst.v
 FILES = $(LINTABLE_FILES) top.v icepll.v 
 PCF = pinmap.pcf
 
@@ -42,10 +42,10 @@ lint: $(LINTABLE_FILES)
 	verilator -Wall --lint-only top.v $^
 
 sim:
-	verilator -Wall --cc --trace air_interface/rtl/gmsk_tx.v --exe air_interface/sim/tb-gmsk_tx.cc
-	make -j -C obj_dir/ -f Vgmsk_tx.mk Vgmsk_tx
-	./obj_dir/Vgmsk_tx > verilog_out.txt
+	verilator -Wall --cc --trace air_interface/rtl/gmsk_modulate.v --exe air_interface/sim/tb-gmsk_modulate.cc
+	make -j -C obj_dir/ -f Vgmsk_modulate.mk Vgmsk_modulate
+	./obj_dir/Vgmsk_modulate > verilog_out.txt
 	# -gtkwave top.vcd top.sav
 
 clean:
-	rm -rf build/* obj_dir top.vcd verilog_out.txt gmsk_tx.vcd
+	rm -rf build/* obj_dir top.vcd verilog_out.txt gmsk_modulate.vcd

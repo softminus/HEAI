@@ -14,7 +14,7 @@
  * emit RF with this!
  */
 
-module gmsk_tx
+module gmsk_modulate
 (
     input wire clock,
     input wire input_bit,
