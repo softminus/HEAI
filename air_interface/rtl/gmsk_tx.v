@@ -12,7 +12,7 @@
  *
  * I am unsure whether this needs any kind of post-filtering, so please do not
  * emit RF with this!
-*/
+ */
 
 module gmsk_tx
 (
