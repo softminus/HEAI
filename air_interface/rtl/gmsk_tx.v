@@ -19,8 +19,10 @@ module gmsk_tx
     input wire clock,
     input wire input_bit,
 
+    output reg next_symbol_kudasai,
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
-    output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
+    output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out,
+    output reg debug_strobe
 );
 
     // XXX make sure this works with GSM data rate and clock, clock dividers
@@ -98,15 +100,22 @@ module gmsk_tx
 
         if (clkdiv == 1) begin
 
+            if (index_rising == ROM_SIZE-3) begin
+                next_symbol_kudasai <= 1;
+            end else begin
+                next_symbol_kudasai <= 0;
+            end // end else
+
             if (index_rising==ROM_SIZE-2) begin
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
                 phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
                 tristimulus <= {tristimulus[1:0], input_bit};
-                debug_strobe <= ~debug_strobe;
+                debug_strobe <= 1;
             end else begin
                 index_rising  <= index_rising  + 1;
                 index_falling <= index_falling - 1;
+                debug_strobe <= 0;
             end // end else
 
             ts_tmp <= tristimulus[1];
