@@ -1,29 +1,29 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Mon Nov  5 03:33:21 2018
+[*] Sat Nov 10 04:18:25 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/gmsk_tx.vcd"
-[dumpfile_mtime] "Mon Nov  5 03:10:25 2018"
-[dumpfile_size] 9387303
+[dumpfile_mtime] "Sat Nov 10 04:11:36 2018"
+[dumpfile_size] 10481363
 [savefile] "/home/thz/tdma_gmsk/master.gtkw"
-[timestart] 3682
+[timestart] 49138
 [size] 1600 879
 [pos] -1 -1
-*-6.000000 3777 368781 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 49280 368781 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [sst_width] 230
 [signals_width] 332
 [sst_expanded] 1
 [sst_vpaned_height] 247
 @28
-TOP.gmsk_tx.clkdiv[3:0]
 TOP.gmsk_tx.reset
 TOP.gmsk_tx.clock
+@29
+TOP.gmsk_tx.next_symbol_kudasai
+@28
 TOP.gmsk_tx.input_bit
 TOP.gmsk_tx.tristimulus[2:0]
-@29
 TOP.gmsk_tx.ts_tmp
-@28
 TOP.gmsk_tx.ts_delay
 TOP.gmsk_tx.phase_quadrant_acc[1:0]
 TOP.gmsk_tx.pq_tmp[1:0]
