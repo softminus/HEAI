@@ -1,7 +1,7 @@
 `default_nettype none
 
 /* 
- * GMSK modulator
+ * GMSK I/Q-modulator
  *
  * We use the scheme explained in Linz1996 (doi://10.1109/82.481470). We
  * ingest data and use logic to generate addresses into a ROM with successive
