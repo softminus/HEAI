@@ -41,11 +41,17 @@ timing: $(ASC_FILE)
 lint: $(LINTABLE_FILES)
 	verilator -Wall --lint-only top.v $^
 
-sim:
+mod_sim:
 	verilator -Wall --cc --trace air_interface/rtl/gmsk_modulate.v --exe air_interface/sim/tb-gmsk_modulate.cc
 	make -j -C obj_dir/ -f Vgmsk_modulate.mk Vgmsk_modulate
 	./obj_dir/Vgmsk_modulate > verilog_out.txt
 	# -gtkwave top.vcd top.sav
+
+burst_sim:
+	verilator -Wall --cc --trace top.v air_interface/rtl/tx_burst.v air_interface/rtl/gmsk_modulate.v --exe air_interface/sim/tb-tx_burst.cc
+	make -j -C obj_dir/ -f Vtop.mk Vtop
+	./obj_dir/Vtop > verilog_out.txt
+
 
 clean:
 	rm -rf build/* obj_dir top.vcd verilog_out.txt gmsk_modulate.vcd
