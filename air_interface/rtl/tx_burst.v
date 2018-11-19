@@ -15,32 +15,46 @@ module tx_burst
     output reg sample_strobe,      // we assert this every sample-interval
 
     // control
+    /* verilator lint_off UNUSED */
     input wire fire_burst, // assert to begin a burst iff is_armed is high
+    /* verilator lint_on UNUSED */
+    /* verilator lint_off UNDRIVEN */
     output reg is_armed,
-    
+    /* verilator lint_on UNDRIVEN */
+
+
     // I/Q sample handling
     input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_inphase,
     input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_quadrature,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_inphase,
     output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_quadrature,
+    /* verilator lint_off UNDRIVEN */
     output reg iq_valid // 1 iff valid I/Q samples are being output
+    /* verilator lint_on UNDRIVEN */
 
 );
 
     localparam ROM_OUTPUT_BITS = 7;
+    localparam CLOCKS_PER_SAMPLE = 4;
+
 
     reg reset;
-
     reg [2:0] priming;
-
     reg detent;
+
+    reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
 
     always @(posedge clock) begin
         if (reset == 0) begin
-            priming   <= 2;
-            reset     <= 1;
-        end
+            priming <= 3'b111;
+            reset   <= 1;
+            clkdiv  <= 1;
+        end else begin
+            clkdiv <= {clkdiv[2:0], clkdiv[3]};
+        end // end else
+
+
 
         if (priming != 0) begin
             current_symbol <= 1;
@@ -53,14 +67,6 @@ module tx_burst
             end // if ((detent == 1) && (next_symbol_strobe == 0))
         end
 
-        inphase_out <= inphase_in;
-        quadrature_out <= quadrature_in;
-        if (reset == 0) begin
-            reset <= 1;
-            clkdiv <= 1;
-        end else begin
-            clkdiv <= {clkdiv[2:0], clkdiv[3]};
-        end // end else
 
         if (clkdiv == 1)
         begin
@@ -68,6 +74,9 @@ module tx_burst
         end else begin
             sample_strobe <= 0;
         end
+
+        rfchain_inphase    <= modulator_inphase;
+        rfchain_quadrature <= modulator_quadrature;
 
 
     end
