@@ -1,7 +1,7 @@
 `default_nettype none
 
 /* 
- * GMSK modulator initialisation/feeding/housekeeping
+ * GMSK modulator timing, initialisation, and feeding
  */
 
 module tx_burst
@@ -10,30 +10,29 @@ module tx_burst
 
     // modulator interface
     input wire next_symbol_strobe, // modulator is ready for next input symbol
-    input wire [(ROM_OUTPUT_BITS-1+1):0] inphase_in,     // i from modulator
-    input wire [(ROM_OUTPUT_BITS-1+1):0] quadrature_in,  // q from modulator
+    input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_inphase,     // i from modulator
+    input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_quadrature,  // q from modulator
     output reg current_symbol,
     
 
     // control
     input wire fire_burst,         // assert to begin a burst
-    output reg armed,
-    output reg tx_rf_chain_enable, // 1 iff valid I/Q samples are being output
+    output reg is_armed,
     
     // output I/Q samples
-    output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
-    output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
+    output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_inphase,
+    output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_quadrature,
+    output reg rfchain_tx_enable // 1 iff valid I/Q samples are being output
 
 );
 
     localparam ROM_OUTPUT_BITS = 7;
 
-    reg [147:0] test_burst;
-    
     reg reset;
 
     reg [2:0] priming;
 
+    reg detent;
 
     always @(posedge clock) begin
         if (reset == 0) begin
@@ -44,12 +43,23 @@ module tx_burst
         if (priming != 0) begin
             current_symbol <= 1;
             if (next_symbol_strobe == 1) begin
-                priming <= priming - 1;
+                detent <= 1;
             end // if (next_symbol_strobe == 1)
-        end 
-    
+            if ((detent == 1) && (next_symbol_strobe == 0)) begin
+                detent <= 0;
+                priming <= priming - 1;
+            end // if ((detent == 1) && (next_symbol_strobe == 0))
+        end
+
+        inphase_out <= inphase_in;
+        quadrature_out <= quadrature_in;
+        if (reset == 0) begin
+            reset <= 1;
+            clkdiv <= 1;
+        end else begin
+            clkdiv <= {clkdiv[1:0], clkdiv[2]};
+        end // end else
+
+
     end
-
-
-
 endmodule // tx_burst
