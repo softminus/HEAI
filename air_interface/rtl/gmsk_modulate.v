@@ -83,41 +83,42 @@ module gmsk_modulate
     reg [1:0] phase_quadrant_acc;
     reg [1:0] pq_tmp;
     reg [1:0] pq_delay;
-
-    reg debug_strobe;
-
-    reg [2:0] clkdiv;
     reg reset;
-
+    reg [3:0] clkdiv;
+    reg sample_strobe;
 
     always @ (posedge clock) begin
+
         if (reset == 0) begin
             reset <= 1;
             clkdiv <= 1;
         end else begin
-            clkdiv <= {clkdiv[1:0], clkdiv[2]};
+            clkdiv <= {clkdiv[2:0], clkdiv[3]};
         end // end else
 
+        if (clkdiv == 1)
+        begin
+            sample_strobe <= 1;
+        end else begin
+            sample_strobe <= 0;
+        end
 
-
-        if (clkdiv == 1) begin
+        if (sample_strobe == 1) begin
 
             if (index_rising == ROM_SIZE-3) begin
-                next_symbol_kudasai <= 1;
+                next_symbol_strobe <= 1;
             end else begin
-                next_symbol_kudasai <= 0;
+                next_symbol_strobe <= 0;
             end // end else
 
             if (index_rising==ROM_SIZE-2) begin
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
                 phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
-                tristimulus <= {tristimulus[1:0], input_bit};
-                debug_strobe <= 1;
+                tristimulus <= {tristimulus[1:0], current_symbol};
             end else begin
                 index_rising  <= index_rising  + 1;
                 index_falling <= index_falling - 1;
-                debug_strobe <= 0;
             end // end else
 
             ts_tmp <= tristimulus[1];
