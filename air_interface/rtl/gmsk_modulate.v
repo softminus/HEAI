@@ -17,12 +17,14 @@
 module gmsk_modulate
 (
     input wire clock,
-    input wire input_bit,
 
-    output reg next_symbol_kudasai,
+    input wire current_symbol,
+    //input wire sample_strobe,
+
+    output reg next_symbol_strobe,
+
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
-    output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out,
-    output reg debug_strobe
+    output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
 );
 
     // XXX make sure this works with GSM data rate and clock, clock dividers
