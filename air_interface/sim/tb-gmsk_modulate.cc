@@ -37,9 +37,8 @@ int main(int argc, char **argv, char **env) {
         tfp->dump (10*tick_count);
 
         if ((tick_count)%(31*4)==0) {
-            gmsk_modulate->input_bit = (rand())%2;
+            gmsk_modulate->current_symbol = (rand())%2;
         }
-
 
         gmsk_modulate->clock = 0;
         gmsk_modulate->eval ();
