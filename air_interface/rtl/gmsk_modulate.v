@@ -21,7 +21,7 @@ module gmsk_modulate
     input wire current_symbol,
     input wire sample_strobe,
 
-    output reg next_symbol_strobe,
+    output wire next_symbol_strobe,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
     output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
@@ -83,20 +83,12 @@ module gmsk_modulate
     reg [1:0] phase_quadrant_acc;
     reg [1:0] pq_tmp;
     reg [1:0] pq_delay;
-    /* verilator lint_off UNUSED */
-    wire advance_stb;
-    /* verilator lint_on UNUSED */
-    assign advance_stb = (index_rising==ROM_SIZE-2);
+
+    assign next_symbol_strobe = (index_rising==ROM_SIZE-2);
 
     always @ (posedge clock) begin
 
         if (sample_strobe == 1) begin
-            if (index_rising == ROM_SIZE-3) begin
-                next_symbol_strobe <= 1;
-            end else begin
-                next_symbol_strobe <= 0;
-            end // end else
-
             if (index_rising==ROM_SIZE-2) begin
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
