@@ -83,11 +83,14 @@ module gmsk_modulate
     reg [1:0] phase_quadrant_acc;
     reg [1:0] pq_tmp;
     reg [1:0] pq_delay;
+    /* verilator lint_off UNUSED */
+    wire advance_stb;
+    /* verilator lint_on UNUSED */
+    assign advance_stb = (index_rising==ROM_SIZE-2);
 
     always @ (posedge clock) begin
 
         if (sample_strobe == 1) begin
-
             if (index_rising == ROM_SIZE-3) begin
                 next_symbol_strobe <= 1;
             end else begin
@@ -103,6 +106,8 @@ module gmsk_modulate
                 index_rising  <= index_rising  + 1;
                 index_falling <= index_falling - 1;
             end // end else
+        end // if (sample_strobe == 1)
+
 
             ts_tmp <= tristimulus[1];
             ts_delay <= ts_tmp;
@@ -166,8 +171,6 @@ module gmsk_modulate
 
             inphase_out <= inphase_tmp;
             quadrature_out <= quadrature_tmp;
-        end // if (sample_strobe == 1)
-
 
     end // always @ (posedge clock)
 
