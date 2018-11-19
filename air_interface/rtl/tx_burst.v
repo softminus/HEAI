@@ -40,21 +40,19 @@ module tx_burst
 
 
     reg reset;
-    reg [2:0] priming;
+    reg [3:0] priming;
     reg detent;
 
     reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
 
     always @(posedge clock) begin
         if (reset == 0) begin
-            priming <= 3'b111;
+            priming <= 4'b1111;
             reset   <= 1;
             clkdiv  <= 1;
         end else begin
-            clkdiv <= {clkdiv[2:0], clkdiv[3]};
+            clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
         end // end else
-
-
 
         if (priming != 0) begin
             current_symbol <= 1;
@@ -63,9 +61,9 @@ module tx_burst
             end // if (next_symbol_strobe == 1)
             if ((detent == 1) && (next_symbol_strobe == 0)) begin
                 detent <= 0;
-                priming <= priming - 1;
+                priming <= {1'b0, priming[3:1]};
             end // if ((detent == 1) && (next_symbol_strobe == 0))
-        end
+        end // if (priming != 0)
 
 
         if (clkdiv == 1)
