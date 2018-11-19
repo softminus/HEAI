@@ -2,8 +2,9 @@
 module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
     input clock;
 
-    wire ss;
+    wire sample_strobe;
     wire bitwire;
+    wire tsugi;
 
     input wire fire_burst;
     output wire armed;
@@ -17,8 +18,27 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
     output wire [7:0] out_q;
 
     
-    gmsk_modulate tx(clock, bitwire, ss, itmp, qtmp);
-    tx_burst bb(clock, ss, itmp, qtmp, bitwire, fire_burst, armed, txchain_en, out_i, out_q);
+    gmsk_modulate modulator (
+        .clock(clock),
+        .current_symbol(bitwire),
+        .sample_strobe(sample_strobe),
+        .inphase_out(itmp),
+        .quadrature_out(qtmp),
+        .next_symbol_strobe(tsugi));
+
+    tx_burst modulator_control(
+        .clock(clock),
+        .next_symbol_strobe(tsugi),
+        .current_symbol(bitwire),
+        .sample_strobe(sample_strobe),
+        .fire_burst(fire_burst),
+        .is_armed(armed),
+        .modulator_inphase(itmp),
+        .modulator_quadrature(qtmp),
+        .rfchain_inphase(out_i),
+        .rfchain_quadrature(out_q),
+        .iq_valid(txchain_en));
+
 
 endmodule
 
