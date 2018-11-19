@@ -75,9 +75,14 @@ module tx_burst
             sample_strobe <= 0;
         end
 
-        rfchain_inphase    <= modulator_inphase;
-        rfchain_quadrature <= modulator_quadrature;
-
-
+        if (priming != 0) begin
+            rfchain_inphase <= 0;
+            rfchain_quadrature <= 0;
+            iq_valid <= 0;
+        end else begin
+            rfchain_inphase    <= modulator_inphase;
+            rfchain_quadrature <= modulator_quadrature;
+            iq_valid <= 1;
+        end // end else
     end
 endmodule // tx_burst
