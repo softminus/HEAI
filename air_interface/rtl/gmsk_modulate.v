@@ -19,7 +19,7 @@ module gmsk_modulate
     input wire clock,
 
     input wire current_symbol,
-    //input wire sample_strobe,
+    input wire sample_strobe,
 
     output reg next_symbol_strobe,
 
@@ -83,25 +83,8 @@ module gmsk_modulate
     reg [1:0] phase_quadrant_acc;
     reg [1:0] pq_tmp;
     reg [1:0] pq_delay;
-    reg reset;
-    reg [3:0] clkdiv;
-    reg sample_strobe;
 
     always @ (posedge clock) begin
-
-        if (reset == 0) begin
-            reset <= 1;
-            clkdiv <= 1;
-        end else begin
-            clkdiv <= {clkdiv[2:0], clkdiv[3]};
-        end // end else
-
-        if (clkdiv == 1)
-        begin
-            sample_strobe <= 1;
-        end else begin
-            sample_strobe <= 0;
-        end
 
         if (sample_strobe == 1) begin
 

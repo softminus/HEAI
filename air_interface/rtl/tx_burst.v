@@ -8,21 +8,23 @@ module tx_burst
 (
     input wire clock,
 
-    // modulator interface
-    input wire next_symbol_strobe, // modulator is ready for next input symbol
-    input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_inphase,     // i from modulator
-    input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_quadrature,  // q from modulator
-    output reg current_symbol,
-    
+    // timing
+    input wire next_symbol_strobe, // modulator asserts this every symbol-interval,
+    output reg current_symbol,     // ...so we can feed symbols to the modulator
+
+    output reg sample_strobe,      // we assert this every sample-interval
 
     // control
-    input wire fire_burst,         // assert to begin a burst
+    input wire fire_burst, // assert to begin a burst iff is_armed is high
     output reg is_armed,
     
-    // output I/Q samples
+    // I/Q sample handling
+    input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_inphase,
+    input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_quadrature,
+
     output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_inphase,
     output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_quadrature,
-    output reg rfchain_tx_enable // 1 iff valid I/Q samples are being output
+    output reg iq_valid // 1 iff valid I/Q samples are being output
 
 );
 
@@ -57,8 +59,15 @@ module tx_burst
             reset <= 1;
             clkdiv <= 1;
         end else begin
-            clkdiv <= {clkdiv[1:0], clkdiv[2]};
+            clkdiv <= {clkdiv[2:0], clkdiv[3]};
         end // end else
+
+        if (clkdiv == 1)
+        begin
+            sample_strobe <= 1;
+        end else begin
+            sample_strobe <= 0;
+        end
 
 
     end
