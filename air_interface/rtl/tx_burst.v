@@ -12,11 +12,12 @@ module tx_burst
     input wire next_symbol_strobe, // modulator asserts this every symbol-interval,
     output reg current_symbol,     // ...so we can feed symbols to the modulator
 
-    output reg sample_strobe,      // we assert this every sample-interval
+    output wire sample_strobe,      // we assert this every sample-interval
 
     // control
     /* verilator lint_off UNUSED */
     input wire fire_burst, // assert to begin a burst iff is_armed is high
+
     /* verilator lint_on UNUSED */
     /* verilator lint_off UNDRIVEN */
     output reg is_armed,
@@ -32,12 +33,12 @@ module tx_burst
     /* verilator lint_off UNDRIVEN */
     output reg iq_valid // 1 iff valid I/Q samples are being output
     /* verilator lint_on UNDRIVEN */
-
 );
 
     localparam ROM_OUTPUT_BITS = 7;
-    localparam CLOCKS_PER_SAMPLE = 4;
+    localparam CLOCKS_PER_SAMPLE = 5;
 
+    assign sample_strobe = clkdiv[0];
 
     reg reset;
     reg [3:0] priming;
@@ -56,22 +57,14 @@ module tx_burst
 
         if (priming != 0) begin
             current_symbol <= 1;
-            if (next_symbol_strobe == 1) begin
+            if ((detent == 0) && (next_symbol_strobe == 1)) begin
                 detent <= 1;
-            end // if (next_symbol_strobe == 1)
-            if ((detent == 1) && (next_symbol_strobe == 0)) begin
-                detent <= 0;
                 priming <= {1'b0, priming[3:1]};
+            end // if (next_symbol_strobe == 1)
+            if (next_symbol_strobe == 0) begin
+                detent <= 0;
             end // if ((detent == 1) && (next_symbol_strobe == 0))
         end // if (priming != 0)
-
-
-        if (clkdiv == 1)
-        begin
-            sample_strobe <= 1;
-        end else begin
-            sample_strobe <= 0;
-        end
 
         if (priming != 0) begin
             rfchain_inphase <= 0;
