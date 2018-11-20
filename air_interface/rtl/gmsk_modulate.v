@@ -73,8 +73,8 @@ module gmsk_modulate
      * filter negligably affects pre-pre-cursor symbol or post-postcursor symbol
      */
     reg [2:0] tristimulus;
-    reg       ts_tmp;
-    reg       ts_delay;
+
+    reg [1:0] tristimulus_delay;
 
     /* where we are on the phase trellis influences what waveform to output, so we
      * add or subtract 1 from phase_quadrant_acc after we emit a symbol to keep
@@ -101,8 +101,7 @@ module gmsk_modulate
         end // if (sample_strobe == 1)
 
 
-            ts_tmp <= tristimulus[1];
-            ts_delay <= ts_tmp;
+            tristimulus_delay <= {tristimulus_delay[0], tristimulus[1]};
 
             pq_tmp <= phase_quadrant_acc;
             pq_delay <= pq_tmp;
@@ -132,7 +131,7 @@ module gmsk_modulate
             sample_rising  <= {1'b0, rom_out_rising };
             sample_falling <= {1'b0, rom_out_falling};
 
-            if (ts_delay == 0)
+            if (tristimulus_delay[1] == 0)
             begin
                 case (pq_delay)
                     2'b00: inphase_tmp <=  sample_falling;
