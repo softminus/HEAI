@@ -32,7 +32,8 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
 
     tx_burst modulator_control(
         .clock(clock),
-        .next_symbol_strobe(tsugi),
+        .symbol_input_strobe(tsugi),
+        .symbol_iq_strobe(iq_tsugi),
         .current_symbol(bitwire),
         .sample_strobe(sample_strobe),
         .fire_burst(fire_burst),
