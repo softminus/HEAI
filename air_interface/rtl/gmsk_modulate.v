@@ -104,11 +104,10 @@ module gmsk_modulate
             end else begin
                 index_rising  <= index_rising  + 1;
                 index_falling <= index_falling - 1;
+                edge_output <= {edge_output[2:0], 1'b0};
             end // end else
-        end else begin
-            edge_output <= {edge_output[2:0], 1'b0};
+
             symbol_beginning <= edge_output[3];
-        end // end else
 
             tristimulus_delay <= {tristimulus_delay[0], tristimulus[1]};
 
@@ -172,6 +171,6 @@ module gmsk_modulate
             inphase_out <= inphase_tmp;
             quadrature_out <= quadrature_tmp;
 
+        end // if (sample_strobe == 1)
     end // always @ (posedge clock)
-
 endmodule
