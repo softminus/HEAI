@@ -5,6 +5,9 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
     wire sample_strobe;
     wire bitwire;
     wire tsugi;
+    /* verilator lint_off UNUSED */
+    wire iq_tsugi;
+    /* verilator lint_on UNUSED */
 
     input wire fire_burst;
     output wire armed;
@@ -22,6 +25,7 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
         .clock(clock),
         .current_symbol(bitwire),
         .sample_strobe(sample_strobe),
+        .symbol_beginning(iq_tsugi),
         .inphase_out(itmp),
         .quadrature_out(qtmp),
         .next_symbol_strobe(tsugi));
