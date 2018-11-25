@@ -21,8 +21,8 @@ module gmsk_modulate
     input wire current_symbol,
     input wire sample_strobe,
 
-    output wire next_symbol_strobe,
-    output wire symbol_beginning,
+    output reg next_symbol_strobe,
+    output reg symbol_beginning,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
     output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
@@ -42,7 +42,7 @@ module gmsk_modulate
     localparam ROM_INDEX_BITS  = 5;
     localparam ROM_SIZE = 2 ** ROM_INDEX_BITS;
 
-    localparam ROM_OUTPUT_BITS = 7;
+    localparam ROM_OUTPUT_BITS = 5;
 
 
     reg [(ROM_OUTPUT_BITS-1):0] master_curve_1 [0:(ROM_SIZE-1)];

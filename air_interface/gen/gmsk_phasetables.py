@@ -5,7 +5,7 @@ from math import *
 
 rom_index_bits = 5
 samples = 2**rom_index_bits
-bitdepth = 7
+bitdepth = 5
 
 beta = pi * 0.3 * sqrt(2 / log(2))
 

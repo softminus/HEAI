@@ -20,7 +20,7 @@ int main(int argc, char **argv, char **env) {
     top->trace (tfp, 99);
     tfp->open ("top.vcd");
     // initialize simulation inputs
-    top->clock = 0;
+    top->xtal = 0;
     // run simulation for 1000 crystal periods
     for (tick_count=1; tick_count<131072; tick_count++) {
 //            top->rf_in_i = (sin(2*i/100.0) * 128.0);
@@ -28,23 +28,23 @@ int main(int argc, char **argv, char **env) {
 //            top->lo_in_i = (sin(2.5*i/100.0) * 128.0);
 //            top->lo_in_q = -(cos(2.5* i/100.0) * 128.0);
 
-        top->clock = 0;
+        top->xtal = 0;
         top->eval ();
         tfp->dump (10*tick_count-2);
 
-        top->clock = 1;
+        top->xtal = 1;
         top->eval ();
         tfp->dump (10*tick_count);
 
 
 
-        top->clock = 0;
+        top->xtal = 0;
         top->eval ();
         tfp->dump (10*tick_count+5);
         tfp->flush();
 
-        i = top->out_i;
-        q = top->out_q;
+        i = top->dac_zero;
+        q = top->dac_one;
 
         printf("%d %d %d\n", tick_count, i,q);
         if (Verilated::gotFinish())    exit(0);

@@ -1,6 +1,6 @@
 `default_nettype none
-module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
-    input clock;
+module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
+    input wire xtal;
 
     wire sample_strobe;
     wire bitwire;
@@ -14,15 +14,27 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
     output wire txchain_en;
 
 
-    wire [7:0] itmp;
-    wire [7:0] qtmp;
+    wire [5:0] itmp;
+    wire [5:0] qtmp;
 
-    output wire [7:0] out_i;
-    output wire [7:0] out_q;
+    output reg [5:0] dac_zero;
+    output reg [5:0] dac_one;
 
-    
+    wire [5:0] q_tc;
+    output wire debug_pin;
+        /* verilator lint_off UNUSED */
+
+    wire [5:0] i_tc;
+    wire [7:0] lfsr_debug;
+    /* verilator lint_on UNUSED */
+
+    always @(posedge xtal) begin
+        dac_zero <= i_tc + 32;
+        dac_one <= q_tc + 32;
+    end // always @(posedge xtal)
+
     gmsk_modulate modulator (
-        .clock(clock),
+        .clock(xtal),
         .current_symbol(bitwire),
         .sample_strobe(sample_strobe),
         .symbol_beginning(iq_tsugi),
@@ -31,7 +43,7 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
         .next_symbol_strobe(tsugi));
 
     tx_burst modulator_control(
-        .clock(clock),
+        .clock(xtal),
         .symbol_input_strobe(tsugi),
         .symbol_iq_strobe(iq_tsugi),
         .current_symbol(bitwire),
@@ -40,10 +52,11 @@ module top (clock, fire_burst, out_i, out_q, armed, txchain_en);
         .is_armed(armed),
         .modulator_inphase(itmp),
         .modulator_quadrature(qtmp),
-        .rfchain_inphase(out_i),
-        .rfchain_quadrature(out_q),
+        .rfchain_inphase(i_tc),
+        .rfchain_quadrature(q_tc),
+        .debug_pin(debug_pin),
+        .lfsr(lfsr_debug),
         .iq_valid(txchain_en));
-
 
 endmodule
 
