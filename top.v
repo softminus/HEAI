@@ -22,15 +22,18 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
 
     wire [5:0] q_tc;
     output wire debug_pin;
-        /* verilator lint_off UNUSED */
-
+    /* verilator lint_off UNUSED */
+    reg tmp, tmp_2;
     wire [5:0] i_tc;
     wire [7:0] lfsr_debug;
+    wire xxx;
     /* verilator lint_on UNUSED */
-
     always @(posedge xtal) begin
-        dac_zero <= i_tc + 32;
-        dac_one <= q_tc + 32;
+        dac_zero <= i_tc + 31;
+        dac_one <= q_tc + 31;
+        debug_pin <= tmp_2;
+        tmp <= iq_tsugi;
+        tmp_2 <= tmp;
     end // always @(posedge xtal)
 
     gmsk_modulate modulator (
@@ -54,7 +57,7 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
         .modulator_quadrature(qtmp),
         .rfchain_inphase(i_tc),
         .rfchain_quadrature(q_tc),
-        .debug_pin(debug_pin),
+        .debug_pin(xxx),
         .lfsr(lfsr_debug),
         .iq_valid(txchain_en));
 

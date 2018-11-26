@@ -49,9 +49,9 @@ module tx_burst
 
     reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
 
-    reg [7:0] lfsr = 69;
-    
-    assign debug_pin = lfsr[0];
+    reg [7:0] lfsr = 1;
+
+    assign debug_pin = current_symbol;
     localparam [7:0] LFSR_TAPS = 8'h2d;
 
     always @(posedge clock) begin
@@ -95,7 +95,9 @@ module tx_burst
             rfchain_inphase    <= pipeline_inphase;
             rfchain_quadrature <= pipeline_quadrature;
             iq_valid <= 1;
-            current_symbol <= lfsr[0];
+            if (symbol_input_strobe == 1) begin
+                current_symbol <= lfsr[1];
+            end // if (symbol_input_strobe == 1)
         end // end else
     end
 endmodule // tx_burst
