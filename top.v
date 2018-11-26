@@ -2,8 +2,10 @@
 module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
     input wire xtal;
 
+
     wire sample_strobe;
     wire bitwire;
+    wire pll_clock;
     wire tsugi;
     /* verilator lint_off UNUSED */
     wire iq_tsugi;
@@ -28,16 +30,14 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
     wire [7:0] lfsr_debug;
     wire xxx;
     /* verilator lint_on UNUSED */
-    always @(posedge xtal) begin
+    always @(posedge pll_clock) begin
         dac_zero <= i_tc + 31;
         dac_one <= q_tc + 31;
-        debug_pin <= tmp_2;
-        tmp <= iq_tsugi;
-        tmp_2 <= tmp;
-    end // always @(posedge xtal)
-
+    end // always @(posedge pll_clock)
+    assign debug_pin = pll_clock;
+    icepll pll(xtal, pll_clock);
     gmsk_modulate modulator (
-        .clock(xtal),
+        .clock(pll_clock),
         .current_symbol(bitwire),
         .sample_strobe(sample_strobe),
         .symbol_beginning(iq_tsugi),
@@ -46,7 +46,7 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
         .next_symbol_strobe(tsugi));
 
     tx_burst modulator_control(
-        .clock(xtal),
+        .clock(pll_clock),
         .symbol_input_strobe(tsugi),
         .symbol_iq_strobe(iq_tsugi),
         .current_symbol(bitwire),
