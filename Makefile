@@ -48,6 +48,7 @@ mod_sim:
 	# -gtkwave top.vcd top.sav
 
 burst_sim:
+	python3 air_interface/gen/gmsk_phasetables.py air_interface/gen/
 	verilator -Wall --cc --trace top.v air_interface/rtl/tx_burst.v air_interface/rtl/gmsk_modulate.v --exe air_interface/sim/tb-tx_burst.cc
 	make -j -C obj_dir/ -f Vtop.mk Vtop
 	./obj_dir/Vtop > verilog_out.txt
