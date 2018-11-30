@@ -31,11 +31,13 @@ curve_table_1 = open("gmsk_curve_1.hex",'w')
 curve_table_2 = open("gmsk_curve_2.hex",'w')
 curve_table_3 = open("gmsk_curve_3.hex",'w')
 curve_table_7 = open("gmsk_curve_7.hex",'w')
+half_mask     = open("half_mask.hex"   ,'w')
 
 curve_table_1_plain = open("gmsk_curve_1.txt",'w')
 curve_table_2_plain = open("gmsk_curve_2.txt",'w')
 curve_table_3_plain = open("gmsk_curve_3.txt",'w')
 curve_table_7_plain = open("gmsk_curve_7.txt",'w')
+half_mask_plain     = open("half_mask.txt"   ,'w')
 
 
 
@@ -77,6 +79,15 @@ def scale(val, bits):
 def conv(v):
     return scale(v, bitdepth)
 
+#### power mask ####
+def power_mask_raw(t):
+    if (t > 1):
+        return 1
+    return t/1
+
+def master_power_mask(t):
+    return conv(power_mask_raw(t))
+
 for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
     f = "{:04x}"
@@ -90,4 +101,8 @@ for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     print (i,       master_curve_three(time)  , file=curve_table_3_plain)
     print (i,       master_curve_seven(time)  , file=curve_table_7_plain)
 
-    
+for i in range(0,64):
+    time = i/64
+    f = "{:04x}"
+    print (f.format(master_power_mask(time))  , file=half_mask)
+    print (i,       master_power_mask(time)   , file=half_mask_plain)
