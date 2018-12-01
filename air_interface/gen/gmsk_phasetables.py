@@ -4,6 +4,7 @@
 from math import *
 import os
 import sys
+import random
 
 rom_index_bits = 5
 samples = 2**rom_index_bits
@@ -80,19 +81,26 @@ def scale(val, bits):
     norm = (2 ** (bits)-1)
     if (val < 0):
         val = 0
-    return ceil(val * norm)
+    return round(val * norm)
 
 def conv(v):
     return scale(v, bitdepth)
 
 #### power mask ####
+def scale_prim(val, bits):
+    norm = (2 ** (bits))
+    if (val < 0):
+        val = 0
+    return round(val * norm)
+
+
 def power_mask_raw(t):
-    if (t > 0.5):
+    if (t > 1):
         return 1
-    return 1
+    return pow(sin(t*pi/2),2)
 
 def master_power_mask(t):
-    return scale(power_mask_raw(t),5)
+    return scale_prim(power_mask_raw(t),5)
 
 for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
