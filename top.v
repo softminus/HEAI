@@ -32,10 +32,11 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
     /* verilator lint_on UNUSED */
     always @(posedge pll_clock) begin
         dac_zero <= i_tc + 31;
-        dac_one <= q_tc + 31;
+        dac_one  <= q_tc + 31;
     end // always @(posedge pll_clock)
     assign debug_pin = pll_clock;
-    icepll pll(xtal, pll_clock);
+//    icepll pll(xtal, pll_clock);
+    assign pll_clock = xtal;
     gmsk_modulate modulator (
         .clock(pll_clock),
         .current_symbol(bitwire),
