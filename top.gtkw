@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Fri Nov 30 22:30:02 2018
+[*] Sat Dec  1 15:01:41 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/top.vcd"
-[dumpfile_mtime] "Fri Nov 30 22:29:00 2018"
-[dumpfile_size] 22801434
+[dumpfile_mtime] "Sat Dec  1 14:59:53 2018"
+[dumpfile_size] 23654782
 [savefile] "/home/thz/tdma_gmsk/top.gtkw"
-[timestart] 781
+[timestart] 8
 [size] 1600 879
 [pos] -1 -1
-*-8.146186 1348 1600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.761662 20460 1600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.top.
 [treeopen] TOP.top.modulator.
@@ -27,38 +27,52 @@ TOP.top.modulator_control.iq_valid
 TOP.top.modulator_control.symcount[7:0]
 @28
 TOP.top.modulator_control.priming[3:0]
-TOP.top.modulator_control.primed
-TOP.top.iq_tsugi
+TOP.top.modulator_control.symbol_input_strobe
+TOP.top.modulator_control.iq_valid
 TOP.top.modulator_control.in_mask
 @22
-TOP.top.modulator_control.mask[5:0]
-@8022
-TOP.top.modulator_control.modulator_inphase[5:0]
-@20000
--
--
-@8022
-TOP.top.modulator_control.modulator_quadrature[5:0]
-@20000
--
--
-@8022
-TOP.top.modulator_control.tmp_i[11:0]
-@20000
--
--
+TOP.top.modulator_control.symcount[7:0]
+@28
+TOP.top.modulator_control.endit
+TOP.top.modulator_control.primed
+TOP.top.modulator_control.in_rampdown
+@8024
+TOP.top.modulator_control.rampdown_sample_counter[8:0]
 @8023
-TOP.top.modulator_control.tmp_q[11:0]
+TOP.top.modulator_control.rampup_sample_counter[8:0]
+@8022
+TOP.top.modulator_control.mask_t[7:0]
+@28
+TOP.top.iq_tsugi
+TOP.top.modulator_control.lfsr[7:0]
+TOP.top.modulator_control.in_mask
+@8022
+TOP.top.modulator_control.modulator_inphase[8:0]
+@20000
+-
+-
+-
+-
+@8022
+TOP.top.modulator_control.modulator_quadrature[8:0]
 @20000
 -
 -
 @8022
-TOP.top.modulator_control.rfchain_quadrature[5:0]
+TOP.top.modulator_control.pipeline_inphase[8:0]
 @20000
 -
 -
 @8022
-TOP.top.modulator_control.rfchain_inphase[5:0]
+TOP.top.modulator_control.pipeline_quadrature[8:0]
+@20000
+-
+@8022
+TOP.top.modulator_control.rfchain_inphase[8:0]
+@20000
+-
+@8022
+TOP.top.modulator_control.rfchain_quadrature[8:0]
 @20000
 -
 -
@@ -70,8 +84,5 @@ TOP.top.modulator.symbol_beginning
 TOP.top.modulator.tristimulus[2:0]
 TOP.top.modulator.tristimulus_delay[1:0]
 TOP.top.modulator.phase_quadrant_acc[1:0]
-@22
-TOP.top.modulator.index_rising[4:0]
-TOP.top.modulator.index_falling[4:0]
 [pattern_trace] 1
 [pattern_trace] 0

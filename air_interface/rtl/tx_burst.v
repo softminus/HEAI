@@ -4,6 +4,9 @@
  * GMSK modulator timing, initialisation, and feeding
  */
 
+ // FIXME use higher number of bits in ROM and in rampup/rampdown tables and THEN truncate to DAC
+
+
 module tx_burst
 (
     input wire clock,
@@ -37,22 +40,22 @@ module tx_burst
     /* verilator lint_on UNDRIVEN */
 );
 
-    localparam ROM_OUTPUT_BITS = 5;
+    localparam ROM_OUTPUT_BITS = 8;
     localparam CLOCKS_PER_SAMPLE = 5;
 
-    localparam MASK_SIZE = 256; // this is enumerated in I/Q-samples and not modulation symbols
-    reg [5:0] half_mask [0:(MASK_SIZE-1)];
+    localparam MASK_SIZE = 512; // this is enumerated in I/Q-samples and not modulation symbols
+    reg [7:0] half_mask [0:(MASK_SIZE-1)];
     initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
-    reg [7:0] rampup_sample_counter;
-    reg [7:0] rampdown_sample_counter;
+    reg [8:0] rampup_sample_counter;
+    reg [8:0] rampdown_sample_counter;
 
-    reg [6:0] mask; // "sign" extended
-    reg [5:0] mask_t; // "sign" extended
+    reg [8:0] mask; // "sign" extended
+    reg [7:0] mask_t;
     /* verilator lint_off UNUSED */
-    reg [12:0] tmp_i; // multiplication output
-    reg [12:0] tmp_q; // multiplication output
-    reg [12:0] tmp_qq;
-    reg [12:0] tmp_ii;
+    reg [17:0] tmp_i; // multiplication output
+    reg [17:0] tmp_q; // multiplication output
+    reg [17:0] tmp_qq;
+    reg [17:0] tmp_ii;
     /* verilator lint_on UNUSED */
 
 
@@ -73,7 +76,7 @@ module tx_burst
     reg [10:0] downtime;
 
     assign debug_pin = current_symbol;
-    localparam [7:0] LFSR_TAPS = 8'h2d;
+    localparam [7:0] LFSR_TAPS = 8'h2e;
 
     always @(posedge clock) begin
         if (reset == 0) begin
@@ -119,9 +122,10 @@ module tx_burst
             iq_valid <= 0;
             in_mask <= 1;
         end else begin
-            if (rampup_sample_counter == 255) begin
+            if (rampup_sample_counter == 511) begin
                 in_mask <= 0;
             end // if (rampup_sample_counter == 63)
+
             if (in_mask) begin
                 rampup_sample_counter <= rampup_sample_counter + 1;
                 mask_t <= half_mask[rampup_sample_counter];
@@ -130,8 +134,8 @@ module tx_burst
                 tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
                 tmp_ii <= tmp_i;
                 tmp_qq <= tmp_q;
-                rfchain_inphase    <= tmp_ii[10:5];
-                rfchain_quadrature <= tmp_qq[10:5];
+                rfchain_inphase    <= tmp_ii[16:8];
+                rfchain_quadrature <= tmp_qq[16:8];
             end else if (in_rampdown) begin
                 rampdown_sample_counter <= rampdown_sample_counter - 1;
                 mask_t <= half_mask[rampdown_sample_counter];
@@ -140,8 +144,8 @@ module tx_burst
                 tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
                 tmp_ii <= tmp_i;
                 tmp_qq <= tmp_q;
-                rfchain_inphase    <= tmp_ii[10:5];
-                rfchain_quadrature <= tmp_qq[10:5];
+                rfchain_inphase    <= tmp_ii[16:8];
+                rfchain_quadrature <= tmp_qq[16:8];
                 if(rampdown_sample_counter == 0) begin
                     in_mask <= 0;
                     in_rampdown <=0;
@@ -156,17 +160,18 @@ module tx_burst
             iq_valid <= 1;
             if (symbol_input_strobe == 1) begin
                 symcount <= symcount + 1;
-                current_symbol <= lfsr[1];
-                           if (lfsr[0]) begin
-                lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
-            end else begin
-                lfsr <= {1'b0, lfsr[7:1]};
-            end // end else
-            end // if (symbol_input_strobe == 1)
-        end // end else
-        if(symcount == 64) begin
-            rampdown_sample_counter <= 255;
+if(symcount == 16) begin
+            rampdown_sample_counter <= 511;
             in_rampdown <= 1;
         end // if(symcount == 16)
+                current_symbol <= lfsr[1]|1'b0;
+                if (lfsr[0]) begin
+                    lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
+                end else begin
+                    lfsr <= {1'b0, lfsr[7:1]};
+                end // end else
+            end // if (symbol_input_strobe == 1)
+        end // end else
+        
     end
 endmodule // tx_burst

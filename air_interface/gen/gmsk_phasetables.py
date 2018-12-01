@@ -6,9 +6,9 @@ import os
 import sys
 import random
 
-rom_index_bits = 5
+rom_index_bits = 8
 samples = 2**rom_index_bits
-bitdepth = 5
+bitdepth = 8
 
 beta = pi * 0.3 * sqrt(2 / log(2))
 
@@ -100,7 +100,7 @@ def power_mask_raw(t):
     return pow(sin(t*pi/2),2)
 
 def master_power_mask(t):
-    return scale_prim(power_mask_raw(t),5)
+    return scale_prim(power_mask_raw(t),8)
 
 for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     time = i/samples        # time from 0 to 1 (to represent real time 0 to T_b)
@@ -115,8 +115,8 @@ for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     print (i,       master_curve_three(time)  , file=curve_table_3_plain)
     print (i,       master_curve_seven(time)  , file=curve_table_7_plain)
 
-for i in range(0,256):
-    time = i/256
+for i in range(0,512):
+    time = i/512
     f = "{:04x}"
     print (f.format(master_power_mask(time))  , file=half_mask)
     print (i,       master_power_mask(time)   , file=half_mask_plain)
