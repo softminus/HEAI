@@ -40,6 +40,20 @@ module tx_burst
     localparam ROM_OUTPUT_BITS = 5;
     localparam CLOCKS_PER_SAMPLE = 5;
 
+    localparam MASK_SIZE = 256; // this is enumerated in I/Q-samples and not modulation symbols
+    reg [5:0] half_mask [0:(MASK_SIZE-1)];
+    initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
+    reg [7:0] rampup_sample_counter;
+    reg [6:0] mask; // "sign" extended
+    reg [5:0] mask_t; // "sign" extended
+    /* verilator lint_off UNUSED */
+    reg [12:0] tmp_i; // multiplication output
+    reg [12:0] tmp_q; // multiplication output
+    reg [12:0] tmp_qq;
+    reg [12:0] tmp_ii;
+    /* verilator lint_on UNUSED */
+
+
     reg [(ROM_OUTPUT_BITS-1+1):0] pipeline_inphase;
     reg [(ROM_OUTPUT_BITS-1+1):0] pipeline_quadrature;
     reg reset;
@@ -48,8 +62,10 @@ module tx_burst
     reg primed;
 
     reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
-
     reg [7:0] lfsr = 1;
+
+    reg [7:0] symcount;
+    reg in_mask;
 
     assign debug_pin = current_symbol;
     localparam [7:0] LFSR_TAPS = 8'h2d;
@@ -62,11 +78,6 @@ module tx_burst
         end else begin
             clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
             sample_strobe <= 1; //clkdiv[0];;
-            if (lfsr[0]) begin
-                lfsr <= { 1'b0, lfsr[7:1]} ^ LFSR_TAPS;
-            end else begin
-                lfsr <= { 1'b0, lfsr[7:1]};
-            end // end else
         end // end else
 
         if (priming != 0) begin
@@ -88,16 +99,41 @@ module tx_burst
         pipeline_inphase <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;
         if (primed == 0) begin
-            rfchain_inphase <= 1;
-            rfchain_quadrature <= 1;
+            rfchain_inphase <= 0;
+            rfchain_quadrature <= 0;
             iq_valid <= 0;
+            in_mask <= 1;
         end else begin
-            rfchain_inphase    <= pipeline_inphase;
-            rfchain_quadrature <= pipeline_quadrature;
+            if (rampup_sample_counter == 255) begin
+                in_mask <= 0;
+            end // if (rampup_sample_counter == 63)
+            if (in_mask) begin
+                rampup_sample_counter <= rampup_sample_counter + 1;
+                mask_t <= half_mask[rampup_sample_counter];
+                mask <= {1'b0, mask_t};
+                tmp_i <= $signed(pipeline_inphase)    * $signed(mask);
+                tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
+                tmp_ii <= tmp_i;
+                tmp_qq <= tmp_q;
+                rfchain_inphase    <= tmp_ii[10:5];
+                rfchain_quadrature <= tmp_qq[10:5];
+            end else begin
+                rfchain_inphase    <= pipeline_inphase;
+                rfchain_quadrature <= pipeline_quadrature;
+            end // end else
             iq_valid <= 1;
             if (symbol_input_strobe == 1) begin
-                current_symbol <= lfsr[1];
+                symcount <= symcount + 1;
+                current_symbol <= lfsr[1] | 1'b1;
+                           if (lfsr[0]) begin
+                lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
+            end else begin
+                lfsr <= {1'b0, lfsr[7:1]};
+            end // end else
             end // if (symbol_input_strobe == 1)
         end // end else
+        if(symcount == 100) begin
+            primed <= 0;
+        end // if(symcount == 16)
     end
 endmodule // tx_burst
