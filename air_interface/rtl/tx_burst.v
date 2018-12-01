@@ -70,6 +70,7 @@ module tx_burst
     reg endit;
     reg in_mask;
     reg in_rampdown;
+    reg [10:0] downtime;
 
     assign debug_pin = current_symbol;
     localparam [7:0] LFSR_TAPS = 8'h2d;
@@ -94,6 +95,15 @@ module tx_burst
                 lockout <= 0;
             end // if ((lockout == 1) && (symbol_input_strobe == 0))
         end // if (priming != 0)
+
+        if (endit == 1) begin
+            downtime <= downtime + 1;
+            if (downtime==1023) begin
+                endit <=0;
+                primed <=0;
+                symcount <= 0;
+            end // if (downtime==255)
+        end // if (endit == 1)
 
         if ((priming == 0) && (primed == 0) && (endit == 0)) begin
             if (symbol_iq_strobe == 1) begin
@@ -154,7 +164,7 @@ module tx_burst
             end // end else
             end // if (symbol_input_strobe == 1)
         end // end else
-        if(symcount == 40) begin
+        if(symcount == 64) begin
             rampdown_sample_counter <= 255;
             in_rampdown <= 1;
         end // if(symcount == 16)
