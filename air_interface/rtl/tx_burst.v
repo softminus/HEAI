@@ -76,7 +76,7 @@ module tx_burst
     reg [10:0] downtime;
 
     assign debug_pin = current_symbol;
-    localparam [7:0] LFSR_TAPS = 8'h2e;
+    localparam [7:0] LFSR_TAPS = 8'h8e;
 
     always @(posedge clock) begin
         if (reset == 0) begin
