@@ -55,4 +55,5 @@ burst_sim:
 
 
 clean:
-	rm -rf build/* obj_dir top.vcd verilog_out.txt gmsk_modulate.vcd
+	rm -rf build/* obj_dir top.vcd verilog_out.txt gmsk_modulate.vcd nco.vcd gmsk_tx.vcd tx_burst.vcd
+
