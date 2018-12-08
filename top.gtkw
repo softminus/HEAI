@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sat Dec  1 15:01:41 2018
+[*] Mon Dec  3 00:03:04 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/top.vcd"
-[dumpfile_mtime] "Sat Dec  1 14:59:53 2018"
-[dumpfile_size] 23654782
+[dumpfile_mtime] "Sun Dec  2 10:54:46 2018"
+[dumpfile_size] 23851860
 [savefile] "/home/thz/tdma_gmsk/top.gtkw"
 [timestart] 8
 [size] 1600 879
 [pos] -1 -1
-*-14.761662 20460 1600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.000000 12170 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.top.
 [treeopen] TOP.top.modulator.
@@ -38,9 +38,8 @@ TOP.top.modulator_control.primed
 TOP.top.modulator_control.in_rampdown
 @8024
 TOP.top.modulator_control.rampdown_sample_counter[8:0]
-@8023
-TOP.top.modulator_control.rampup_sample_counter[8:0]
 @8022
+TOP.top.modulator_control.rampup_sample_counter[8:0]
 TOP.top.modulator_control.mask_t[7:0]
 @28
 TOP.top.iq_tsugi
@@ -52,6 +51,7 @@ TOP.top.modulator_control.modulator_inphase[8:0]
 -
 -
 -
+@20001
 -
 @8022
 TOP.top.modulator_control.modulator_quadrature[8:0]
