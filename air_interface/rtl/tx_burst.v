@@ -17,7 +17,7 @@ module tx_burst
     input wire symbol_iq_strobe,    // high on the first I/Q samples of the next symbol
 
     // modulator symbol interface
-    output reg current_symbol,      // value of symbol to emit
+    output reg current_symbol_o,      // value of symbol to emit
     // I/Q sample interface
     input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_inphase,
     input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_quadrature,
@@ -71,16 +71,19 @@ module tx_burst
 
     reg [7:0] symcount;
     reg endit;
+    reg [4:0] burst_state;
+
     reg in_mask;
     reg in_rampdown;
     reg [10:0] downtime;
 
-    assign debug_pin = current_symbol;
+    assign debug_pin = current_symbol_o;
     localparam [7:0] LFSR_TAPS = 8'h8e;
 
     always @(posedge clock) begin
         if (reset == 0) begin
             priming <= 4'b1111;
+            burst_state <= 5'b00001; // flush bubbles out of modulator pipeline
             reset   <= 1;
             clkdiv  <= 1;
         end else begin
@@ -88,8 +91,9 @@ module tx_burst
             sample_strobe <= 1; //clkdiv[0];;
         end // end else
 
-        if (priming != 0) begin
-            current_symbol <= 1;
+        // flush bubbles out of modulator pipeline and reset modulator state
+        // also accept filling of bit buffer
+        if (burst_state == 5'b00001) begin
             if ((lockout == 0) && (symbol_input_strobe == 1)) begin
                 lockout <= 1;
                 priming <= {1'b0, priming[3:1]};
@@ -97,7 +101,33 @@ module tx_burst
             if (symbol_input_strobe == 0) begin
                 lockout <= 0;
             end // if ((lockout == 1) && (symbol_input_strobe == 0))
-        end // if (priming != 0)
+            rfchain_inphase <= 0;
+            rfchain_quadrature <= 0;
+            iq_valid <= 0;
+            current_symbol_o <= 1;
+            if (priming == 0) begin
+                burst_state <= 5'b00010;
+            end // if (priming == 0)
+        end // if (burst_state == 5'b00001)
+
+        // Armed state. Ready to send
+        if (burst_state == 5'b00010) begin
+        end // if (burst_state == 5'b00010)
+
+        // Sending, in ramp-up
+        if (burst_state == 5'b00100) begin
+        end // if (burst_state == 5'b00100)
+
+        // Sending, in full-power
+        if (burst_state == 5'b01000) begin
+        pipeline_inphase <= modulator_inphase;
+        pipeline_quadrature <= modulator_quadrature;
+        end // if (burst_state == 5'b01000)
+
+        // Sending, in ramp-down
+        if (burst_state == 5'b10000) begin
+        end // if (burst_state == 5'b10000)
+
 
         if (endit == 1) begin
             downtime <= downtime + 1;
@@ -108,20 +138,8 @@ module tx_burst
             end // if (downtime==255)
         end // if (endit == 1)
 
-        if ((priming == 0) && (primed == 0) && (endit == 0)) begin
-            if (symbol_iq_strobe == 1) begin
-                primed <= 1;
-                in_mask <=1;
-            end // if (symbol_iq_strobe == 1)
-        end // if ((priming == 0) && (primed == 0))
-        pipeline_inphase <= modulator_inphase;
-        pipeline_quadrature <= modulator_quadrature;
-        if (primed == 0) begin
-            rfchain_inphase <= 0;
-            rfchain_quadrature <= 0;
-            iq_valid <= 0;
-            in_mask <= 1;
-        end else begin
+
+
             if (rampup_sample_counter == 511) begin
                 in_mask <= 0;
             end // if (rampup_sample_counter == 63)
@@ -160,11 +178,11 @@ module tx_burst
             iq_valid <= 1;
             if (symbol_input_strobe == 1) begin
                 symcount <= symcount + 1;
-if(symcount == 16) begin
+        if(symcount == 16) begin
             rampdown_sample_counter <= 511;
             in_rampdown <= 1;
         end // if(symcount == 16)
-                current_symbol <= lfsr[1]|1'b0;
+                current_symbol_o <= lfsr[1]|1'b0;
                 if (lfsr[0]) begin
                     lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
                 end else begin
