@@ -50,7 +50,7 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
         .clock(pll_clock),
         .symbol_input_strobe(tsugi),
         .symbol_iq_strobe(iq_tsugi),
-        .current_symbol(bitwire),
+        .current_symbol_o(bitwire),
         .sample_strobe(sample_strobe),
         .fire_burst(fire_burst),
         .is_armed(armed),
