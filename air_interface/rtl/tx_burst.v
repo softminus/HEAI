@@ -7,14 +7,14 @@
  // FIXME use higher number of bits in ROM and in rampup/rampdown tables and THEN truncate to DAC
 
 
-module tx_burst
-(
-    input wire clock,
+ module tx_burst
+     (
+         input wire clock,
 
     // timing in/out from modulator
     output reg sample_strobe,      // we assert this every sample-interval
     input wire symbol_input_strobe, // high when the modulator expects a new symbol
-        /* verilator lint_off UNUSED */
+    /* verilator lint_off UNUSED */
 
     input wire symbol_iq_strobe,    // high on the first I/Q samples of the next symbol
     /* verilator lint_on UNUSED */
@@ -35,16 +35,16 @@ module tx_burst
     // how we get controlled
     /* verilator lint_off UNUSED */
     input wire fire_burst, // assert to begin a burst iff is_armed is high
-    /* verilator lint_on UNUSED */
-    /* verilator lint_off UNDRIVEN */
-    output reg is_armed,
-    output wire debug_pin,
-    output reg [7:0] lfsr
-    /* verilator lint_on UNDRIVEN */
-);
+        /* verilator lint_on UNUSED */
+        /* verilator lint_off UNDRIVEN */
+        output reg is_armed,
+        output wire debug_pin,
+        output reg [7:0] lfsr
+        /* verilator lint_on UNDRIVEN */
+        );
 
-    localparam ROM_OUTPUT_BITS = 8;
-    localparam CLOCKS_PER_SAMPLE = 5;
+     localparam ROM_OUTPUT_BITS = 8;
+     localparam CLOCKS_PER_SAMPLE = 5;
 
     localparam MASK_SIZE = 512; // this is enumerated in I/Q-samples and not modulation symbols
     reg [7:0] half_mask [0:(MASK_SIZE-1)];
@@ -117,70 +117,62 @@ module tx_burst
             rfchain_quadrature <= 0;
             iq_valid <= 0;
             symcount <= 0;
+            mask_t <= 69;
+            mask   <= 42;
             iftime <= iftime - 1;
             if(iftime == 0) begin
                 burst_state <= 5'b00100;
             end // if(iftime == 0)
         end // if (burst_state == 5'b00010)
 
-        // Sending, in ramp-up
-        if (burst_state == 5'b00100) begin
-            pipeline_inphase <= modulator_inphase;
-            pipeline_quadrature <= modulator_quadrature;
-            rampup_sample_counter <= rampup_sample_counter + 1;
-            mask_t <= half_mask[rampup_sample_counter];
-            mask <= {1'b0, mask_t};
-            tmp_i <= $signed(pipeline_inphase)    * $signed(mask);
-            tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
-            tmp_ii <= tmp_i;
-            tmp_qq <= tmp_q;
-            rfchain_inphase    <= tmp_ii[16:8];
-            rfchain_quadrature <= tmp_qq[16:8];
-            if(rampup_sample_counter == 511) begin
-                burst_state <= 5'b01000;
-            end // if ((preaction == 1) && (symbol_iq_strobe == 1))
+        // Sending
+        if ((burst_state == 5'b00100) || (burst_state == 5'b01000) || (burst_state == 5'b10000)) begin
+            if (burst_state == 5'b00100) begin
+                rampup_sample_counter <= rampup_sample_counter + 1;
+                mask_t <= half_mask[rampup_sample_counter];
+                mask <= {1'b0, mask_t};
+                if(rampup_sample_counter == 511) begin
+                    burst_state <= 5'b01000;
+                end // if(rampup_sample_counter == 511)
+            end // if (burst_state == 5'b00100)
+
+            if (burst_state == 5'b01000) begin
+                mask_t <= 8'b11111111;
+                mask <= {1'b0, mask_t};
+                if (symbol_input_strobe == 1) begin
+                    symcount <= symcount + 1;
+                    current_symbol_o <= lfsr[1]|1'b0;
+                    if (lfsr[0]) begin
+                        lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
+                    end else begin
+                        lfsr <= {1'b0, lfsr[7:1]};
+                    end // end else
+                end // if (symbol_input_strobe == 1)
+                if (symcount == 16) begin
+                    burst_state <= 5'b10000;
+                end // if (symcount == 16)
+            end // if (burst_state == 5'b01000)
+
+            if (burst_state == 5'b10000) begin
+                rampdown_sample_counter <= rampdown_sample_counter - 1;
+                mask_t <= half_mask[rampdown_sample_counter];
+                mask <= {1'b0, mask_t};
+                if(rampdown_sample_counter == 0) begin
+                    burst_state <= 5'b00001;
+                    priming <= 4'b1111;
+                end // if(rampdown_sample_counter == 0)
+            end // if (burst_state == 5'b10000)
+
+        pipeline_inphase    <= modulator_inphase;
+        pipeline_quadrature <= modulator_quadrature;
+        tmp_i <= $signed(pipeline_inphase)    * $signed(mask);
+        tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
+        tmp_ii <= tmp_i;
+        tmp_qq <= tmp_q;
+        rfchain_inphase    <= tmp_ii[16:8];
+        rfchain_quadrature <= tmp_qq[16:8];
+        iq_valid <= 1;
         end // if (burst_state == 5'b00100)
 
-
-
-
-        // Sending, in full-power
-        if (burst_state == 5'b01000) begin
-        iq_valid <= 1;
-        if (symbol_input_strobe == 1) begin
-            symcount <= symcount + 1;
-            current_symbol_o <= lfsr[1]|1'b0;
-            if (lfsr[0]) begin
-                lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
-            end else begin
-                lfsr <= {1'b0, lfsr[7:1]};
-            end // end else
-        end // if (symbol_input_strobe == 1)
-        if (symcount == 16) begin
-            burst_state <= 5'b10000;
-        end // if (symcount == 16)
-        rfchain_inphase <= modulator_inphase;
-        rfchain_quadrature <= modulator_quadrature;
-        end // if (burst_state == 5'b01000)
-
-        // Sending, in ramp-down
-        if (burst_state == 5'b10000) begin
-            pipeline_inphase <= modulator_inphase;
-            pipeline_quadrature <= modulator_quadrature;
-            rampdown_sample_counter <= rampdown_sample_counter - 1;
-            mask_t <= half_mask[rampdown_sample_counter];
-            mask <= {1'b0, mask_t};
-            tmp_i <= $signed(pipeline_inphase)    * $signed(mask);
-            tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
-            tmp_ii <= tmp_i;
-            tmp_qq <= tmp_q;
-            rfchain_inphase    <= tmp_ii[16:8];
-            rfchain_quadrature <= tmp_qq[16:8];
-
-            if(rampdown_sample_counter == 0) begin
-                burst_state <= 5'b00001;
-                priming <= 4'b1111;
-            end // if(rampdown_sample_counter == 0)
-        end // if (burst_state == 5'b10000)
-    end
+    end // always @(posedge clock)
 endmodule // tx_burst
