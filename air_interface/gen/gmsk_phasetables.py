@@ -88,7 +88,7 @@ def conv(v):
 
 #### power mask ####
 def scale_prim(val, bits):
-    norm = (2 ** (bits))
+    norm = (2 ** (bits)-1)
     if (val < 0):
         val = 0
     return round(val * norm)
