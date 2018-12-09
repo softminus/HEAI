@@ -1,57 +1,49 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Mon Dec  3 00:03:04 2018
+[*] Sun Dec  9 03:49:27 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/top.vcd"
-[dumpfile_mtime] "Sun Dec  2 10:54:46 2018"
-[dumpfile_size] 23851860
+[dumpfile_mtime] "Sun Dec  9 03:49:05 2018"
+[dumpfile_size] 22494109
 [savefile] "/home/thz/tdma_gmsk/top.gtkw"
 [timestart] 8
 [size] 1600 879
 [pos] -1 -1
-*-13.000000 12170 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.000000 20410 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.top.
 [treeopen] TOP.top.modulator.
 [sst_width] 212
 [signals_width] 431
 [sst_expanded] 1
-[sst_vpaned_height] 247
+[sst_vpaned_height] 402
 @28
 TOP.top.modulator_control.clock
 TOP.top.modulator_control.sample_strobe
 TOP.top.modulator.next_symbol_strobe
 TOP.top.modulator_control.lockout
 TOP.top.modulator_control.iq_valid
-@22
-TOP.top.modulator_control.symcount[7:0]
-@28
+TOP.top.modulator_control.burst_state[4:0]
 TOP.top.modulator_control.priming[3:0]
 TOP.top.modulator_control.symbol_input_strobe
+TOP.top.modulator_control.symbol_iq_strobe
 TOP.top.modulator_control.iq_valid
-TOP.top.modulator_control.in_mask
-@22
-TOP.top.modulator_control.symcount[7:0]
-@28
-TOP.top.modulator_control.endit
-TOP.top.modulator_control.primed
-TOP.top.modulator_control.in_rampdown
 @8024
 TOP.top.modulator_control.rampdown_sample_counter[8:0]
+@8023
+TOP.top.modulator_control.iftime[7:0]
 @8022
 TOP.top.modulator_control.rampup_sample_counter[8:0]
 TOP.top.modulator_control.mask_t[7:0]
 @28
 TOP.top.iq_tsugi
 TOP.top.modulator_control.lfsr[7:0]
-TOP.top.modulator_control.in_mask
 @8022
 TOP.top.modulator_control.modulator_inphase[8:0]
 @20000
 -
 -
 -
-@20001
 -
 @8022
 TOP.top.modulator_control.modulator_quadrature[8:0]
@@ -79,7 +71,6 @@ TOP.top.modulator_control.rfchain_quadrature[8:0]
 @28
 TOP.top.modulator_control.debug_pin
 TOP.top.modulator.next_symbol_strobe
-TOP.top.modulator_control.current_symbol
 TOP.top.modulator.symbol_beginning
 TOP.top.modulator.tristimulus[2:0]
 TOP.top.modulator.tristimulus_delay[1:0]
