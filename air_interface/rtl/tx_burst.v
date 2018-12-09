@@ -62,7 +62,6 @@
     reg [17:0] tmp_ii;
     /* verilator lint_on UNUSED */
 
-
     reg [(ROM_OUTPUT_BITS-1+1):0] pipeline_inphase;
     reg [(ROM_OUTPUT_BITS-1+1):0] pipeline_quadrature;
     reg reset;
@@ -82,7 +81,7 @@
     always @(posedge clock) begin
         if (reset == 0) begin
             priming <= 4'b1111;
-            burst_state <= 5'b00001; // flush bubbles out of modulator pipeline
+            burst_state <= 5'b00100; // flush bubbles out of modulator pipeline
             reset   <= 1;
             clkdiv  <= 1;
             iftime  <= 1020;
@@ -90,6 +89,7 @@
             clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
             sample_strobe <= 1; //clkdiv[0];;
         end // end else
+
 
         // flush bubbles out of modulator pipeline and reset modulator state
         // also accept filling of bit buffer
@@ -128,7 +128,7 @@
 
         // Sending
         if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
-            if (burst_state[2]) begin
+  /*          if (burst_state[2]) begin
                 rampup_sample_counter <= rampup_sample_counter + 1;
                 tmp <= rampup_sample_counter;
                 mask_t <= half_mask[tmp];
@@ -137,9 +137,9 @@
                     burst_state <= {burst_state[3:0],burst_state[4]};
                 end // if(rampup_sample_counter == 511)
             end // if (burst_state == 5'b00100)
-
+*/
             if (burst_state[3]) begin
-                mask_t <= 8'b11111111;
+                mask_t <= 8'b100000000;
                 mask <= {1'b0, mask_t};
                 if (symbol_input_strobe == 1) begin
                     symcount <= symcount + 1;
@@ -151,11 +151,11 @@
                     end // end else
                 end // if (symbol_input_strobe == 1)
                 if (symcount == 13) begin
-                    burst_state <= {burst_state[3:0],burst_state[4]};
+ //                    burst_state <= {burst_state[3:0],burst_state[4]};
                 end // if (symcount == 16)
             end // if (burst_state == 5'b01000)
 
-            if (burst_state[4]) begin
+/*            if (burst_state[4]) begin
                 rampdown_sample_counter <= rampdown_sample_counter - 1;
                 tmp <= rampdown_sample_counter;
                 mask_t <= half_mask[tmp];
@@ -165,7 +165,7 @@
                     priming <= 4'b1111;
                 end // if(rampdown_sample_counter == 0)
             end // if (burst_state == 5'b10000)
-
+*/
 
         pipeline_inphase    <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;
