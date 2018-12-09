@@ -51,6 +51,7 @@
     initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
     reg [8:0] rampup_sample_counter;
     reg [8:0] rampdown_sample_counter;
+    reg [8:0] tmp;
 
     reg [8:0] mask; // "sign" extended
     reg [7:0] mask_t;
@@ -72,7 +73,7 @@
     reg [7:0] lfsr = 1;
 
     reg [4:0] burst_state;
-    reg [6:0] symcount;
+    reg [7:0] symcount;
     reg [9:0] iftime;
 
     assign debug_pin = current_symbol_o;
@@ -92,7 +93,7 @@
 
         // flush bubbles out of modulator pipeline and reset modulator state
         // also accept filling of bit buffer
-        if (burst_state == 5'b00001) begin
+        if (burst_state[0]) begin
             if ((lockout == 0) && (symbol_input_strobe == 1)) begin
                 lockout <= 1;
                 priming <= {1'b0, priming[3:1]};
@@ -105,38 +106,39 @@
             iq_valid <= 0;
             current_symbol_o <= 1;
             if (priming == 0) begin
-                burst_state <= 5'b00010;
+                burst_state <= {burst_state[3:0],burst_state[4]};
             end // if (priming == 0)
         end // if (burst_state == 5'b00001)
 
         // Armed state. Ready to send
-        if (burst_state == 5'b00010) begin
-            rampup_sample_counter <= 0;
-            rampdown_sample_counter <= 511;
+        if (burst_state[1]) begin
             rfchain_inphase <= 0;
             rfchain_quadrature <= 0;
             iq_valid <= 0;
             symcount <= 0;
-            mask_t <= 69;
-            mask   <= 42;
+            mask_t <= 00;
+            mask   <= 00;
             iftime <= iftime - 1;
             if(iftime == 0) begin
-                burst_state <= 5'b00100;
+                            rampup_sample_counter <= 0;
+            rampdown_sample_counter <= 480;
+            burst_state <= {burst_state[3:0],burst_state[4]};
             end // if(iftime == 0)
         end // if (burst_state == 5'b00010)
 
         // Sending
-        if ((burst_state == 5'b00100) || (burst_state == 5'b01000) || (burst_state == 5'b10000)) begin
-            if (burst_state == 5'b00100) begin
+        if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
+            if (burst_state[2]) begin
                 rampup_sample_counter <= rampup_sample_counter + 1;
-                mask_t <= half_mask[rampup_sample_counter];
+                tmp <= rampup_sample_counter;
+                mask_t <= half_mask[tmp];
                 mask <= {1'b0, mask_t};
-                if(rampup_sample_counter == 511) begin
-                    burst_state <= 5'b01000;
+                if(rampup_sample_counter == 490) begin
+                    burst_state <= {burst_state[3:0],burst_state[4]};
                 end // if(rampup_sample_counter == 511)
             end // if (burst_state == 5'b00100)
 
-            if (burst_state == 5'b01000) begin
+            if (burst_state[3]) begin
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
                 if (symbol_input_strobe == 1) begin
@@ -148,20 +150,22 @@
                         lfsr <= {1'b0, lfsr[7:1]};
                     end // end else
                 end // if (symbol_input_strobe == 1)
-                if (symcount == 16) begin
-                    burst_state <= 5'b10000;
+                if (symcount == 13) begin
+                    burst_state <= {burst_state[3:0],burst_state[4]};
                 end // if (symcount == 16)
             end // if (burst_state == 5'b01000)
 
-            if (burst_state == 5'b10000) begin
+            if (burst_state[4]) begin
                 rampdown_sample_counter <= rampdown_sample_counter - 1;
-                mask_t <= half_mask[rampdown_sample_counter];
+                tmp <= rampdown_sample_counter;
+                mask_t <= half_mask[tmp];
                 mask <= {1'b0, mask_t};
                 if(rampdown_sample_counter == 0) begin
-                    burst_state <= 5'b00001;
+                    burst_state <= {burst_state[3:0],burst_state[4]};
                     priming <= 4'b1111;
                 end // if(rampdown_sample_counter == 0)
             end // if (burst_state == 5'b10000)
+
 
         pipeline_inphase    <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;

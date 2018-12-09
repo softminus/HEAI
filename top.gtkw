@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sun Dec  9 03:49:27 2018
+[*] Sun Dec  9 04:59:49 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/top.vcd"
-[dumpfile_mtime] "Sun Dec  9 03:49:05 2018"
-[dumpfile_size] 22494109
+[dumpfile_mtime] "Sun Dec  9 04:56:08 2018"
+[dumpfile_size] 27179698
 [savefile] "/home/thz/tdma_gmsk/top.gtkw"
-[timestart] 8
+[timestart] 17573
 [size] 1600 879
 [pos] -1 -1
-*-14.000000 20410 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-7.000000 17901 17901 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.top.
 [treeopen] TOP.top.modulator.
@@ -30,36 +30,32 @@ TOP.top.modulator_control.symbol_iq_strobe
 TOP.top.modulator_control.iq_valid
 @8024
 TOP.top.modulator_control.rampdown_sample_counter[8:0]
-@8023
-TOP.top.modulator_control.iftime[7:0]
 @8022
+TOP.top.modulator_control.iftime[9:0]
 TOP.top.modulator_control.rampup_sample_counter[8:0]
+@22
 TOP.top.modulator_control.mask_t[7:0]
+TOP.top.modulator_control.mask[8:0]
 @28
 TOP.top.iq_tsugi
 TOP.top.modulator_control.lfsr[7:0]
-@8022
+@8028
 TOP.top.modulator_control.modulator_inphase[8:0]
 @20000
--
--
--
 -
 @8022
 TOP.top.modulator_control.modulator_quadrature[8:0]
 @20000
 -
--
 @8022
 TOP.top.modulator_control.pipeline_inphase[8:0]
 @20000
--
 -
 @8022
 TOP.top.modulator_control.pipeline_quadrature[8:0]
 @20000
 -
-@8022
+@8028
 TOP.top.modulator_control.rfchain_inphase[8:0]
 @20000
 -
@@ -67,11 +63,7 @@ TOP.top.modulator_control.rfchain_inphase[8:0]
 TOP.top.modulator_control.rfchain_quadrature[8:0]
 @20000
 -
--
 @28
-TOP.top.modulator_control.debug_pin
-TOP.top.modulator.next_symbol_strobe
-TOP.top.modulator.symbol_beginning
 TOP.top.modulator.tristimulus[2:0]
 TOP.top.modulator.tristimulus_delay[1:0]
 TOP.top.modulator.phase_quadrant_acc[1:0]

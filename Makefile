@@ -24,7 +24,7 @@ $(JSON_FILE): $(FILES)
 	yosys -p "synth_ice40 -top top -json $(JSON_FILE)" $^
 
 $(ASC_FILE): $(JSON_FILE) $(PCF)
-	nextpnr-ice40 --$(ICETIME_DEVICE) --json $(JSON_FILE) --pcf $(PCF) --asc $(ASC_FILE)
+	nextpnr-ice40 --$(ICETIME_DEVICE) --json $(JSON_FILE) --pcf $(PCF) --asc $(ASC_FILE) --freq 50
 
 $(BIN_FILE): $(ASC_FILE)
 	icepack $< $@

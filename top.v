@@ -19,8 +19,8 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
     wire [8:0] itmp;
     wire [8:0] qtmp;
 
-    output reg [5:0] dac_zero;
-    output reg [5:0] dac_one;
+    output wire [5:0] dac_zero;
+    output wire [5:0] dac_one;
 
     output wire debug_pin;
     /* verilator lint_off UNUSED */
@@ -28,14 +28,18 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
     wire [8:0] q_tc;
     wire [8:0] i_tc;
     wire [7:0] lfsr_debug;
+    reg [5:0] a;
+    reg [5:0] b;
+    assign dac_zero = a;
+    assign dac_one = b;
     wire xxx;
     /* verilator lint_on UNUSED */
     always @(posedge pll_clock) begin
-        dac_zero <= i_tc[8:3] + 32;
-        dac_one  <= q_tc[8:3] + 32;
+        a <= i_tc[8:3] + 32;
+        b  <= q_tc[8:3] + 32;
     end // always @(posedge pll_clock)
     assign debug_pin = pll_clock;
-//    icepll pll(xtal, pll_clock);
+    //icepll pll(xtal, pll_clock);
     assign pll_clock = xtal;
     gmsk_modulate modulator (
         .clock(pll_clock),
