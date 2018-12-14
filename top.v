@@ -1,5 +1,5 @@
 `default_nettype none
-module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
+module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, a_x, b_x, armed, txchain_en);
     input wire xtal;
 
 
@@ -28,15 +28,15 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, armed, txchain_en);
     wire [8:0] q_tc;
     wire [8:0] i_tc;
     wire [7:0] lfsr_debug;
-    reg [5:0] a;
-    reg [5:0] b;
-    assign dac_zero = a;
-    assign dac_one = b;
+    output reg [8:0] a_x;
+    output reg [8:0] b_x;
+    assign dac_zero = a_x[8:3];
+    assign dac_one = b_x[8:3];
     wire xxx;
     /* verilator lint_on UNUSED */
     always @(posedge pll_clock) begin
-        a <= i_tc[8:3] + 32;
-        b  <= q_tc[8:3] + 32;
+        a_x <= i_tc+255;
+        b_x  <= q_tc+255;
     end // always @(posedge pll_clock)
     assign debug_pin = pll_clock;
     //icepll pll(xtal, pll_clock);
