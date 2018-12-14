@@ -10,7 +10,7 @@ int main(int argc, char **argv, char **env) {
     srand(time(0));
     int tick_count;
     int clk;
-    int8_t i,q;
+    int16_t i,q;
     Verilated::commandArgs(argc, argv);
     // init top verilog instance
     Vtop* top = new Vtop;
@@ -43,8 +43,8 @@ int main(int argc, char **argv, char **env) {
         tfp->dump (10*tick_count+5);
         tfp->flush();
 
-        i = top->dac_zero;
-        q = top->dac_one;
+        i = top->a_x;
+        q = top->b_x;
 
         printf("%d %d %d\n", tick_count, i,q);
         if (Verilated::gotFinish())    exit(0);
