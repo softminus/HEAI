@@ -5,12 +5,11 @@
  */
 
  // FIXME use higher number of bits in ROM and in rampup/rampdown tables and THEN truncate to DAC
+ // FIXME also do complete analysis of bit-widths everywhere and DOCUMENT it properly
 
 
- module tx_burst
-     (
-         input wire clock,
-
+module tx_burst (
+    input wire clock,
     // timing in/out from modulator
     output reg sample_strobe,      // we assert this every sample-interval
     input wire symbol_input_strobe, // high when the modulator expects a new symbol
@@ -35,13 +34,13 @@
     // how we get controlled
     /* verilator lint_off UNUSED */
     input wire fire_burst, // assert to begin a burst iff is_armed is high
-        /* verilator lint_on UNUSED */
-        /* verilator lint_off UNDRIVEN */
-        output reg is_armed,
-        output wire debug_pin,
-        output reg [7:0] lfsr
-        /* verilator lint_on UNDRIVEN */
-        );
+    /* verilator lint_on UNUSED */
+    /* verilator lint_off UNDRIVEN */
+    output reg is_armed,
+    output wire debug_pin,
+    output reg [7:0] lfsr
+    /* verilator lint_on UNDRIVEN */
+);
 
      localparam ROM_OUTPUT_BITS = 8;
      localparam CLOCKS_PER_SAMPLE = 5;
@@ -85,6 +84,9 @@
             reset   <= 1;
             clkdiv  <= 1;
             iftime  <= 1020;
+                        rampup_sample_counter <= 0;
+            rampdown_sample_counter <= 480;
+
         end else begin
             clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
             sample_strobe <= 1; //clkdiv[0];;
@@ -120,7 +122,7 @@
             mask   <= 00;
             iftime <= iftime - 1;
             if(iftime == 0) begin
-                            rampup_sample_counter <= 0;
+            rampup_sample_counter <= 0;
             rampdown_sample_counter <= 480;
             burst_state <= {burst_state[3:0],burst_state[4]};
             end // if(iftime == 0)
@@ -128,18 +130,18 @@
 
         // Sending
         if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
-  /*          if (burst_state[2]) begin
+            if (burst_state[2]) begin
                 rampup_sample_counter <= rampup_sample_counter + 1;
                 tmp <= rampup_sample_counter;
                 mask_t <= half_mask[tmp];
                 mask <= {1'b0, mask_t};
                 if(rampup_sample_counter == 490) begin
-                    burst_state <= {burst_state[3:0],burst_state[4]};
+                    burst_state <= {burst_state[3:0], burst_state[4]};
                 end // if(rampup_sample_counter == 511)
             end // if (burst_state == 5'b00100)
-*/
+
             if (burst_state[3]) begin
-                mask_t <= 8'b100000000;
+                mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
                 if (symbol_input_strobe == 1) begin
                     symcount <= symcount + 1;
@@ -151,21 +153,20 @@
                     end // end else
                 end // if (symbol_input_strobe == 1)
                 if (symcount == 13) begin
- //                    burst_state <= {burst_state[3:0],burst_state[4]};
+                    burst_state <= {burst_state[3:0], burst_state[4]};
                 end // if (symcount == 16)
             end // if (burst_state == 5'b01000)
 
-/*            if (burst_state[4]) begin
+            if (burst_state[4]) begin
                 rampdown_sample_counter <= rampdown_sample_counter - 1;
                 tmp <= rampdown_sample_counter;
                 mask_t <= half_mask[tmp];
                 mask <= {1'b0, mask_t};
                 if(rampdown_sample_counter == 0) begin
-                    burst_state <= {burst_state[3:0],burst_state[4]};
+                    burst_state <= {burst_state[3:0], burst_state[4]};
                     priming <= 4'b1111;
                 end // if(rampdown_sample_counter == 0)
             end // if (burst_state == 5'b10000)
-*/
 
         pipeline_inphase    <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;
