@@ -63,9 +63,9 @@ module tx_burst (
     reg [3:0] priming;
 
     reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
-    reg [7:0] lfsr;
+    reg [7:0] lfsr = 1;
 
-    reg [4:0] burst_state;
+    reg [4:0] burst_state =1;
     reg new_symbol;
     reg samples_edge;
     reg [7:0] symcount;
@@ -147,7 +147,7 @@ module tx_burst (
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
                 if (new_symbol == 1) begin
-                    if ((symcount < 10) || (symcount > 20)) begin
+                    if ((symcount < 1) || (symcount > 9)) begin
                         current_symbol_o <= 1;
                     end else begin
                         current_symbol_o <= lfsr[1]|1'b0;
@@ -162,7 +162,7 @@ module tx_burst (
                     symcount <= symcount + 1;
                 end // if (samples_edge == 1)
 
-                if (symcount == 32) begin
+                if (symcount == 20) begin
                     burst_state <= {burst_state[3:0], burst_state[4]};
                     iftime <= 1021;
                     mask_index <= 255;
