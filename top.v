@@ -43,17 +43,17 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, a_x, b_x, armed, txc
     assign pll_clock = xtal;
     gmsk_modulate modulator (
         .clock(pll_clock),
-        .current_symbol(bitwire),
-        .sample_strobe(sample_strobe),
-        .symbol_beginning(iq_tsugi),
+        .current_symbol_i(bitwire),
+        .sample_strobe_i(sample_strobe),
+        .iq_symbol_edge_o(iq_tsugi),
         .inphase_out(itmp),
         .quadrature_out(qtmp),
-        .next_symbol_strobe(tsugi));
+        .symbol_strobe_o(tsugi));
 
     tx_burst modulator_control(
         .clock(pll_clock),
-        .symbol_input_strobe(tsugi),
-        .symbol_iq_strobe(iq_tsugi),
+        .symbol_strobe_i(tsugi),
+        .iq_symbol_edge_i(iq_tsugi),
         .current_symbol_o(bitwire),
         .sample_strobe(sample_strobe),
         .fire_burst(fire_burst),
@@ -63,7 +63,6 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, a_x, b_x, armed, txc
         .rfchain_inphase(i_tc),
         .rfchain_quadrature(q_tc),
         .debug_pin(xxx),
-        .lfsr(lfsr_debug),
         .iq_valid(txchain_en));
 
 endmodule
