@@ -10,26 +10,25 @@
 
 module tx_burst (
     input wire clock,
-    // timing in/out from modulator
-    output reg sample_strobe,      // we assert this every sample-interval
-    input wire symbol_input_strobe, // high when the modulator expects a new symbol
-    /* verilator lint_off UNUSED */
 
-    input wire symbol_iq_strobe,    // high on the first I/Q samples of the next symbol
-    /* verilator lint_on UNUSED */
+    // we divide the system clock to generate a sample clock for the modulator
+    output reg sample_strobe,
 
-    // modulator symbol interface
-    output reg current_symbol_o,      // value of symbol to emit
+    // we feed symbols to the modulator ...
+    output reg current_symbol_o,
+    // ... when the modulator asserts this strobe:
+    input wire symbol_strobe_i,    // high when the modulator expects a new symbol input
+    // ...and the new symbol's I/Q samples begin when this is high:
+    input wire iq_symbol_edge_i,   // high on the first I/Q samples of the next symbol
+
+
     // I/Q sample interface
     input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_inphase,
     input wire [(ROM_OUTPUT_BITS-1+1):0] modulator_quadrature,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_inphase,
     output reg [(ROM_OUTPUT_BITS-1+1):0] rfchain_quadrature,
-    /* verilator lint_off UNDRIVEN */
-    output reg iq_valid, // 1 iff valid I/Q samples are being output (use to enable RF PA)
-    /* verilator lint_on UNDRIVEN */
-
+    output reg iq_valid, // 1 iff valid I/Q samples are being output (feed this to RF chain)
 
     // how we get controlled
     /* verilator lint_off UNUSED */
