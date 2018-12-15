@@ -54,6 +54,7 @@ module tx_burst (
     reg [17:0] tmp_i; // multiplication output
     reg [17:0] tmp_q; // multiplication output
     reg [17:0] tmp_qq;
+    reg in_tail;
     reg [17:0] tmp_ii;
     /* verilator lint_on UNUSED */
 
@@ -65,10 +66,10 @@ module tx_burst (
     reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
     reg [7:0] lfsr = 1;
 
-    reg [4:0] burst_state =1;
-    reg new_symbol;
-    reg samples_edge;
-    reg [7:0] symcount;
+    reg [4:0] burst_state = 1;
+    wire new_symbol;
+    wire samples_edge;
+    reg [7:0] current_symbol_idx;
     reg [9:0] iftime;
 
     assign debug_pin = current_symbol_o;
@@ -108,7 +109,7 @@ module tx_burst (
             rfchain_inphase <= 0;
             rfchain_quadrature <= 0;
             iq_valid <= 0;
-            symcount <= 0;
+            current_symbol_idx <= 0;
             mask_t <= 00;
             mask   <= 00;
             if (iftime != 0) begin
@@ -136,6 +137,7 @@ module tx_burst (
                 mask_t <= half_mask[mask_index_tmp];
                 mask <= {1'b0, mask_t};
                 if (samples_edge == 1) begin
+                    current_symbol_idx <= current_symbol_idx + 1;
                     if (burst_state[4]) begin
                         priming <= 4'b1111;
                     end // if (burst_state[4])
@@ -147,10 +149,12 @@ module tx_burst (
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
                 if (new_symbol == 1) begin
-                    if ((symcount < 1) || (symcount > 9)) begin
+                    if ((current_symbol_idx < 2) || (current_symbol_idx > 12)) begin
+                        in_tail <= 1;
                         current_symbol_o <= 1;
                     end else begin
-                        current_symbol_o <= lfsr[1]|1'b0;
+                        in_tail <= 0;
+                        current_symbol_o <= 0; //lfsr[1]|1'b0;
                     end // end else
                     if (lfsr[0]) begin
                         lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
@@ -159,15 +163,15 @@ module tx_burst (
                     end // end else
                 end // if (new_symbol == 1)
                 if (samples_edge == 1) begin
-                    symcount <= symcount + 1;
+                    current_symbol_idx <= current_symbol_idx + 1;
                 end // if (samples_edge == 1)
 
-                if (symcount == 20) begin
+                if (current_symbol_idx == 16) begin
                     burst_state <= {burst_state[3:0], burst_state[4]};
                     iftime <= 1021;
                     mask_index <= 255;
                     mask_index_tmp <= 255;
-                end // if (symcount == 16)
+                end // if (current_symbol_idx == 16)
             end // if (burst_state == 5'b01000)
         pipeline_inphase    <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;
