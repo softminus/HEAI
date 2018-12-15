@@ -18,11 +18,11 @@ module gmsk_modulate
 (
     input wire clock,
 
-    input wire current_symbol,
-    input wire sample_strobe,
+    input wire current_symbol_i,
+    input wire sample_strobe_i,
 
-    output reg next_symbol_strobe,
-    output reg symbol_beginning,
+    output reg symbol_strobe_o,
+    output reg iq_symbol_edge_o,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
     output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
@@ -89,17 +89,17 @@ module gmsk_modulate
     always @ (posedge clock) begin
 
         if (index_rising == ROM_SIZE-4) begin
-            next_symbol_strobe <= 1;
+            symbol_strobe_o<= 1;
         end else begin
-            next_symbol_strobe <= 0;
+            symbol_strobe_o <= 0;
         end // end else
 
-        if (sample_strobe == 1) begin
-            if (index_rising==ROM_SIZE-2) begin
+        if (sample_strobe_i == 1) begin
+            if (index_rising == (ROM_SIZE-2)) begin
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
                 phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
-                tristimulus <= {tristimulus[1:0], current_symbol};
+                tristimulus <= {tristimulus[1:0], current_symbol_i};
                 edge_output <= {edge_output[2:0], 1'b1};
             end else begin
                 index_rising  <= index_rising  + 1;
@@ -107,7 +107,7 @@ module gmsk_modulate
                 edge_output <= {edge_output[2:0], 1'b0};
             end // end else
 
-            symbol_beginning <= edge_output[3];
+            iq_symbol_edge_o <= edge_output[3];
 
             tristimulus_delay <= {tristimulus_delay[0], tristimulus[1]};
 
