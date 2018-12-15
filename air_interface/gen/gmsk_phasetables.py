@@ -115,8 +115,8 @@ for i in range(0,samples):  # from zero (inclusive) to 64 (EXCLUSIVE)
     print (i,       master_curve_three(time)  , file=curve_table_3_plain)
     print (i,       master_curve_seven(time)  , file=curve_table_7_plain)
 
-for i in range(0,512):
-    time = i/512
+for i in range(0,256):
+    time = i/256
     f = "{:04x}"
     print (f.format(master_power_mask(time))  , file=half_mask)
     print (i,       master_power_mask(time)   , file=half_mask_plain)
