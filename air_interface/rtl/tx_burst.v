@@ -36,20 +36,17 @@ module tx_burst (
     /* verilator lint_on UNUSED */
     /* verilator lint_off UNDRIVEN */
     output reg is_armed,
-    output wire debug_pin,
-    output reg [7:0] lfsr
+    output wire debug_pin
     /* verilator lint_on UNDRIVEN */
 );
 
-     localparam ROM_OUTPUT_BITS = 8;
-     localparam CLOCKS_PER_SAMPLE = 5;
-
-    localparam MASK_SIZE = 512; // this is enumerated in I/Q-samples and not modulation symbols
+    localparam ROM_OUTPUT_BITS = 8;
+    localparam CLOCKS_PER_SAMPLE = 5;
+    localparam MASK_SIZE = 256; // this is enumerated in I/Q-samples and not modulation symbols
     reg [7:0] half_mask [0:(MASK_SIZE-1)];
     initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
-    reg [8:0] rampup_sample_counter;
-    reg [8:0] rampdown_sample_counter;
-    reg [8:0] tmp;
+    reg [7:0] mask_index;
+    reg [7:0] mask_index_tmp;
 
     reg [8:0] mask; // "sign" extended
     reg [7:0] mask_t;
@@ -64,12 +61,13 @@ module tx_burst (
     reg [(ROM_OUTPUT_BITS-1+1):0] pipeline_quadrature;
     reg reset;
     reg [3:0] priming;
-    reg lockout;
 
     reg [(CLOCKS_PER_SAMPLE-1):0] clkdiv;
-    reg [7:0] lfsr = 1;
+    reg [7:0] lfsr;
 
     reg [4:0] burst_state;
+    reg new_symbol;
+    reg samples_edge;
     reg [7:0] symcount;
     reg [9:0] iftime;
 
@@ -79,13 +77,11 @@ module tx_burst (
     always @(posedge clock) begin
         if (reset == 0) begin
             priming <= 4'b1111;
-            burst_state <= 5'b00100; // flush bubbles out of modulator pipeline
+            burst_state <= 5'b00001; // flush bubbles out of modulator pipeline
             reset   <= 1;
             clkdiv  <= 1;
-            iftime  <= 1020;
-                        rampup_sample_counter <= 0;
-            rampdown_sample_counter <= 480;
-
+            iftime  <= 1021;
+            lfsr <= 1;
         end else begin
             clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
             sample_strobe <= 1; //clkdiv[0];;
@@ -95,13 +91,9 @@ module tx_burst (
         // flush bubbles out of modulator pipeline and reset modulator state
         // also accept filling of bit buffer
         if (burst_state[0]) begin
-            if ((lockout == 0) && (symbol_input_strobe == 1)) begin
-                lockout <= 1;
+            if (new_symbol == 1) begin
                 priming <= {1'b0, priming[3:1]};
-            end // if (symbol_input_strobe == 1)
-            if (symbol_input_strobe == 0) begin
-                lockout <= 0;
-            end // if ((lockout == 1) && (symbol_input_strobe == 0))
+            end // if (new_symbol == 1)
             rfchain_inphase <= 0;
             rfchain_quadrature <= 0;
             iq_valid <= 0;
@@ -119,22 +111,34 @@ module tx_burst (
             symcount <= 0;
             mask_t <= 00;
             mask   <= 00;
-            iftime <= iftime - 1;
-            if(iftime == 0) begin
-            rampup_sample_counter <= 0;
-            rampdown_sample_counter <= 480;
-            burst_state <= {burst_state[3:0],burst_state[4]};
+            if (iftime != 0) begin
+                iftime <= iftime - 1;
+            end else begin
+                mask_index <= 0;
+                mask_index_tmp <= 0;
+                if (samples_edge == 1) begin
+                burst_state <= {burst_state[3:0],burst_state[4]};
+            end // end else
             end // if(iftime == 0)
         end // if (burst_state == 5'b00010)
 
         // Sending
         if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
-            if (burst_state[2]) begin
-                rampup_sample_counter <= rampup_sample_counter + 1;
-                tmp <= rampup_sample_counter;
-                mask_t <= half_mask[tmp];
+            if (burst_state[2] || burst_state[4]) begin
+                if (sample_strobe == 1) begin
+                    if (burst_state[4]) begin
+                        mask_index <= mask_index - 1;
+                    end else begin
+                        mask_index <= mask_index + 1;
+                    end // end else
+                end // if (sample_strobe == 1)
+                mask_index_tmp <= mask_index;
+                mask_t <= half_mask[mask_index_tmp];
                 mask <= {1'b0, mask_t};
-                if(rampup_sample_counter == 490) begin
+                if (samples_edge == 1) begin
+                    if (burst_state[4]) begin
+                        priming <= 4'b1111;
+                    end // if (burst_state[4])
                     burst_state <= {burst_state[3:0], burst_state[4]};
                 end // if(rampup_sample_counter == 511)
             end // if (burst_state == 5'b00100)
@@ -142,31 +146,25 @@ module tx_burst (
             if (burst_state[3]) begin
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
-                if (symbol_input_strobe == 1) begin
-                    symcount <= symcount + 1;
+                if (new_symbol == 1) begin
                     current_symbol_o <= lfsr[1]|1'b0;
                     if (lfsr[0]) begin
                         lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
                     end else begin
                         lfsr <= {1'b0, lfsr[7:1]};
                     end // end else
-                end // if (symbol_input_strobe == 1)
-                if (symcount == 13) begin
+                end // if (new_symbol == 1)
+                if (samples_edge == 1) begin
+                    symcount <= symcount + 1;
+                end // if (samples_edge == 1)
+
+                if (symcount == 8) begin
                     burst_state <= {burst_state[3:0], burst_state[4]};
+                    iftime <= 1021;
+                    mask_index <= 255;
+                    mask_index_tmp <= 255;
                 end // if (symcount == 16)
             end // if (burst_state == 5'b01000)
-
-            if (burst_state[4]) begin
-                rampdown_sample_counter <= rampdown_sample_counter - 1;
-                tmp <= rampdown_sample_counter;
-                mask_t <= half_mask[tmp];
-                mask <= {1'b0, mask_t};
-                if(rampdown_sample_counter == 0) begin
-                    burst_state <= {burst_state[3:0], burst_state[4]};
-                    priming <= 4'b1111;
-                end // if(rampdown_sample_counter == 0)
-            end // if (burst_state == 5'b10000)
-
         pipeline_inphase    <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;
         tmp_i <= $signed(pipeline_inphase)    * $signed(mask);
@@ -175,8 +173,13 @@ module tx_burst (
         tmp_qq <= tmp_q;
         rfchain_inphase    <= tmp_ii[16:8];
         rfchain_quadrature <= tmp_qq[16:8];
-        iq_valid <= 1;
+        iq_valid <= 1; // FIXME enable with appropriate strobe from modulator!
         end // if (burst_state == 5'b00100)
 
     end // always @(posedge clock)
+
+    multirate_strobe mod_in_stb  (.clock(clock), .slow_strobe(symbol_strobe_i),  .fast_strobe(new_symbol));
+    multirate_strobe mod_out_stb (.clock(clock), .slow_strobe(iq_symbol_edge_i), .fast_strobe(samples_edge));
+
 endmodule // tx_burst
+
