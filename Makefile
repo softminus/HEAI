@@ -8,7 +8,7 @@ ICETIME_DEVICE	= hx8k
 FOOTPRINT = ct256
 
 # Files
-LINTABLE_FILES = air_interface/rtl/gmsk_modulate.v air_interface/rtl/tx_burst.v
+LINTABLE_FILES = air_interface/rtl/gmsk_modulate.v air_interface/rtl/tx_burst.v air_interface/rtl/multirate_strobe.v
 FILES = $(LINTABLE_FILES) top.v icepll.v 
 PCF = pinmap.pcf
 
@@ -49,7 +49,7 @@ mod_sim:
 
 burst_sim:
 	python3 air_interface/gen/gmsk_phasetables.py air_interface/gen/
-	verilator -Wall --cc --trace top.v air_interface/rtl/tx_burst.v air_interface/rtl/gmsk_modulate.v --exe air_interface/sim/tb-tx_burst.cc
+	verilator -Wall --cc --trace top.v air_interface/rtl/tx_burst.v air_interface/rtl/gmsk_modulate.v air_interface/rtl/multirate_strobe.v --exe air_interface/sim/tb-tx_burst.cc
 	make -j -C obj_dir/ -f Vtop.mk Vtop
 	./obj_dir/Vtop > verilog_out.txt
 
