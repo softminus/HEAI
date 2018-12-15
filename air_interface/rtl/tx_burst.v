@@ -41,7 +41,7 @@ module tx_burst (
 );
 
     localparam ROM_OUTPUT_BITS = 8;
-    localparam CLOCKS_PER_SAMPLE = 5;
+    localparam CLOCKS_PER_SAMPLE = 3;
     localparam MASK_SIZE = 256; // this is enumerated in I/Q-samples and not modulation symbols
     reg [7:0] half_mask [0:(MASK_SIZE-1)];
     initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
@@ -80,11 +80,11 @@ module tx_burst (
             burst_state <= 5'b00001; // flush bubbles out of modulator pipeline
             reset   <= 1;
             clkdiv  <= 1;
-            iftime  <= 1021;
+            iftime  <= 997;
             lfsr <= 1;
         end else begin
             clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
-            sample_strobe <= 1; //clkdiv[0];;
+            sample_strobe <= 1;// clkdiv[0];
         end // end else
 
 
@@ -147,7 +147,11 @@ module tx_burst (
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
                 if (new_symbol == 1) begin
-                    current_symbol_o <= lfsr[1]|1'b0;
+                    if ((symcount < 10) || (symcount > 20)) begin
+                        current_symbol_o <= 1;
+                    end else begin
+                        current_symbol_o <= lfsr[1]|1'b0;
+                    end // end else
                     if (lfsr[0]) begin
                         lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
                     end else begin
@@ -158,7 +162,7 @@ module tx_burst (
                     symcount <= symcount + 1;
                 end // if (samples_edge == 1)
 
-                if (symcount == 8) begin
+                if (symcount == 32) begin
                     burst_state <= {burst_state[3:0], burst_state[4]};
                     iftime <= 1021;
                     mask_index <= 255;
