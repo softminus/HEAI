@@ -43,6 +43,9 @@ int main(int argc, char **argv, char **env) {
         tfp->dump (10*tick_count+5);
         tfp->flush();
 
+//        i = top->dac_zero;
+//        q = top->dac_one;
+
         i = top->a_x;
         q = top->b_x;
 
