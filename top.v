@@ -40,8 +40,11 @@ output reg [8:0] b_x;
         dac_one  <= q_tc[8:3] + 32;
     end // always @(posedge pll_clock)
     assign debug_pin = iq_tsugi;
+    `ifdef VERILATOR
+    assign pll_clock = xtal;
+    `else
     icepll pll(xtal, pll_clock);
-    //assign pll_clock = xtal;
+    `endif
     gmsk_modulate modulator (
         .clock(pll_clock),
         .current_symbol_i(bitwire),

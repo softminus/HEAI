@@ -95,7 +95,7 @@ module gmsk_modulate
         end // end else
 
         if (sample_strobe_i == 1) begin
-            if (index_rising == (ROM_SIZE-2)) begin
+            if (index_rising == (ROM_SIZE-1)) begin
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
                 phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
