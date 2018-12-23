@@ -71,6 +71,7 @@ module tx_burst (
     wire samples_edge;
     reg [7:0] current_symbol_idx;
     reg [9:0] iftime;
+    reg prev_bit, cur_bit;
 
     assign debug_pin = current_symbol_o;
     localparam [7:0] LFSR_TAPS = 8'h8e;
@@ -93,12 +94,14 @@ module tx_burst (
         // also accept filling of bit buffer
         if (burst_state[0]) begin
             if (new_symbol == 1) begin
+                current_symbol_o <= cur_bit ^ prev_bit;
+                prev_bit <= cur_bit;
+                cur_bit <= 1;
                 priming <= {1'b0, priming[3:1]};
             end // if (new_symbol == 1)
             rfchain_inphase <= 0;
             rfchain_quadrature <= 0;
             iq_valid <= 0;
-            current_symbol_o <= 1;
             if (priming == 0) begin
                 burst_state <= {burst_state[3:0],burst_state[4]};
             end // if (priming == 0)
@@ -127,6 +130,9 @@ module tx_burst (
         if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
             if (burst_state[2] || burst_state[4]) begin
                 if (sample_strobe == 1) begin
+                                    current_symbol_o <= cur_bit ^ prev_bit;
+                prev_bit <= cur_bit;
+                cur_bit <= 0;
                     if (burst_state[4]) begin
                         mask_index <= mask_index - 1;
                     end else begin
@@ -151,10 +157,14 @@ module tx_burst (
                 if (new_symbol == 1) begin
                     if ((current_symbol_idx < 2) || (current_symbol_idx > 12)) begin
                         in_tail <= 1;
-                        current_symbol_o <= 1;
+                current_symbol_o <= cur_bit ^ prev_bit;
+                prev_bit <= cur_bit;
+                cur_bit <= 0;
                     end else begin
                         in_tail <= 0;
-                        current_symbol_o <= 0; //lfsr[1]|1'b0;
+                                        current_symbol_o <= cur_bit ^ prev_bit;
+                prev_bit <= cur_bit;
+                cur_bit <= current_symbol_o <= 0;//lfsr[1]|1'b0;
                     end // end else
                     if (lfsr[0]) begin
                         lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
@@ -190,4 +200,3 @@ module tx_burst (
     multirate_strobe mod_out_stb (.clock(clock), .slow_strobe(iq_symbol_edge_i), .fast_strobe(samples_edge));
 
 endmodule // tx_burst
-
