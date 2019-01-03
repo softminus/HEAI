@@ -21,10 +21,10 @@ JSON_FILE 	= $(BUILD)/$(PROJ).json
 all: $(BIN_FILE)
 
 $(JSON_FILE): $(FILES)
-	yosys -p "synth_ice40 -top top -abc2 -relut -json $(JSON_FILE)" $^
+	yosys -p "synth_ice40 -top top -json $(JSON_FILE)" $^
 
 $(ASC_FILE): $(JSON_FILE) $(PCF)
-	nextpnr-ice40 --$(ICETIME_DEVICE) --json $(JSON_FILE) --pcf $(PCF) --asc $(ASC_FILE) --freq 80 --opt-timing
+	nextpnr-ice40 --$(ICETIME_DEVICE) --json $(JSON_FILE) --pcf $(PCF) --pcf-allow-unconstrained --asc $(ASC_FILE) --freq 80 --opt-timing
 
 $(BIN_FILE): $(ASC_FILE)
 	icepack $< $@
@@ -55,5 +55,5 @@ burst_sim:
 
 
 clean:
-	rm -rf build/* obj_dir top.vcd verilog_out.txt gmsk_modulate.vcd nco.vcd gmsk_tx.vcd tx_burst.vcd
+	rm -rf build/* obj_dir top.vcd verilog_out.txt verilog_out.bin gmsk_modulate.vcd nco.vcd gmsk_tx.vcd tx_burst.vcd
 
