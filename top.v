@@ -21,8 +21,8 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, a_x, b_x, armed, txc
 
     output reg [5:0] dac_zero;
     output reg [5:0] dac_one;
-output reg [8:0] a_x;
-output reg [8:0] b_x;
+    output reg [8:0] a_x;
+    output reg [8:0] b_x;
 
     output wire debug_pin;
     /* verilator lint_off UNUSED */
