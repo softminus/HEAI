@@ -25,5 +25,19 @@ HEAI is an in-progress GSM PHY/MAC intended to function as a subcomponent of a G
 
 * I haven't started implementing the receiver components yet.
 
+## TODO/plan
+
+* demodulate GMSK IQ samples (with gnuradio)
+
+* write gateware to interface FPGA board with LMS6002D board (read/write to its SPI registers)
+
+* UART command scheme (parsing and comman/data ringbuffers)
+
+* simulate fading channel with LO frequency/phase offsets, delay, and small clock phase/frequency offsets
+
+* investigate training sequence correlation (first in python/haskell, then in verilog) for estimating LO fine freq/phase offset + clock phase/freq
+
+* look into nmigen or clash for implementing DSP components of receiver
+
 ## Warning
 The code in this repository is very incomplete. Do not use it for broadcasting RF unless you do appropriate conformance testing, since I haven't yet.
