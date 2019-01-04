@@ -43,6 +43,7 @@ module tx_burst (
     localparam ROM_OUTPUT_BITS = 8;
     localparam CLOCKS_PER_SAMPLE = 3;
     localparam MASK_SIZE = 256; // this is enumerated in I/Q-samples and not modulation symbols
+    /* verilator lint_off UNUSED */
     reg [7:0] half_mask [0:(MASK_SIZE-1)];
     initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
     reg [7:0] mask_index;
@@ -73,6 +74,14 @@ module tx_burst (
     reg [9:0] iftime;
     reg prev_bit, cur_bit;
 
+    localparam MESSAGE_SIZE = 104;
+    /* verilator lint_off UNUSED */
+
+    reg message [0:(MESSAGE_SIZE-1)];
+    /* verilator lint_on UNUSED */
+    initial $readmemb("air_interface/gen/hello.bin", message);
+    reg [6:0] message_bit_count;
+
     assign debug_pin = current_symbol_o;
     localparam [7:0] LFSR_TAPS = 8'h8e;
 
@@ -82,7 +91,7 @@ module tx_burst (
             burst_state <= 5'b00001; // flush bubbles out of modulator pipeline
             reset   <= 1;
             clkdiv  <= 1;
-            iftime  <= 997;
+            iftime  <= 512;
             lfsr <= 1;
         end else begin
             clkdiv <= {clkdiv[(CLOCKS_PER_SAMPLE-2):0], clkdiv[(CLOCKS_PER_SAMPLE-1)]};
@@ -130,7 +139,7 @@ module tx_burst (
         if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
             if (burst_state[2] || burst_state[4]) begin
                 if (sample_strobe == 1) begin
-                                    current_symbol_o <= cur_bit ^ prev_bit;
+                current_symbol_o <= cur_bit ^ prev_bit;
                 prev_bit <= cur_bit;
                 cur_bit <= 0;
                     if (burst_state[4]) begin
@@ -155,16 +164,17 @@ module tx_burst (
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
                 if (new_symbol == 1) begin
-                    if ((current_symbol_idx < 2) || (current_symbol_idx > 12)) begin
+                    if ((current_symbol_idx < 10) || (current_symbol_idx > 125)) begin
                         in_tail <= 1;
-                current_symbol_o <= cur_bit ^ prev_bit;
-                prev_bit <= cur_bit;
-                cur_bit <= 0;
+                        current_symbol_o <= cur_bit ^ prev_bit;
+                        prev_bit <= cur_bit;
+                        cur_bit <= 0;
                     end else begin
+                        message_bit_count <= message_bit_count + 1;
                         in_tail <= 0;
-                                        current_symbol_o <= cur_bit ^ prev_bit;
-                prev_bit <= cur_bit;
-                cur_bit <= current_symbol_o <= 0;//lfsr[1]|1'b0;
+//                        current_symbol_o <= cur_bit ^ prev_bit;
+//                        prev_bit <= cur_bit;
+                        current_symbol_o <= message[message_bit_count];
                     end // end else
                     if (lfsr[0]) begin
                         lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
@@ -176,7 +186,7 @@ module tx_burst (
                     current_symbol_idx <= current_symbol_idx + 1;
                 end // if (samples_edge == 1)
 
-                if (current_symbol_idx == 16) begin
+                if (current_symbol_idx == 128) begin
                     burst_state <= {burst_state[3:0], burst_state[4]};
                     iftime <= 1021;
                     mask_index <= 255;
