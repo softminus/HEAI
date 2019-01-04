@@ -1,60 +1,57 @@
 [*]
 [*] GTKWave Analyzer v3.3.94 (w)1999-2018 BSI
-[*] Sat Dec 15 03:42:48 2018
+[*] Tue Dec 25 05:27:32 2018
 [*]
 [dumpfile] "/home/thz/tdma_gmsk/top.vcd"
-[dumpfile_mtime] "Sat Dec 15 03:39:39 2018"
-[dumpfile_size] 32109921
+[dumpfile_mtime] "Tue Dec 25 05:21:59 2018"
+[dumpfile_size] 7758178
 [savefile] "/home/thz/tdma_gmsk/top.gtkw"
-[timestart] 22939
-[size] 1600 879
+[timestart] 23098
+[size] 1366 747
 [pos] -1 -1
-*-4.788588 22976 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-4.788588 23130 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.top.
 [treeopen] TOP.top.modulator.
 [treeopen] TOP.top.modulator_control.
 [sst_width] 212
-[signals_width] 431
+[signals_width] 335
 [sst_expanded] 1
-[sst_vpaned_height] 181
+[sst_vpaned_height] 246
 @28
 TOP.top.modulator_control.clock
-TOP.top.modulator_control.sample_strobe
-TOP.top.modulator_control.iq_valid
-TOP.top.modulator_control.samples_edge
-TOP.top.modulator_control.new_symbol
-TOP.top.modulator.tristimulus[2:0]
-@23
-TOP.top.modulator_control.lfsr[7:0]
-@28
-TOP.top.modulator_control.current_symbol_o
 TOP.top.modulator_control.burst_state[4:0]
+TOP.top.modulator_control.in_tail
+TOP.top.modulator_control.cur_bit
+TOP.top.modulator_control.prev_bit
+TOP.top.modulator_control.current_symbol_o
+TOP.top.modulator.tristimulus[2:0]
+TOP.top.modulator_control.new_symbol
+TOP.top.modulator_control.samples_edge
+@24
+TOP.top.modulator_control.current_symbol_idx[7:0]
+@22
+TOP.top.modulator.index_falling[7:0]
+TOP.top.modulator.index_rising[7:0]
+TOP.top.modulator.rom_out_falling[7:0]
+TOP.top.modulator.rom_out_rising[7:0]
+@28
 TOP.top.modulator_control.priming[3:0]
-TOP.top.modulator_control.iq_valid
-@8022
+@22
+TOP.top.modulator_control.message_bit_count[6:0]
 TOP.top.modulator_control.iftime[9:0]
-@22
 TOP.top.modulator_control.mask_index[7:0]
-@8022
-TOP.top.modulator_control.mask_index[7:0]
-@22
 TOP.top.modulator_control.mask_index_tmp[7:0]
 @8022
 TOP.top.modulator_control.mask_t[7:0]
 @22
-TOP.top.modulator_control.symcount[7:0]
-@8022
 TOP.top.modulator_control.modulator_inphase[8:0]
-@20000
+@20001
 -
 @8022
 TOP.top.modulator_control.modulator_quadrature[8:0]
 @20000
 -
-@22
-TOP.top.modulator_control.mask_t[7:0]
-TOP.top.modulator_control.mask[8:0]
 @8022
 TOP.top.modulator_control.pipeline_inphase[8:0]
 @20000
