@@ -30,7 +30,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 364)</value>
+      <value>(152, 972)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -101,7 +101,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 92)</value>
+      <value>(16, 964)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -140,7 +140,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(544, 268)</value>
+      <value>(264, 348)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -183,7 +183,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(360, 212)</value>
+      <value>(304, 292)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -238,7 +238,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 332)</value>
+      <value>(64, 396)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -289,7 +289,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 4)</value>
+      <value>(16, 20)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -321,6 +321,65 @@
     </param>
   </block>
   <block>
+    <key>blocks_file_source</key>
+    <param>
+      <key>begin_tag</key>
+      <value>pmt.PMT_NIL</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>file</key>
+      <value>/home/thz/tdma_gmsk/hello.reallybin</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 492)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_file_source_1</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_float_to_complex</key>
     <param>
       <key>alias</key>
@@ -340,7 +399,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(576, 176)</value>
+      <value>(456, 296)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -383,7 +442,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(208, 20)</value>
+      <value>(216, 36)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -403,7 +462,7 @@
     </param>
     <param>
       <key>num_items</key>
-      <value>32768</value>
+      <value>65536</value>
     </param>
     <param>
       <key>type</key>
@@ -438,7 +497,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 20)</value>
+      <value>(384, 36)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -466,14 +525,10 @@
     </param>
   </block>
   <block>
-    <key>blocks_null_source</key>
+    <key>blocks_skiphead</key>
     <param>
       <key>alias</key>
       <value></value>
-    </param>
-    <param>
-      <key>bus_conns</key>
-      <value>[[0,],]</value>
     </param>
     <param>
       <key>comment</key>
@@ -489,7 +544,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 184)</value>
+      <value>(600, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -497,7 +552,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_null_source_0</value>
+      <value>blocks_skiphead_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -508,8 +563,8 @@
       <value>0</value>
     </param>
     <param>
-      <key>num_outputs</key>
-      <value>1</value>
+      <key>num_items</key>
+      <value>128+8+8+8+4</value>
     </param>
     <param>
       <key>type</key>
@@ -540,7 +595,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(624, 12)</value>
+      <value>(56, 156)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -576,6 +631,69 @@
     </param>
   </block>
   <block>
+    <key>channels_channel_model</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>block_tags</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>epsilon</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>0.000</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(552, 4)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>channels_channel_model_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>noise_voltage</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0 </value>
+    </param>
+  </block>
+  <block>
     <key>digital_gmsk_demod</key>
     <param>
       <key>alias</key>
@@ -599,7 +717,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(144, 236)</value>
+      <value>(56, 260)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -662,7 +780,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(456, 92)</value>
+      <value>(728, 28)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -687,6 +805,57 @@
     <param>
       <key>resamp_ratio</key>
       <value>32</value>
+    </param>
+  </block>
+  <block>
+    <key>gsm_gmsk_mod</key>
+    <param>
+      <key>BT</key>
+      <value>0.3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(248, 492)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>gsm_gmsk_mod_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>pulse_duration</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>8</value>
     </param>
   </block>
   <block>
@@ -717,7 +886,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 4)</value>
+      <value>(600, 148)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -989,7 +1158,7 @@
     </param>
     <param>
       <key>size</key>
-      <value>16384/32</value>
+      <value>16384/16</value>
     </param>
     <param>
       <key>tr_chan</key>
@@ -1072,7 +1241,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 76)</value>
+      <value>(928, 340)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1180,11 +1349,11 @@
     </param>
     <param>
       <key>marker3</key>
-      <value>-1</value>
+      <value>4</value>
     </param>
     <param>
       <key>style3</key>
-      <value>1</value>
+      <value>3</value>
     </param>
     <param>
       <key>width3</key>
@@ -1204,11 +1373,11 @@
     </param>
     <param>
       <key>marker4</key>
-      <value>-1</value>
+      <value>6</value>
     </param>
     <param>
       <key>style4</key>
-      <value>1</value>
+      <value>3</value>
     </param>
     <param>
       <key>width4</key>
@@ -1344,7 +1513,7 @@
     </param>
     <param>
       <key>size</key>
-      <value>256</value>
+      <value>1024</value>
     </param>
     <param>
       <key>srate</key>
@@ -1439,7 +1608,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(792, 252)</value>
+      <value>(632, 292)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1789,6 +1958,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_file_source_1</source_block_id>
+    <sink_block_id>gsm_gmsk_mod_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_float_to_complex_0</source_block_id>
     <sink_block_id>qtgui_time_sink_x_1</sink_block_id>
     <source_key>0</source_key>
@@ -1802,15 +1977,21 @@
   </connection>
   <connection>
     <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>gsm_controlled_fractional_resampler_cc_0</sink_block_id>
+    <sink_block_id>channels_channel_model_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_null_source_0</source_block_id>
+    <source_block_id>blocks_skiphead_0</source_block_id>
     <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>1</sink_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>blocks_skiphead_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
@@ -1825,8 +2006,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
+    <source_block_id>channels_channel_model_0</source_block_id>
+    <sink_block_id>gsm_controlled_fractional_resampler_cc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1847,5 +2028,11 @@
     <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gsm_gmsk_mod_0</source_block_id>
+    <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
   </connection>
 </flow_graph>
