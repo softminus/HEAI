@@ -1,3 +1,4 @@
+top_block.py
 build/*
 obj_dir
 *.sav
