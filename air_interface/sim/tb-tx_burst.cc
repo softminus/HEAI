@@ -25,7 +25,7 @@ int main(int argc, char **argv, char **env) {
     // initialize simulation inputs
     top->xtal = 0;
     // run simulation for 1000 crystal periods
-    for (tick_count=1; tick_count<35000; tick_count++) {
+    for (tick_count=1; tick_count<65536; tick_count++) {
 //            top->rf_in_i = (sin(2*i/100.0) * 128.0);
 //            top->rf_in_q = (cos(2*i/100.0) * 128.0);
 //            top->lo_in_i = (sin(2.5*i/100.0) * 128.0);
