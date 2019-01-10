@@ -19,7 +19,7 @@ module gmsk_modulate
     input wire clock,
 
     input wire next_symbol,
-    input wire sample_strobe_i,
+    input wire sample_strobe,
 
     output reg symbol_strobe_o,
     output reg iq_symbol_edge_o,
@@ -94,7 +94,7 @@ module gmsk_modulate
             symbol_strobe_o <= 0;
         end // end else
 
-        if (sample_strobe_i == 1) begin
+        if (sample_strobe == 1) begin
             if (index_rising == (ROM_SIZE-2)) begin
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
