@@ -10,7 +10,7 @@ int main(int argc, char **argv, char **env) {
     srand(time(0));
     int tick_count;
     int clk;
-    int16_t i,q;
+    int16_t i,q,iq_stb;
     FILE *float_out;
     float i_float,q_float;
     Verilated::commandArgs(argc, argv);
@@ -56,9 +56,9 @@ int main(int argc, char **argv, char **env) {
         fwrite(&i_float, sizeof(i_float), 1, float_out);
         fwrite(&q_float, sizeof(q_float), 1, float_out);
 
+        iq_stb = top->debug_pin;
 
-
-        printf("%d %d %d\n", tick_count, i,q);
+        printf("%d %d %d %d\n", tick_count, i, q, iq_stb);
         if (Verilated::gotFinish())    exit(0);
     }
     tfp->close();
