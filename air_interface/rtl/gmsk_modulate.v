@@ -18,7 +18,7 @@ module gmsk_modulate
 (
     input wire clock,
 
-    input wire current_symbol_i,
+    input wire next_symbol,
     input wire sample_strobe_i,
 
     output reg symbol_strobe_o,
@@ -99,7 +99,7 @@ module gmsk_modulate
                 index_rising  <= 0;
                 index_falling <= ROM_SIZE-1;
                 phase_quadrant_acc <= phase_quadrant_acc + ((tristimulus[1]) ? 2'b01 : 2'b11);
-                tristimulus <= {tristimulus[1:0], current_symbol_i};
+                tristimulus <= {tristimulus[1:0], next_symbol};
                 edge_output <= {edge_output[2:0], 1'b1};
             end else begin
                 index_rising  <= index_rising  + 1;
