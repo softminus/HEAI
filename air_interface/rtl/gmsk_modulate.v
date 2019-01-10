@@ -21,8 +21,8 @@ module gmsk_modulate
     input wire next_symbol,
     input wire sample_strobe,
 
-    output reg symbol_strobe_o,
-    output reg iq_symbol_edge_o,
+    output reg symbol_strobe,
+    output reg iq_symbol_edge,
 
     output reg [(ROM_OUTPUT_BITS-1+1):0] inphase_out,
     output reg [(ROM_OUTPUT_BITS-1+1):0] quadrature_out
@@ -89,9 +89,9 @@ module gmsk_modulate
     always @ (posedge clock) begin
 
         if (index_rising == ROM_SIZE-4) begin
-            symbol_strobe_o <= 1;
+            symbol_strobe <= 1;
         end else begin
-            symbol_strobe_o <= 0;
+            symbol_strobe <= 0;
         end // end else
 
         if (sample_strobe == 1) begin
@@ -107,7 +107,7 @@ module gmsk_modulate
                 edge_output <= {edge_output[2:0], 1'b0};
             end // end else
 
-            iq_symbol_edge_o <= edge_output[3];
+            iq_symbol_edge <= edge_output[3];
 
             tristimulus_delay <= {tristimulus_delay[0], tristimulus[1]};
 
