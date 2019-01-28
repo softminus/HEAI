@@ -6,15 +6,23 @@ import os
 import sys
 import random
 
+def gnuplotize(data):
+    outf = open(os.path.join(data_dir, "python_out.txt"), 'w')
+    for idx, val in enumerate(data):
+        f = "{:d} {:d}"
+        print (f.format(idx, val), file=outf)
+
 if (len(sys.argv) == 2):
     data_dir = sys.argv[1]
 else:
     data_dir = os.getcwd()
+
 path = "verilog_out.txt"
 f = open(os.path.join(data_dir,path),'r')
-lines = f.read()
 
+lines = f.read()
 x = list(map((lambda x:str.split(x,' ')),str.split(lines,'\n')))
+
 x.pop() #get rid of newline
 
 
@@ -26,4 +34,6 @@ samples = list(zip(i_samples,q_samples))
 print(samples)
 
 energy = list(map(lambda x: (x[0]-255)**2 + (x[1]-255)**2, samples))
-print (energy)
+
+
+gnuplotize(energy)
