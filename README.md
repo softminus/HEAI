@@ -27,17 +27,29 @@ HEAI is an in-progress GSM PHY/MAC intended to function as a subcomponent of a G
 
 ## TODO/plan
 
-* demodulate GMSK IQ samples (with gnuradio)
+* DSP Toolbox:
+    1. GMSK modulator in python (arbitrary samples/symbol)
+    2. COST207 channel models, with attenuation and noise
+    3. framework to run arbitrary simulations for a given single channel model with different {phase offsets, freq offsets, timing offsets, bit sequences, noise amplitudes} and plot statistics of estimator accuracy and bit-error-rate vs Eb/N0
 
-* write gateware to interface FPGA board with LMS6002D board (read/write to its SPI registers)
+* Implement and evaluate performance of feedforward/data-aided estimators:
+    1. data-aided midamble correlation to find symbol timing offset
+    2. data-aided correlation to find freq/phase offsets (IDK if this will be necessary due to adaptive MLSE equalization, but we will do it if only for symbol-by-symbol demod)
+    3. data-aided correlation to estimate channel impulse response
 
-* UART command scheme (parsing and comman/data ringbuffers)
+* Symbol-by-symbol demodulation as proof-of-concept:
+    1. Investigate derotation (allegedly converts GMSK to BPSKish constellation)
+    2. Check out performance of symbol-by-symbol demodulation of GMSK and also derotated GMSK (see if the derotation scheme worsens anything) with COST207 channel models
 
-* simulate fading channel with LO frequency/phase offsets, delay, and small clock phase/frequency offsets
+* Viterbi equalization/demodulation:
+    1. Investigate how many samples per symbol Viterbi needs and matched-filtering
+    2. Implement Viterbi equalizer components (ACS, trellis, filter, CIR update)
 
-* investigate training sequence correlation (first in python/haskell, then in verilog) for estimating LO fine freq/phase offset + clock phase/freq
 
-* look into nmigen or clash for implementing DSP components of receiver
+* Implementation concerns:
+    1. write gateware to interface FPGA board with LMS6002D board (read/write to its SPI registers)
+    2. UART command scheme (parsing and comman/data ringbuffers)
+    3. Look into nmigen or clash for implementing DSP components of receiver
 
 ## Warning
 The code in this repository is very incomplete. Do not use it for broadcasting RF unless you do appropriate conformance testing, since I haven't yet.
