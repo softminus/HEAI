@@ -56,12 +56,65 @@ def phase_shaping_pulse(x):
     foo = bigG((x / bigT) + 0.5) - bigG((x / bigT) - 0.5)
     return 0.5 * foo
 
-def multisymbols(x):
-    return phase_shaping_pulse(x) - phase_shaping_pulse(x-5) + phase_shaping_pulse(x-1)
-
-x = np.linspace(-20,20,num=20*100)
-z = np.vectorize(multisymbols)(x)
 
 
-plt.plot(x,z)
+def multisymbols(syms, x):
+    tot = 0
+    for pos,val in enumerate(syms):
+        tot = tot + val * phase_shaping_pulse(x-pos)
+    
+    return tot
+
+
+pulserange = np.linspace(-4,4,num=8*100)
+
+stored_pulse = np.vectorize(phase_shaping_pulse)(pulserange)
+
+#plt.plot(stored_pulse)
+#plt.show()
+rangez = np.linspace(0,32,num=32*100)
+range_echoez = np.linspace(0,36,num=36*100)
+
+modu = np.vectorize(multisymbols, excluded=['syms'])
+
+def add_pulse(victim, idx, val):
+
+    victim[idx:idx+stored_pulse.shape[0] ] += val * stored_pulse;
+    victim[    idx+stored_pulse.shape[0]:] += val * np.ones_like(victim[idx+stored_pulse.shape[0]:])*0.5
+    return victim
+
+def multisymbols_two(syms, x):
+    tot = 0
+    for pos,val in enumerate(syms):
+        x = add_pulse(x, pos * 100, val)
+    return x
+
+def cost(z):
+    echo_extended = np.zeros(len(z)+400)
+    echo_extended[0:z.shape[0]]       = z
+#    echo_extended[80:80+z.shape[0]]   += 0.1*z
+#    echo_extended[120:120+z.shape[0]] += 0.1*z
+#    echo_extended[140:140+z.shape[0]] += 0.1*z
+#    echo_extended[190:190+z.shape[0]] += 0.1*z
+#    echo_extended[400:400+z.shape[0]] += 0.5*z
+    cir = np.zeros(400)
+    cir[0]=0.5
+    cir[20] =0.1
+    cir[30] =0.1
+    cir[40] = 0.1
+    cir[210] = 0.5
+    return np.convolve(echo_extended,cir,'same')
+
+print(len(rangez))
+for i in range(0,1):
+    symbol_array = np.random.randint(0,2,20) * 2 - 1
+    hadaka = np.zeros_like(rangez)
+    z = multisymbols_two(symbol_array, hadaka)
+#    plt.plot(rangez, z)
+    isam = np.cos((np.pi)*z)
+    qsam = np.sin((np.pi)*z)
+    plt.plot(range_echoez, cost(qsam))
+    plt.plot(range_echoez, cost(isam))
+#    plt.plot(rangez, qsam)
+
 plt.show()
