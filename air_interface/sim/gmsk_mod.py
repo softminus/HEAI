@@ -90,19 +90,19 @@ def multisymbols_two(syms, x):
     return x
 
 def cost(z):
-    echo_extended = np.zeros(len(z)+4*samples_per_symbol)
+    echo_extended = np.zeros(len(z)+4*samples_per_symbol,dtype=complex)
     echo_extended[0:z.shape[0]]       = z
 #    echo_extended[80:80+z.shape[0]]   += 0.1*z
 #    echo_extended[120:120+z.shape[0]] += 0.1*z
 #    echo_extended[140:140+z.shape[0]] += 0.1*z
 #    echo_extended[190:190+z.shape[0]] += 0.1*z
 #    echo_extended[400:400+z.shape[0]] += 0.5*z
-    cir = np.zeros(4*samples_per_symbol)
-    cir[0]=0.3
-    cir[1] =0.1
-    cir[3] =0.1
+    cir = np.zeros(4*samples_per_symbol, dtype=complex)
+    cir[0]=0.2j+0.2
+    cir[1] =0.2j
+    cir[3] =0.4+0.1j
     cir[7] = 0.1
-    cir[14] = 0.4
+    cir[14] = .1j+0.1
     return np.convolve(echo_extended,cir,'same')
 
 print(len(rangez))
@@ -113,12 +113,16 @@ for i in range(0,1):
     #plt.plot(rangez, z)
     isam = np.cos((np.pi)*z)
     qsam = np.sin((np.pi)*z)
-    plt.plot(rangez,isam)
-    plt.plot(rangez,qsam)
+    signal = isam + 1j*qsam
+    plt.plot(rangez,np.real(signal))
+    plt.plot(rangez,np.imag(signal))
 ##    plt.plot(cost(isam),cost(qsam))
 
-    plt.plot(range_echoez, cost(qsam)+4)
-    plt.plot(range_echoez, cost(isam)+4)
+    munged_signal = cost(signal)
+
+    plt.plot(range_echoez, np.real(munged_signal)+4)
+    plt.plot(range_echoez, np.imag(munged_signal)+4)
+
 #    plt.plot(rangez, qsam)
 
 plt.show()
