@@ -72,8 +72,8 @@ stored_pulse = np.vectorize(phase_shaping_pulse)(pulserange)
 
 #plt.plot(stored_pulse)
 #plt.show()
-rangez = np.linspace(0,32,num=32*samples_per_symbol)
-range_echoez = np.linspace(0,36,num=36*samples_per_symbol)
+rangez = np.linspace(0,160,num=160*samples_per_symbol)
+range_echoez = np.linspace(0,164,num=164*samples_per_symbol)
 
 modu = np.vectorize(multisymbols, excluded=['syms'])
 
@@ -98,16 +98,15 @@ def cost(z):
 #    echo_extended[190:190+z.shape[0]] += 0.1*z
 #    echo_extended[400:400+z.shape[0]] += 0.5*z
     cir = np.zeros(4*samples_per_symbol, dtype=complex)
-    cir[0]=0.2j+0.2
-    cir[1] =0.2j
-    cir[3] =0.4+0.1j
-    cir[7] = 0.1
-    cir[14] = .1j+0.1
+    cir[0]=0.3
+    cir[19]=0.3
+    cir[26]=1j
+    cir[31]=0.3
     return np.convolve(echo_extended,cir,'same')
 
 print(len(rangez))
 for i in range(0,1):
-    symbol_array = np.random.randint(0,2,22) * 2 - 1
+    symbol_array = np.random.randint(0,2,150) * 2 - 1
     hadaka = np.zeros_like(rangez)
     z = multisymbols_two(symbol_array, hadaka)
     #plt.plot(rangez, z)
@@ -115,13 +114,15 @@ for i in range(0,1):
     qsam = np.sin((np.pi)*z)
     signal = isam + 1j*qsam
     plt.plot(rangez,np.real(signal))
-    plt.plot(rangez,np.imag(signal))
-##    plt.plot(cost(isam),cost(qsam))
+    plt.plot(rangez,np.imag(signal)+2)
 
     munged_signal = cost(signal)
+    #plt.plot(np.real(munged_signal),np.imag(munged_signal))
+    #plt.show()
 
-    plt.plot(range_echoez, np.real(munged_signal)+4)
-    plt.plot(range_echoez, np.imag(munged_signal)+4)
+    plt.plot(range_echoez, np.real(munged_signal)+6)
+    plt.plot(range_echoez, np.imag(munged_signal)+9)
+
 
 #    plt.plot(rangez, qsam)
 
