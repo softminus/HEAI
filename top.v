@@ -7,9 +7,7 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, a_x, b_x, armed, txc
     wire bitwire;
     wire pll_clock;
     wire tsugi;
-    /* verilator lint_off UNUSED */
     wire iq_tsugi;
-    /* verilator lint_on UNUSED */
 
     input wire fire_burst;
     output wire armed;
@@ -47,12 +45,12 @@ module top (xtal, debug_pin, fire_burst, dac_zero, dac_one, a_x, b_x, armed, txc
     `endif
     gmsk_modulate modulator (
         .clock(pll_clock),
-        .current_symbol_i(bitwire),
-        .sample_strobe_i(sample_strobe),
-        .iq_symbol_edge_o(iq_tsugi),
+        .next_symbol(bitwire),
+        .sample_strobe(sample_strobe),
+        .iq_symbol_edge(iq_tsugi),
         .inphase_out(itmp),
         .quadrature_out(qtmp),
-        .symbol_strobe_o(tsugi));
+        .symbol_strobe(tsugi));
 
     tx_burst modulator_control(
         .clock(pll_clock),
