@@ -18,12 +18,6 @@ bigT = 1
 def qfun(x):
     return (0.5 * erfc(x/(sqrt(2))))
 
-def frequency_shaping_pulse(x):
-    scale = 1/(2*bigT)
-    firstQ  = qfun((x/bigT - 0.5)/sigma)
-    secondQ = qfun((x/bigT + 0.5)/sigma)
-    return (scale * (firstQ - secondQ))
-
 def bigPhi(x):
     return (1.0 - qfun(x))
 
@@ -35,6 +29,13 @@ def bigG(x):
 def phase_shaping_pulse(x):
     foo = bigG((x / bigT) + 0.5) - bigG((x / bigT) - 0.5)
     return 0.5 * foo
+
+def frequency_shaping_pulse(x):
+    scale = 1/(2*bigT)
+    firstQ  = qfun((x/bigT - 0.5)/sigma)
+    secondQ = qfun((x/bigT + 0.5)/sigma)
+    return (scale * (firstQ - secondQ))
+
 
 def warmup(samples_per_symbol):
     pulserange = np.linspace(-4,4,num=8*samples_per_symbol)
@@ -56,8 +57,10 @@ def add_pulse(victim, idx, val, pulse):
 
 def modulate(syms, samples_per_symbol, stored_pulse):
     phase_trajectory = np.zeros((len(syms)+8)*samples_per_symbol, dtype=float)
+
     for pos,val in enumerate(syms):
-        phase_trajectory = add_pulse(phase_trajectory, pos * samples_per_symbol, val, stored_pulse)
+        phase_trajectory = add_pulse(phase_trajectory, \
+            pos * samples_per_symbol, val, stored_pulse)
 
     isam = np.cos((np.pi) * phase_trajectory)
     qsam = np.sin((np.pi) * phase_trajectory)
