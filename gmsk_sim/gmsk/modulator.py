@@ -24,7 +24,6 @@ def frequency_shaping_pulse(x):
     secondQ = qfun((x/bigT + 0.5)/sigma)
     return (scale * (firstQ - secondQ))
 
-
 def bigPhi(x):
     return (1.0 - qfun(x))
 
@@ -37,15 +36,23 @@ def phase_shaping_pulse(x):
     foo = bigG((x / bigT) + 0.5) - bigG((x / bigT) - 0.5)
     return 0.5 * foo
 
-def add_pulse(victim, idx, val, pulse):
-    victim[idx:idx+pulse.shape[0] ] += val * pulse;
-    victim[    idx+pulse.shape[0]:] += val * np.ones_like(victim[idx+pulse.shape[0]:])*0.5
-    return victim
-
 def warmup(samples_per_symbol):
     pulserange = np.linspace(-4,4,num=8*samples_per_symbol)
     stored_pulse = np.vectorize(phase_shaping_pulse)(pulserange)
     return stored_pulse
+
+def add_pulse(victim, idx, val, pulse):
+    # add (or subtract) the phase-shaping pulse over where it's
+    # defined ...
+    victim[idx:idx+pulse.shape[0] ] += val * pulse;
+    # ... and since on the "right" side of the pulse, it's equal to
+    # 0.5 thereafter, add (or subtract) 0.5 from the right edge of
+    # the stored pulse to the end of the phase-trajectory we seek to
+    # modify
+    victim[    idx+pulse.shape[0]:] += \
+        val * 0.5 * np.ones_like(victim[idx+pulse.shape[0]:])
+    return victim
+
 
 def modulate(syms, samples_per_symbol, stored_pulse):
     phase_trajectory = np.zeros((len(syms)+8)*samples_per_symbol, dtype=float)
