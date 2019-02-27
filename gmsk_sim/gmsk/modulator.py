@@ -42,12 +42,12 @@ def add_pulse(victim, idx, val, pulse):
     victim[    idx+pulse.shape[0]:] += val * np.ones_like(victim[idx+pulse.shape[0]:])*0.5
     return victim
 
-def gmsk_modulator_warmup(samples_per_symbol):
+def warmup(samples_per_symbol):
     pulserange = np.linspace(-4,4,num=8*samples_per_symbol)
     stored_pulse = np.vectorize(phase_shaping_pulse)(pulserange)
     return stored_pulse
 
-def gmsk_modulate(syms, samples_per_symbol, stored_pulse):
+def modulate(syms, samples_per_symbol, stored_pulse):
     phase_trajectory = np.zeros((len(syms)+8)*samples_per_symbol, dtype=float)
     for pos,val in enumerate(syms):
         phase_trajectory = add_pulse(phase_trajectory, pos * samples_per_symbol, val, stored_pulse)
