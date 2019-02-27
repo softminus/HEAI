@@ -42,21 +42,21 @@ module tx_burst (
 
     localparam ROM_OUTPUT_BITS = 8;
     localparam CLOCKS_PER_SAMPLE = 3;
-    localparam MASK_SIZE = 256; // this is enumerated in I/Q-samples and not modulation symbols
+    localparam MASK_SIZE = 256/4; // this is enumerated in I/Q-samples and not modulation symbols
     /* verilator lint_off UNUSED */
     reg [7:0] half_mask [0:(MASK_SIZE-1)];
     initial $readmemh("air_interface/gen/half_mask.hex", half_mask);
-    reg [7:0] mask_index;
-    reg [7:0] mask_index_tmp;
+    reg [5:0] mask_index;
+    reg [5:0] mask_index_tmp;
 
     reg [8:0] mask; // "sign" extended
     reg [7:0] mask_t;
     /* verilator lint_off UNUSED */
     reg [17:0] tmp_i; // multiplication output
     reg [17:0] tmp_q; // multiplication output
-    reg [17:0] tmp_qq;
+    reg [8:0] tmp_qq;
     reg in_tail;
-    reg [17:0] tmp_ii;
+    reg [8:0] tmp_ii;
     /* verilator lint_on UNUSED */
 
     reg [(ROM_OUTPUT_BITS-1+1):0] pipeline_inphase;
@@ -68,20 +68,20 @@ module tx_burst (
     reg [7:0] lfsr = 1;
 
     reg [4:0] burst_state = 1;
-    wire new_symbol;
+    wire symbol_input_stb;
     wire samples_edge;
     reg [7:0] current_symbol_idx;
     reg [9:0] iftime;
-    reg prev_bit, cur_bit;
 
-    localparam MESSAGE_SIZE = 104;
+    localparam MESSAGE_SIZE = 142;
+    reg [7:0] message_bit_count;
+
     /* verilator lint_off UNUSED */
 
     reg message [0:(MESSAGE_SIZE-1)];
     /* verilator lint_on UNUSED */
     initial $readmemb("air_interface/gen/hello.bin", message);
-    reg [6:0] message_bit_count;
-
+    
     assign debug_pin = current_symbol_o;
     localparam [7:0] LFSR_TAPS = 8'h8e;
 
@@ -102,12 +102,10 @@ module tx_burst (
         // flush bubbles out of modulator pipeline and reset modulator state
         // also accept filling of bit buffer
         if (burst_state[0]) begin
-            if (new_symbol == 1) begin
-                current_symbol_o <= cur_bit ^ prev_bit;
-                prev_bit <= cur_bit;
-                cur_bit <= 1;
+            if (symbol_input_stb == 1) begin
+                current_symbol_o <= 1;
                 priming <= {1'b0, priming[3:1]};
-            end // if (new_symbol == 1)
+            end // if (symbol_input_stb == 1)
             rfchain_inphase <= 0;
             rfchain_quadrature <= 0;
             iq_valid <= 0;
@@ -139,9 +137,7 @@ module tx_burst (
         if ((burst_state[2]) || (burst_state[3]) || (burst_state[4])) begin
             if (burst_state[2] || burst_state[4]) begin
                 if (sample_strobe == 1) begin
-                current_symbol_o <= cur_bit ^ prev_bit;
-                prev_bit <= cur_bit;
-                cur_bit <= 0;
+                current_symbol_o <= 0;
                     if (burst_state[4]) begin
                         mask_index <= mask_index - 1;
                     end else begin
@@ -163,50 +159,48 @@ module tx_burst (
             if (burst_state[3]) begin
                 mask_t <= 8'b11111111;
                 mask <= {1'b0, mask_t};
-                if (new_symbol == 1) begin
-                    if ((current_symbol_idx < 10) || (current_symbol_idx > 125)) begin
+                if (symbol_input_stb == 1) begin
+                    if ((current_symbol_idx < 10) || (current_symbol_idx > 145)) begin
                         in_tail <= 1;
-                        current_symbol_o <= cur_bit ^ prev_bit;
-                        prev_bit <= cur_bit;
-                        cur_bit <= 0;
+                        current_symbol_o <= 0;
                     end else begin
                         message_bit_count <= message_bit_count + 1;
                         in_tail <= 0;
 //                        current_symbol_o <= cur_bit ^ prev_bit;
 //                        prev_bit <= cur_bit;
-                        current_symbol_o <= message[message_bit_count];
+                            current_symbol_o <= message[message_bit_count];
                     end // end else
                     if (lfsr[0]) begin
                         lfsr <= {1'b0, lfsr[7:1]} ^ LFSR_TAPS;
                     end else begin
                         lfsr <= {1'b0, lfsr[7:1]};
                     end // end else
-                end // if (new_symbol == 1)
+                end // if (symbol_input_stb == 1)
                 if (samples_edge == 1) begin
                     current_symbol_idx <= current_symbol_idx + 1;
                 end // if (samples_edge == 1)
 
-                if (current_symbol_idx == 128) begin
+                if (current_symbol_idx == 150) begin
                     burst_state <= {burst_state[3:0], burst_state[4]};
-                    iftime <= 1021;
-                    mask_index <= 255;
-                    mask_index_tmp <= 255;
+                    iftime <= 128;
+                    mask_index <= 63;
+                    mask_index_tmp <= 63;
                 end // if (current_symbol_idx == 16)
             end // if (burst_state == 5'b01000)
         pipeline_inphase    <= modulator_inphase;
         pipeline_quadrature <= modulator_quadrature;
         tmp_i <= $signed(pipeline_inphase)    * $signed(mask);
         tmp_q <= $signed(pipeline_quadrature) * $signed(mask);
-        tmp_ii <= tmp_i;
-        tmp_qq <= tmp_q;
-        rfchain_inphase    <= tmp_ii[16:8];
-        rfchain_quadrature <= tmp_qq[16:8];
+        tmp_ii <= tmp_i[16:8];
+        tmp_qq <= tmp_q[16:8];
+        rfchain_inphase    <= tmp_ii;
+        rfchain_quadrature <= tmp_qq;
         iq_valid <= 1; // FIXME enable with appropriate strobe from modulator!
         end // if (burst_state == 5'b00100)
 
     end // always @(posedge clock)
 
-    multirate_strobe mod_in_stb  (.clock(clock), .slow_strobe(symbol_strobe_i),  .fast_strobe(new_symbol));
+    multirate_strobe mod_in_stb  (.clock(clock), .slow_strobe(symbol_strobe_i),  .fast_strobe(symbol_input_stb));
     multirate_strobe mod_out_stb (.clock(clock), .slow_strobe(iq_symbol_edge_i), .fast_strobe(samples_edge));
 
 endmodule // tx_burst
