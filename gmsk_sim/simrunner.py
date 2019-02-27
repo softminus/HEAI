@@ -9,14 +9,14 @@ import numpy as np
 
 
 
-samples_per_symbol = 16
+samples_per_symbol = 8
 
 
 
 if (len(sys.argv) == 2):
     data_dir = sys.argv[1]
 else:
-    data_dir = "../.."
+    data_dir = "../"
 
 rangez = np.linspace(0,160,num=160*samples_per_symbol)
 range_echoez = np.linspace(0,164,num=164*samples_per_symbol)
