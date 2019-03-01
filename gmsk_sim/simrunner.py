@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-from gmsk import modulator
+from gmsk import modulator, chansim
 import os
 import sys
 import matplotlib.pyplot as plt
@@ -29,7 +29,11 @@ for i in range(0,1):
     symbol_array = np.random.randint(0,2,150) * 2 - 1
     hadaka = np.zeros_like(rangez)
     z = modulator.modulate(symbol_array, samples_per_symbol, gmsk_modu)
-    plt.plot(np.imag(z))
-    plt.plot(np.real(z))
+    #plt.plot(np.real(z)+6)
+    #plt.plot(np.imag(z)+6)
+
+    z = chansim.cost(z, samples_per_symbol)
+    plt.plot(np.real(z), np.imag(z))
+    #plt.plot(np.imag(z))
 
 plt.show()
