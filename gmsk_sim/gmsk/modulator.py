@@ -38,7 +38,7 @@ def frequency_shaping_pulse(x):
 
 
 def warmup(samples_per_symbol):
-    pulserange = np.linspace(-4,4,num=8*samples_per_symbol)
+    pulserange = np.linspace(-8,8,num=16*samples_per_symbol)
     stored_pulse = np.vectorize(phase_shaping_pulse)(pulserange)
     return stored_pulse
 
@@ -56,7 +56,7 @@ def add_pulse(victim, idx, val, pulse):
 
 
 def modulate(syms, samples_per_symbol, stored_pulse):
-    phase_trajectory = np.zeros((len(syms)+8)*samples_per_symbol, dtype=float)
+    phase_trajectory = np.zeros((len(syms)+16)*samples_per_symbol, dtype=float)
 
     for pos,val in enumerate(syms):
         phase_trajectory = add_pulse(phase_trajectory, \
