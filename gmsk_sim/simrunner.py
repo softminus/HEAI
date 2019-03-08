@@ -24,7 +24,8 @@ range_echoez = np.linspace(0,164,num=164*samples_per_symbol)
 gmsk_modu = modulator.warmup(samples_per_symbol)
 
 print(len(rangez))
-
+cir = chansim.channel_ir(chansim.HT_1, samples_per_symbol)
+print(cir)
 for i in range(0,1):
     symbol_array = np.random.randint(0,2,150) * 2 - 1
     hadaka = np.zeros_like(rangez)
@@ -32,7 +33,7 @@ for i in range(0,1):
     #plt.plot(np.real(z)+6)
     #plt.plot(np.imag(z)+6)
 
-    z = chansim.cost(z, samples_per_symbol)
+    z = chansim.channel_sim(z, cir, samples_per_symbol)
     plt.plot(np.real(z), np.imag(z))
     #plt.plot(np.imag(z))
 
