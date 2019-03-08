@@ -3,27 +3,32 @@
 
 import numpy as np
 
+RA_1 = [(0,1), (0.2,0.63), (0.4,0.1), (0.6,0.01)]
+RA_2 = [(0,1), (0.1,0.4), (0.2,0.16), (0.3,0.06), (0.4,0.03), (0.5,0.01)]
 
-def cost(z, samples_per_symbol):
-    microsecond = (samples_per_symbol / 270.8333333) * 1000
-    echo_extended = np.zeros(len(z)+48*samples_per_symbol,dtype=complex)
-    echo_extended[0:z.shape[0]]       = z
-#    echo_extended[80:80+z.shape[0]]   += 0.1*z
-#    echo_extended[120:120+z.shape[0]] += 0.1*z
-#    echo_extended[140:140+z.shape[0]] += 0.1*z
-#    echo_extended[190:190+z.shape[0]] += 0.1*z
-#    echo_extended[400:400+z.shape[0]] += 0.5*z
-    cir = np.zeros(48*samples_per_symbol, dtype=complex)
-    cir[0                       ]=0.2
-    cir[round(0.2 * microsecond)]=0.5
-    cir[round(0.4 * microsecond)]=0.79
-    cir[round(0.8 * microsecond)]=1
-    cir[round(1.6 * microsecond)]=0.63
-    cir[round(2.2 * microsecond)]=0.25
-    cir[round(3.2 * microsecond)]=0.2
-    cir[round(5.0 * microsecond)]=0.79
-    cir[round(6.0 * microsecond)]=0.63
-    cir[round(7.2 * microsecond)]=0.2
-    cir[round(8.2 * microsecond)]=0.1
-    cir[round(10.0* microsecond)]=0.03
+TU_1 = [(0,0.4), (0.2,0.5), (0.4,1), (0.6,0.63),(0.8,0.5),(1.2,0.32),(1.4,0.2),(1.8,0.32),(2.4,0.25),(3.0,0.13),(3.2,0.08),(5.0,0.1)]
+TU_2 = [(0,0.4), (0.1,0.5), (0.3,1), (0.5,0.55),(0.8,0.5),(1.1,0.32),(1.3,0.2),(1.7,0.32),(2.3,0.22),(3.1,0.14),(3.2,0.08),(5.0,0.1)]
+
+BU_1 = [(0,0.2), (0.2,0.5), (0.4,0.79), (0.8,1),(1.6,0.63),(2.2,0.25),(3.2,0.2),(5.0,0.79),(6.0,0.63),(7.2,0.2),(8.2,0.1),(10.0,0.03)]
+BU_2 = [(0,0.17), (0.1,0.46), (0.3,0.74), (0.7,1),(1.6,0.59),(2.2,0.28),(3.1,0.18),(5.0,0.72),(6.0,0.69),(7.2,0.21),(8.1,0.1),(10.0,0.03)]
+
+HT_1 = [(0,0.1), (0.2,0.16), (0.4,0.25), (0.6,0.4),(0.8,1),(2.0,1),(2.4,0.4),(15.0,0.16),(15.2,0.13),(15.8,0.1),(17.2,0.06),(20.0,0.04)]
+HT_2 = [(0,0.1), (0.1,0.16), (0.3,0.25), (0.5,0.4),(0.7,1),(1.0,1),(1.3,0.4),(15.0,0.16),(15.2,0.13),(15.7,0.1),(17.2,0.06),(20.0,0.04)]
+
+
+def channel_ir(chantype, samples_per_symbol):
+    microsecond = samples_per_symbol * (48.0/13.0)
+    cir = np.zeros(74*samples_per_symbol,dtype=complex)
+
+    for tap in chantype:
+        position = round(tap[0] * microsecond)
+        coefficient = tap[1]
+        cir[position] = coefficient
+
+    return cir
+
+
+def channel_sim(signal, cir, samples_per_symbol):
+    echo_extended = np.zeros(len(signal)+74*samples_per_symbol,dtype=complex)
+    echo_extended[0:signal.shape[0]]       = signal
     return np.convolve(echo_extended,cir,'full')
