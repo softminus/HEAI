@@ -18,4 +18,4 @@
 
 
 
-def normal_burst()
+def normal_burst(left_data, midamble, right_data):
