@@ -32,3 +32,12 @@ def channel_sim(signal, cir, samples_per_symbol):
     echo_extended = np.zeros(len(signal)+74*samples_per_symbol,dtype=complex)
     echo_extended[0:signal.shape[0]]       = signal
     return np.convolve(echo_extended,cir,'full')
+
+def awgn(signal, ebno, bits_per_symbol, samples_per_symbol):
+    signal_amplitude = np.var(signal)
+    noise_amplitude = (samples_per_symbol * signal_amplitude) / \
+                (np.power(ebno/10, 10) + 10 * np.log10(bits_per_symbol))
+
+    noise_r = np.random.normal(scale = 1, size = len(signal))
+    noise_i = np.random.normal(scale = 1, size = len(signal))
+    return signal + (noise_r + 1j * noise_i) * (noise_amplitude/2)
