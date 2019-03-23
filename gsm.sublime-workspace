@@ -3,46 +3,218 @@
 	{
 		"selected_items":
 		[
+			[
+				"gms",
+				"gmsk_modu"
+			],
+			[
+				"sampl",
+				"samples_per_symbol"
+			],
+			[
+				"symb",
+				"symbol_array"
+			],
+			[
+				"sym",
+				"symbol_array"
+			],
+			[
+				"sa",
+				"samples_noisy"
+			],
+			[
+				"sample",
+				"samples_noisy"
+			],
+			[
+				"sam",
+				"samples_per_symbol"
+			],
+			[
+				"iq_",
+				"iq_stb"
+			],
+			[
+				"current",
+				"current_symbol_o"
+			],
+			[
+				"curren",
+				"current_symbol_o"
+			],
+			[
+				"message",
+				"message_bit_count"
+			],
+			[
+				"current_",
+				"current_symbol_idx"
+			],
+			[
+				"pll",
+				"pll_clock"
+			],
+			[
+				"bru",
+				"burst_state"
+			],
+			[
+				"mask_index",
+				"mask_index_tmp"
+			],
+			[
+				"mask_inde",
+				"mask_index_tmp"
+			],
+			[
+				"symbol_s",
+				"symbol_strobe_i"
+			],
+			[
+				"symbo",
+				"symbol_strobe_o"
+			],
+			[
+				"tmp",
+				"tmp"
+			],
+			[
+				"rampdown",
+				"rampdown_sample_counter"
+			],
+			[
+				"burs",
+				"burst_state"
+			],
+			[
+				"MASK",
+				"MASK_SIZE-1"
+			],
+			[
+				"rampu",
+				"rampup_sample_counter"
+			],
+			[
+				"ramp",
+				"rampdown_sample_counter"
+			],
+			[
+				"pip",
+				"pipeline_quadrature"
+			],
+			[
+				"tmp_q",
+				"tmp_q"
+			],
+			[
+				"pipe",
+				"pipeline_inphase"
+			],
+			[
+				"rfc",
+				"rfchain_quadrature"
+			],
+			[
+				"ha",
+				"half_mask_plain"
+			],
+			[
+				"master",
+				"master_power_mask"
+			],
+			[
+				"ROM_",
+				"ROM_OUTPUT_BITS-1"
+			],
+			[
+				"LFS",
+				"LFSR_TAPS"
+			],
+			[
+				"modul",
+				"modulator_quadrature"
+			],
+			[
+				"tri",
+				"tristimulus_delay"
+			],
+			[
+				"CLOCK",
+				"CLOCKS_PER_SAMPLE-1"
+			],
+			[
+				"rfcha",
+				"rfchain_quadrature"
+			],
+			[
+				"rf",
+				"rfchain_quadrature"
+			],
+			[
+				"rfch",
+				"rfchain_inphase"
+			],
+			[
+				"modu",
+				"modulator_quadrature"
+			],
+			[
+				"end",
+				"end"
+			],
+			[
+				"gmsk",
+				"gmsk_modulate-"
+			],
+			[
+				"tx",
+				"tx_burst"
+			],
+			[
+				"alw",
+				"alwaysc\talways *"
+			],
+			[
+				"pq_",
+				"pq_delay"
+			],
+			[
+				"inpu",
+				"input_bit"
+			],
+			[
+				"js",
+				"JSON_FILE"
+			],
+			[
+				"rom_out_",
+				"rom_out_rising"
+			],
+			[
+				"quad",
+				"quadrature_tmp"
+			],
+			[
+				"qu",
+				"quadrature_out"
+			],
+			[
+				"inphase",
+				"inphase_tmp"
+			],
+			[
+				"fixu",
+				"fixup_table_sel"
+			],
+			[
+				"qua",
+				"quadrature_tmp"
+			]
 		]
 	},
 	"buffers":
 	[
-		{
-			"file": "air_interface/gmsk_tx.v",
-			"settings":
-			{
-				"buffer_size": 2523,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "air_interface/tb-gmsk_tx.cc",
-			"settings":
-			{
-				"buffer_size": 1344,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "air_interface/gmsk_phasetables.py",
-			"settings":
-			{
-				"buffer_size": 2483,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "air_interface/mock_gmsk_phasetables.py",
-			"settings":
-			{
-				"buffer_size": 1609,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -68,9 +240,11 @@
 	},
 	"console":
 	{
-		"height": 0.0,
+		"height": 414.0,
 		"history":
 		[
+			"view.settings().get('font_face')",
+			"view.settings"
 		]
 	},
 	"distraction_free":
@@ -84,19 +258,89 @@
 	},
 	"file_history":
 	[
+		"/home/thz/tdma_gmsk/demodulation_simulation/gmsk/burstgen.py",
+		"/home/thz/tdma_gmsk/demodulation_simulation/gmsk/modulator.py",
+		"/home/thz/tdma_gmsk/demodulation_simulation/gmsk/utility.py",
+		"/home/thz/tdma_gmsk/demodulation_simulation/gmsk/chansim.py",
+		"/home/thz/tdma_gmsk/demodulation_simulation/simrunner.py",
+		"/home/thz/tdma_gmsk/demodulation_simulation/gmsk/ramp.py",
+		"/home/thz/.config/sublime-text-3/Packages/Anaconda/Anaconda.sublime-settings",
+		"/home/thz/.config/sublime-text-3/Packages/User/Anaconda.sublime-settings",
+		"/home/thz/tdma_gmsk/gmsk_sim/gmsk/burstgen.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/gmsk/chansim.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/gmsk/modulator.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/simrunner.py",
+		"/home/thz/.config/sublime-text-3/Packages/WordHighlight/Word Highlight.sublime-settings",
+		"/home/thz/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
+		"/home/thz/.bash_profile",
+		"/home/thz/tdma_gmsk/README.md",
+		"/home/thz/tdma_gmsk/gmsk_sim/gmsk/utility.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/gmsk/data_aided_midamble.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/data_aided_midamble.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/dsp_utils.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/chansim.py",
+		"/home/thz/tdma_gmsk/gmsk_sim/gmsk_mod.py",
+		"/home/thz/tdma_gmsk/air_interface/sim/simrunner.py",
+		"/home/thz/tdma_gmsk/air_interface/sim/dsp_utils.py",
+		"/home/thz/tdma_gmsk/air_interface/sim/chansim.py",
+		"/home/thz/tdma_gmsk/air_interface/sim/gmsk_mod.py",
+		"/home/thz/tdma_gmsk/air_interface/sim/data_aided_midamble.py",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_phasetables.py",
+		"/home/thz/tdma_gmsk/air_interface/rtl/gmsk_modulate.v",
+		"/home/thz/tdma_gmsk/Makefile",
+		"/home/thz/tdma_gmsk/air_interface/sim/tb-tx_burst.cc",
+		"/home/thz/tdma_gmsk/air_interface/rtl/tx_burst.v",
+		"/home/thz/tdma_gmsk/air_interface/sim/util.py",
+		"/home/thz/pw/MASTER",
+		"/home/thz/tdma_gmsk/top.v",
+		"/home/thz/tdma_gmsk/icepll.v",
+		"/home/thz/tdma_gmsk/air_interface/gen/hello.bin",
+		"/home/thz/.python_history",
+		"/home/thz/Downloads/clash-fb_vga-master/verilog/VGA/fb_vga/VGA_vga.v",
+		"/home/thz/Downloads/clash-fb_vga-master/verilog/VGA/fb_vga/VGA_bram.v",
+		"/home/thz/Downloads/clash-fb_vga-master/verilog/VGA/fb_vga/fb_vga.v",
+		"/home/thz/Downloads/clash-fb_vga-master/VGA.hs",
+		"/home/thz/tdma_gmsk/pinmap.pcf",
+		"/home/thz/tdma_gmsk/x.txt",
+		"/home/thz/tdma_gmsk/VGA/fb_vga/*",
+		"/home/thz/Downloads/clash-fb_vga-master/verilog/VGA/fb_vga/fb_vga.manifest",
+		"/home/thz/tdma_gmsk/diffencode.py",
+		"/home/thz/tdma_gmsk/air_interface/rtl/multirate_strobe.v",
+		"/home/thz/tdma_gmsk/air_interface/rtl/util.v",
+		"/home/thz/tdma_gmsk/air_interface/sim/tb-",
+		"/home/thz/tdma_gmsk/complex_mixer.v",
+		"/home/thz/tdma_gmsk/air_interface/sim/tb-gmsk_modulate.cc",
+		"/home/thz/bio",
+		"/home/thz/tdma_gmsk/bio",
+		"/home/thz/tdma_gmsk/air_interface/gen/mock_gmsk_phasetables.py",
+		"/home/thz/tdma_gmsk/air_interface/sim/tb-gmsk_tx.cc",
+		"/home/thz/tdma_gmsk/air_interface/rtl/gmsk_tx.v",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_7.hex",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_1.hex",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_3.hex",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_3.txt",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_2.txt",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_2.hex",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_1.txt",
+		"/home/thz/tdma_gmsk/uart_tx.v",
+		"/home/thz/tdma_gmsk/uart_rx.v",
 		"/home/thz/tdma_gmsk/nco.v",
+		"/home/thz/tdma_gmsk/air_interface/gen/gmsk_curve_7.txt",
+		"/home/thz/Makefile",
+		"/home/thz/tdma_gmsk/air_interface/sim/Makefile",
+		"/home/thz/tdma_gmsk/spi.v",
+		"/home/thz/tdma_gmsk/air_interface/mock_gmsk_phasetables.py",
+		"/home/thz/tdma_gmsk/air_interface/gmsk_phasetables.py",
+		"/home/thz/tdma_gmsk/air_interface/gmsk_tx.v",
 		"/home/thz/tdma_gmsk/air_interface/tb-gmsk_tx.cc",
 		"/home/thz/tdma_gmsk/qwave_6i_4o.hex",
 		"/home/thz/tdma_gmsk/qwave_romgen.py",
-		"/home/thz/tdma_gmsk/air_interface/gmsk_phasetables.py",
 		"/home/thz/tdma_gmsk/qwave_gen.py",
-		"/home/thz/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
-		"/home/thz/tdma_gmsk/air_interface/gmsk_tx.v",
 		"/home/thz/tdma_gmsk/gmsk_tx.sublime-project"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 31.0
 	},
 	"find_in_files":
 	{
@@ -110,9 +354,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"  ",
-			"conv",
-			"scale"
+			"pep",
+			"lint",
+			"proxy",
+			"rangez",
+			"dtype",
+			"tot",
+			"stored_",
+			"samples_",
+			"16",
+			"multisymbols",
+			"modu",
+			"echoez",
+			"rangez",
+			"empty",
+			"minmod",
+			"300",
+			"minmod",
+			"modu",
+			"symbols",
+			"np.",
+			"module",
+			"0.3",
+			"arra",
+			"data_dir",
+			"implement",
+			"current_symbol_o",
+			",",
+			"lfsr",
+			"hajime",
+			"print",
+			"samples_noi",
+			"gnuplot",
+			"1",
+			"iq_tsugi",
+			"edge",
+			"iq_symbol_edge_o",
+			"symbol_strobe_o",
+			"sample_strobe_i",
+			"current_symbol_i",
+			"new_symbol",
+			"current_symbol_o",
+			"_bit",
+			"cur_bit",
+			"message",
+			"mess",
+			"prim",
+			"burst_state",
+			"in_tail",
+			"mask",
+			"mask_t",
+			"mask",
+			"110001",
+			"prev_bit",
+			"0000010",
+			"10000010",
+			"iftim",
+			"101010101010",
+			"10010000",
+			"L",
+			"0",
+			"1",
+			"message",
+			"current_symbol_o",
+			"current_symbol",
+			"message",
+			"current_symbo",
+			"prev",
+			"symcount",
+			"symcoun",
+			"new_sy",
+			"];",
+			"debug_pin",
+			"lfsr",
+			"quadra",
+			"_tmp",
+			"lfsr",
+			"_o",
+			"else begin",
+			"mask_ind",
+			"mask",
+			"mask_index",
+			"== 1",
+			"mask_index",
+			"iftime",
+			"lfsr",
+			"mask_index",
+			"ramp",
+			"tmp",
+			"rampdow",
+			"sample_strobe",
+			"lfsr",
+			"== 0",
+			"255",
+			"samples_edge",
+			"_o",
+			"sample_edge",
+			"lockout",
+			"symbol_input_strobe",
+			"symbol_input",
+			"symbol_strobe_i",
+			"symbol_input",
+			"begin",
+			"end",
+			"symbol_beginn",
+			"strobe",
+			"symboL_beginn",
+			"current_symbol",
+			"current_symbol_i",
+			"strobe",
+			"iq_valid",
+			"counter",
+			"1111",
+			"rampdown",
+			"mask_t",
+			"tmp_iii",
+			"tmp_iiii",
+			"burst_state",
+			"tmp_i",
+			"rom_out_rising",
+			"tmp_2",
+			"tmp2",
+			"5:0",
+			"rampdown_sam",
+			"symcount",
+			"rampdown_sample",
+			"symcount",
+			" if",
+			" ="
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -120,6 +489,31 @@
 		"regex": false,
 		"replace_history":
 		[
+			"\n",
+			"0",
+			"iq_symbol_edge",
+			"symbol_strobe",
+			"sample_strobe",
+			"next_symbol",
+			"symbol_input_stb",
+			"0",
+			"1",
+			"L",
+			"current_symbol_idx",
+			"new_symbol",
+			"pll_clock",
+			"xtal",
+			"lockout",
+			"clock",
+			"top",
+			"tx_burst",
+			"gmsk_modulate",
+			"falling",
+			"rising",
+			"falling",
+			"rom_out_reversed",
+			"rom_out_forward",
+			"tristimulus",
 			"    "
 		],
 		"reverse": false,
@@ -131,135 +525,14 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "air_interface/gmsk_tx.v",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2523,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2461,
-								2461
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SystemVerilog/SystemVerilog.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1116.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "air_interface/tb-gmsk_tx.cc",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1344,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								969,
-								969
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 150.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "air_interface/gmsk_phasetables.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2483,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								974,
-								974
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 207.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "air_interface/mock_gmsk_phasetables.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1609,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								678,
-								678
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 276.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 31.0
 	},
 	"input":
 	{
@@ -300,7 +573,7 @@
 	"project": "gsm.sublime-project",
 	"replace":
 	{
-		"height": 80.0
+		"height": 58.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -327,22 +600,26 @@
 	},
 	"select_symbol":
 	{
-		"height": 0.0,
+		"height": 379.0,
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"power_mask_raw"
+			]
 		],
-		"width": 0.0
+		"width": 592.0
 	},
 	"selected_group": 0,
 	"settings":
 	{
 	},
 	"show_minimap": true,
-	"show_open_files": false,
+	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_visible": false,
+	"side_bar_width": 108.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
