@@ -10,4 +10,4 @@ def gnuplotize(data):
         print (f.format(idx/samples_per_symbol, val), file=outf)
 
 def prbs(length):
-    return (np.random.randint(0,2,length) * 2 - 1)
+    return np.random.randint(0,2,length)
