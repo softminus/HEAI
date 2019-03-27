@@ -33,11 +33,15 @@ def channel_sim(signal, cir, samples_per_symbol):
     echo_extended[0:signal.shape[0]]       = signal
     return np.convolve(echo_extended,cir,'full')
 
+# https://www.mathworks.com/help/comm/ref/comm.awgnchannel-system-object.html#buiamu7-1-SNR
+# https://www.mathworks.com/help/comm/ug/awgn-channel.html
+
 def awgn(signal, ebno, bits_per_symbol, samples_per_symbol):
     signal_amplitude = np.var(signal)
     noise_amplitude = (samples_per_symbol * signal_amplitude) / \
-                (np.power(ebno/10, 10) + 10 * np.log10(bits_per_symbol))
-
-    noise_r = np.random.normal(scale = 1, size = len(signal))
-    noise_i = np.random.normal(scale = 1, size = len(signal))
-    return signal + (noise_r + 1j * noise_i) * (noise_amplitude/2)
+                (np.power(10, ebno/10))
+    #print(noise_amplitude)
+    #print(signal_amplitude)
+    noise_r = np.random.randn(len(signal))
+    noise_i = np.random.randn(len(signal))
+    return signal + ((noise_r + 1j * noise_i) * (noise_amplitude/2.0))
