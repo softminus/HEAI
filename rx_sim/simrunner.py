@@ -19,25 +19,26 @@ if (len(sys.argv) == 2):
 else:
     data_dir = "../"
 
-nb = burstgen.normal_burst(utility.prbs(58),utility.prbs(26),utility.prbs(58))
-orig_syms = burstgen.diffencode(nb)
 
-print(len(orig_syms))
 
-#orig_syms =  #np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,1,1,1,1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]) #utility.prbs(150)
+#orig_syms = # np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,1,1,1,1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]) #utility.prbs(150)
 
 gmsk_modu = modulator.warmup(samples_per_symbol)
 cir = chansim.channel_ir(chansim.RA_1, samples_per_symbol)
-for i in range(0,32):
+for i in range(0,16):
+
+    nb = burstgen.normal_burst(utility.prbs(58),(0,0,1,0,0,1,0,1,1,1,0,0,0,0,1,0,0,0,1,0,0,1,0,1,1,1),utility.prbs(58))
+    orig_syms = burstgen.diffencode(nb)
     symbol_array = orig_syms
     sig = modulator.modulate(symbol_array, samples_per_symbol, gmsk_modu)
     #plt.plot(np.real(z)+6)
     #plt.plot(np.imag(z)+6)
+    z = sig
 
-    #z = chansim.channel_sim(sig, cir, samples_per_symbol)
-    z=sig
-    z = chansim.awgn(z,90, bits_per_symbol=2, samples_per_symbol=samples_per_symbol)
-    z = chansim.freq_phase_error(z, 1, 0.0)
+    #z = chansim.channel_sim(z, cir, samples_per_symbol)
+
+    z = chansim.awgn(z,6, bits_per_symbol=2, samples_per_symbol=samples_per_symbol)
+    #z = chansim.freq_phase_error(z, np.random.random_sample() * 2 * np.pi, 0.01)
     z = sp.decimate(z,samples_per_symbol)
 
     sig = sp.decimate(sig,samples_per_symbol)
@@ -56,7 +57,8 @@ for i in range(0,32):
     plt.plot(np.imag(z)+12)
     plt.plot(np.real(sig)+16)
     plt.plot(np.imag(sig)+18)
-    plt.plot(symbol_array + 20)
+
+    plt.step(np.linspace(0,len(symbol_array),len(symbol_array)),symbol_array +22 )
     plt.plot(pseudosyms )
 #    ax = plt.axes()
 #    ax.xaxis.set_major_locator(plt.MultipleLocator(1))
