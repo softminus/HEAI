@@ -33,6 +33,16 @@ def channel_sim(signal, cir, samples_per_symbol):
     echo_extended[0:signal.shape[0]]       = signal
     return np.convolve(echo_extended,cir,'full')
 
+
+def freq_phase_error(signal, delta_phase, delta_freq):
+    num_samples = len(signal)
+
+    frequency_factor = np.linspace(delta_phase, delta_freq*num_samples+delta_phase, num=num_samples)
+    frequency_signal = np.exp(1j*frequency_factor)
+
+    frobbed_signal = frequency_signal * signal
+    return frobbed_signal
+
 # https://www.mathworks.com/help/comm/ref/comm.awgnchannel-system-object.html#buiamu7-1-SNR
 # https://www.mathworks.com/help/comm/ug/awgn-channel.html
 
