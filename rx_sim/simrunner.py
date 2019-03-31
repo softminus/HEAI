@@ -28,7 +28,7 @@ print(len(orig_syms))
 
 gmsk_modu = modulator.warmup(samples_per_symbol)
 cir = chansim.channel_ir(chansim.RA_1, samples_per_symbol)
-for i in range(0,4):
+for i in range(0,32):
     symbol_array = orig_syms
     sig = modulator.modulate(symbol_array, samples_per_symbol, gmsk_modu)
     #plt.plot(np.real(z)+6)
@@ -36,7 +36,8 @@ for i in range(0,4):
 
     #z = chansim.channel_sim(sig, cir, samples_per_symbol)
     z=sig
-    z = chansim.awgn(z,9, bits_per_symbol=2, samples_per_symbol=samples_per_symbol)
+    z = chansim.awgn(z,90, bits_per_symbol=2, samples_per_symbol=samples_per_symbol)
+    z = chansim.freq_phase_error(z, 1, 0.0)
     z = sp.decimate(z,samples_per_symbol)
 
     sig = sp.decimate(sig,samples_per_symbol)
