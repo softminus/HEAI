@@ -31,8 +31,6 @@ def normal_burst(left_data, midamble, right_data):
     assert(len(right_data) == 58)
     tail_bits = np.array([0,0,0])
     burst_data = np.concatenate((tail_bits, left_data, midamble, right_data, tail_bits))
-    print (burst_data)
-    print (len(burst_data))
     return burst_data
 
 def diffencode(bits):
