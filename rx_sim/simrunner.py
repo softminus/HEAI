@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 
-from gmsk import modulator, chansim, utility, burstgen
-import os
+
+from gmsk import modulator, chansim, utility, burstgen, feedforward
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy.signal as sp
+import scipy.signal as signal
 
 
 
@@ -18,50 +18,60 @@ if (len(sys.argv) == 2):
     data_dir = sys.argv[1]
 else:
     data_dir = "../"
-
-
-
-#orig_syms = # np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,1,1,1,1,1,1,1,1,1,1,1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]) #utility.prbs(150)
-
 gmsk_modu = modulator.warmup(samples_per_symbol)
-cir = chansim.channel_ir(chansim.RA_1, samples_per_symbol)
-for i in range(0,16):
+ts = (0,0,1,0,0,1,0,1,1,1,0,0,0,0,1,0,0,0,1,0,0,1,0,1,1,1)
 
-    nb = burstgen.normal_burst(utility.prbs(58),(0,0,1,0,0,1,0,1,1,1,0,0,0,0,1,0,0,0,1,0,0,1,0,1,1,1),utility.prbs(58))
-    orig_syms = burstgen.diffencode(nb)
-    symbol_array = orig_syms
-    sig = modulator.modulate(symbol_array, samples_per_symbol, gmsk_modu)
-    #plt.plot(np.real(z)+6)
-    #plt.plot(np.imag(z)+6)
-    z = sig
+ts_cut =       (1,0,1,1,1,0,0,0,0,1,0,0,0,1,0,0)
+smol_modu = modulator.warmup(2)
 
-    #z = chansim.channel_sim(z, cir, samples_per_symbol)
+modulated_ts = modulator.modulate(burstgen.diffencode(ts_cut), 2, smol_modu)
+modulated_ts =modulated_ts[14:49]
 
-    z = chansim.awgn(z,6, bits_per_symbol=2, samples_per_symbol=samples_per_symbol)
-    #z = chansim.freq_phase_error(z, np.random.random_sample() * 2 * np.pi, 0.01)
-    z = sp.decimate(z,samples_per_symbol)
+plt.rc('lines',marker='x',markersize=4,linewidth=1)
+plt.tight_layout()
 
-    sig = sp.decimate(sig,samples_per_symbol)
+plt.plot(np.real(modulated_ts))
+plt.plot(np.imag(modulated_ts))
+
+
+plt.tight_layout()
+plt.show()
+
+
+cir = chansim.channel_ir(chansim.TE_1, samples_per_symbol)
+for i in range(0,32):
+
+    nb = burstgen.normal_burst(utility.prbs(58),ts,utility.prbs(58))
+    differential_syms = burstgen.diffencode(nb)
+    sig = modulator.modulate(differential_syms, samples_per_symbol, gmsk_modu)
+
+    z = sig[70:]
+    z = chansim.channel_sim(z, cir, samples_per_symbol)
+
+    z = chansim.awgn(z,20, bits_per_symbol=2, samples_per_symbol=samples_per_symbol)
+    z = chansim.freq_phase_error(z, np.random.random_sample() * 2 * np.pi, 0.001)
+
+    z = signal.decimate(z,8)
+    sig = signal.decimate(sig,8)
 
     realz = np.sign(np.real(z))
     imagz = np.sign(np.imag(z))
-
     pseudosyms = 2 * realz + imagz
-#    plt.plot(np.real(z), np.imag(z))
-#    plt.plot(np.real(sig)+0, np.imag(sig)+3)
-#    plt.show()
+
     headbits = np.zeros(8)
     tailbits = np.zeros(8)
-    symbol_array = np.concatenate((headbits,symbol_array,tailbits))
+    symbol_array = np.concatenate((headbits,differential_syms,tailbits))
+
     plt.plot(np.real(z)+6)
     plt.plot(np.imag(z)+12)
     plt.plot(np.real(sig)+16)
     plt.plot(np.imag(sig)+18)
-
     plt.step(np.linspace(0,len(symbol_array),len(symbol_array)),symbol_array +22 )
-    plt.plot(pseudosyms )
-#    ax = plt.axes()
-#    ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+    plt.plot(pseudosyms)
+    plt.plot(24+np.abs(np.correlate(z,modulated_ts))/8)
+    print(np.argmax(np.abs(np.correlate(z,modulated_ts))))
 
+
+plt.tight_layout()
 
 plt.show()
