@@ -65,4 +65,4 @@ def modulate(syms, samples_per_symbol, stored_pulse):
     isam = np.cos((np.pi) * phase_trajectory)
     qsam = np.sin((np.pi) * phase_trajectory)
     signal = isam + 1j*qsam
-    return signal
+    return signal[(6*samples_per_symbol):(len(isam)-7*samples_per_symbol)]
